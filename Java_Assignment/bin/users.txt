@@ -1,0 +1,2 @@
+01;najib;rosmah;1/1/2020;najib;najib;Customer;admin
+02;rosmah;obama;1/1/2020;obama@rosmah.com;babinajib;Vendor;admin

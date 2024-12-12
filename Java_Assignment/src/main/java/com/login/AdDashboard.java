@@ -62,17 +62,17 @@ public class AdDashboard extends javax.swing.JFrame {
             String id = (String) employeeTable.getValueAt(selectedRow, 0);
             String name = (String) employeeTable.getValueAt(selectedRow, 1);
             String address = (String) employeeTable.getValueAt(selectedRow, 2);
-            String dob = (String) employeeTable.getValueAt(selectedRow, 3);
-            String username = (String) employeeTable.getValueAt(selectedRow, 4);
-            String password = (String) employeeTable.getValueAt(selectedRow, 5);
-            String role = (String) employeeTable.getValueAt(selectedRow, 4);
+            String phoneno = (String) employeeTable.getValueAt(selectedRow, 3);
+            String username = (String) employeeTable.getValueAt(selectedRow, 3);
+            String password = (String) employeeTable.getValueAt(selectedRow, 4);
+            String role = (String) employeeTable.getValueAt(selectedRow, 5);
             //get id from file
 
             idtxt.setText(id);
             //idtxt.setEnabled(false);
             nametxt.setText(name);
             addresstxt.setText(address);
-            dobtxt.setText(dob);
+            phonenotxt.setText(phoneno);
             usernametxt.setText(username);
             passwordtxt.setText(password);
             rolecbx.setSelectedItem(role);
@@ -94,15 +94,15 @@ public class AdDashboard extends javax.swing.JFrame {
                     String id = read.split(";")[0];
                     String name = read.split(";")[1];
                     String address = read.split(";")[2];
-                    String dob = read.split(";")[3];
+                    String phoneno = read.split(";")[3];
                     String username = read.split(";")[4];
                     String password = read.split(";")[5];
                     String role = read.split(";")[6];
                     model.addRow(
-                            new Object[]{id, name, address, dob, username, password,
+                            new Object[]{id, name, address, phoneno, username, password,
                                 role});
                     model1.addRow(
-                            new Object[]{id, name, address, dob, username, password,
+                            new Object[]{id, name, address, phoneno, username, password,
                                 role});
                 }
             }
@@ -175,7 +175,7 @@ public class AdDashboard extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         employeeTable = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
-        dobtxt = new javax.swing.JTextField();
+        phonenotxt = new javax.swing.JTextField();
         searchtxt = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -373,7 +373,7 @@ public class AdDashboard extends javax.swing.JFrame {
 
             },
             new String [] {
-                "id", "name", "address", "dob", "username", "password", "role"
+                "id", "name", "address", "phone no", "username", "password", "role"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -509,7 +509,7 @@ public class AdDashboard extends javax.swing.JFrame {
                             .addComponent(usernameField)
                             .addComponent(phoneNoField))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(title_label1, javax.swing.GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE))
+                    .addComponent(title_label1, javax.swing.GroupLayout.DEFAULT_SIZE, 1015, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jp2Layout.setVerticalGroup(
@@ -544,7 +544,7 @@ public class AdDashboard extends javax.swing.JFrame {
                     .addComponent(registerBtn)
                     .addComponent(clearBtn)
                     .addComponent(backBtn))
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addContainerGap(110, Short.MAX_VALUE))
         );
 
         title_label3.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
@@ -571,7 +571,7 @@ public class AdDashboard extends javax.swing.JFrame {
 
             },
             new String [] {
-                "id", "name", "address", "dob", "username", "password", "role"
+                "id", "name", "address", "phone no", "username", "password", "role"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -593,7 +593,7 @@ public class AdDashboard extends javax.swing.JFrame {
             employeeTable.getColumnModel().getColumn(6).setResizable(false);
         }
 
-        jLabel5.setText("DOB:");
+        jLabel5.setText("Phone No.:");
 
         searchtxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -643,54 +643,56 @@ public class AdDashboard extends javax.swing.JFrame {
             .addGroup(jp3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(title_label3)
                     .addGroup(jp3Layout.createSequentialGroup()
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(title_label3)
+                        .addGap(118, 118, 118))
+                    .addGroup(jp3Layout.createSequentialGroup()
+                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jp3Layout.createSequentialGroup()
-                                .addGap(74, 74, 74)
-                                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(updatebtn)
-                                    .addGroup(jp3Layout.createSequentialGroup()
-                                        .addComponent(jButton1)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(clearbtn)))
-                                .addGap(18, 18, 18)
                                 .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(deletebtn)
-                                    .addComponent(addbtn)))
-                            .addGroup(jp3Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4)
+                                    .addGroup(jp3Layout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel2)
+                                            .addComponent(jLabel4)))
                                     .addComponent(jLabel5))
                                 .addGap(23, 23, 23)
-                                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(usernametxt, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                                    .addComponent(dobtxt)
-                                    .addComponent(addresstxt)
-                                    .addComponent(nametxt)
-                                    .addComponent(idtxt)))
-                            .addComponent(jLabel6)
-                            .addGroup(jp3Layout.createSequentialGroup()
-                                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel7))
-                                .addGap(23, 23, 23)
                                 .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jp3Layout.createSequentialGroup()
+                                    .addComponent(idtxt)
+                                    .addComponent(nametxt)
+                                    .addComponent(addresstxt)
+                                    .addComponent(phonenotxt)
+                                    .addComponent(usernametxt)))
+                            .addComponent(jLabel6)
+                            .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(jp3Layout.createSequentialGroup()
+                                    .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(updatebtn)
+                                        .addGroup(jp3Layout.createSequentialGroup()
+                                            .addComponent(jButton1)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(clearbtn)))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(deletebtn)
+                                        .addComponent(addbtn)))
+                                .addGroup(jp3Layout.createSequentialGroup()
+                                    .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel8)
+                                        .addComponent(jLabel7))
+                                    .addGap(28, 28, 28)
+                                    .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(rolecbx, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 200, Short.MAX_VALUE))
-                                    .addComponent(passwordtxt))))
-                        .addGap(18, 18, Short.MAX_VALUE)
+                                        .addComponent(passwordtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(18, 18, 18)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jp3Layout.createSequentialGroup()
                                 .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(searchtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(26, Short.MAX_VALUE))
+                                .addGap(27, 27, 27)
+                                .addComponent(searchtxt))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(140, 140, 140))))
         );
         jp3Layout.setVerticalGroup(
             jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -714,7 +716,7 @@ public class AdDashboard extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(dobtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(phonenotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(21, 21, 21)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
@@ -742,7 +744,7 @@ public class AdDashboard extends javax.swing.JFrame {
                             .addComponent(jLabel9))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         title_label4.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
@@ -909,7 +911,7 @@ public class AdDashboard extends javax.swing.JFrame {
             String newId = idtxt.getText(); // New ID entered by the user
             String name = nametxt.getText();
             String address = addresstxt.getText();
-            String dob = dobtxt.getText();
+            String phoneno = phonenotxt.getText();
             String username = usernametxt.getText();
             String password = new String(passwordtxt.getPassword());
             String role = rolecbx.getSelectedItem().toString();
@@ -948,21 +950,20 @@ public class AdDashboard extends javax.swing.JFrame {
                 String existingLine = lines.get(i);
                 String[] data = existingLine.split(";");
 
-                if (data[0].equals(originalId)) { // Match using the original ID
+                if (idtxt.getText().trim().isEmpty() || nametxt.getText().trim().isEmpty() || addresstxt.getText().trim().isEmpty() || phonenotxt.getText().trim().isEmpty() || usernametxt.getText().trim().isEmpty() || passwordtxt.getText().trim().isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Please fill in the blank space");
+                } else { // Match using the original ID
                     // Write the updated record with the new ID and other details
                     fw.write(
                         newId + ";"
                         + name + ";"
                         + address + ";"
-                        + dob + ";"
+                        + phoneno + ";"
                         + username + ";"
                         + password + ";"
                         + role + ";"
                         + login.getUsername() + "\n"
                     );
-                } else {
-                    // Write the existing record as-is
-                    fw.write(existingLine + "\n");
                 }
             }
             fw.close();
@@ -1048,21 +1049,21 @@ public class AdDashboard extends javax.swing.JFrame {
                 String id = data[0].trim();
                 String name = data[1].trim();
                 String address = data[2].trim();
-                String dob = data[3].trim();
-                String username = data[4].trim();
-                String password = data[5].trim();
-                String role = data[6].trim();
+                String phoneno = data[3].trim();
+                String username = data[3].trim();
+                String password = data[4].trim();
+                String role = data[5].trim();
 
                 // Check if any field matches the search text
                 if (id.equalsIgnoreCase(searchText)
                     || name.equalsIgnoreCase(searchText)
                     || address.equalsIgnoreCase(searchText)
-                    || dob.equalsIgnoreCase(searchText)
+                    || phoneno.equalsIgnoreCase(searchText)
                     || username.equalsIgnoreCase(searchText)
                     || password.equalsIgnoreCase(searchText)
                     || role.equalsIgnoreCase(searchText)) {
                     // Add the matching record to the table
-                    model.addRow(new Object[]{id, name, address, dob, username, password, role});
+                    model.addRow(new Object[]{id, name, address, phoneno, username, password, role});
                 }
             }
             br.close(); // Close the file reader
@@ -1077,7 +1078,7 @@ public class AdDashboard extends javax.swing.JFrame {
         idtxt.setText("");
         nametxt.setText("");
         addresstxt.setText("");
-        dobtxt.setText("");
+        phonenotxt.setText("");
         usernametxt.setText("");
         passwordtxt.setText("");
         rolecbx.setSelectedIndex(0);
@@ -1093,7 +1094,7 @@ public class AdDashboard extends javax.swing.JFrame {
         if ((idtxt == null || idtxt.getText().trim().isEmpty()) ||
             (nametxt == null || nametxt.getText().trim().isEmpty()) ||
             (addresstxt == null || addresstxt.getText().trim().isEmpty()) ||
-            (dobtxt == null || dobtxt.getText().trim().isEmpty()) ||
+            (phonenotxt == null || phonenotxt.getText().trim().isEmpty()) ||
             (usernametxt == null || usernametxt.getText().trim().isEmpty()) ||
             (passwordtxt == null || new String(passwordtxt.getPassword()).trim().isEmpty())) {
             JOptionPane.showMessageDialog(null, "Please fill in all the fields!");
@@ -1103,7 +1104,7 @@ public class AdDashboard extends javax.swing.JFrame {
                 idtxt.getText().trim() + ";"
                 + nametxt.getText().trim() + ";"
                 + addresstxt.getText().trim() + ";"
-                + dobtxt.getText().trim() + ";"
+                + phonenotxt.getText().trim() + ";"
                 + usernametxt.getText().trim() + ";"
                 + new String(passwordtxt.getPassword()).trim() + ";"
                 + rolecbx.getSelectedItem().toString() + ";"
@@ -1119,7 +1120,7 @@ public class AdDashboard extends javax.swing.JFrame {
             idtxt.setText("");
             nametxt.setText("");
             addresstxt.setText("");
-            dobtxt.setText("");
+            phonenotxt.setText("");
             usernametxt.setText("");
             passwordtxt.setText("");
             rolecbx.setSelectedIndex(0);
@@ -1184,7 +1185,6 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JButton clearBtn;
     private javax.swing.JButton clearbtn;
     private javax.swing.JButton deletebtn;
-    private javax.swing.JTextField dobtxt;
     private javax.swing.JPanel editAccount;
     private javax.swing.JTable employeeTable;
     private javax.swing.JTable employeeTable1;
@@ -1219,6 +1219,7 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JPasswordField passwordtxt;
     private javax.swing.JTextField phoneNoField;
     private javax.swing.JLabel phoneNumberNo;
+    private javax.swing.JTextField phonenotxt;
     private javax.swing.JLabel pic;
     private java.awt.PopupMenu popupMenu1;
     private java.awt.PopupMenu popupMenu2;

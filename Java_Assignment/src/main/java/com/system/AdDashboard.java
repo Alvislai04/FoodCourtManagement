@@ -1,5 +1,5 @@
 
-package com.login;
+package com.system;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -41,8 +41,8 @@ public class AdDashboard extends javax.swing.JFrame {
         initComponents();
         jp1.setVisible(false);
         jp2.setVisible(false);
+        jp2.setVisible(false);
         jp3.setVisible(false);
-        jp4.setVisible(false);
 
         /*Just Added*/
         employeeTable.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -63,9 +63,9 @@ public class AdDashboard extends javax.swing.JFrame {
             String name = (String) employeeTable.getValueAt(selectedRow, 1);
             String address = (String) employeeTable.getValueAt(selectedRow, 2);
             String phoneno = (String) employeeTable.getValueAt(selectedRow, 3);
-            String username = (String) employeeTable.getValueAt(selectedRow, 3);
-            String password = (String) employeeTable.getValueAt(selectedRow, 4);
-            String role = (String) employeeTable.getValueAt(selectedRow, 5);
+            String username = (String) employeeTable.getValueAt(selectedRow, 4);
+            String password = (String) employeeTable.getValueAt(selectedRow, 5);
+            String role = (String) employeeTable.getValueAt(selectedRow, 6);
             //get id from file
 
             idtxt.setText(id);
@@ -135,14 +135,12 @@ public class AdDashboard extends javax.swing.JFrame {
         title_label = new javax.swing.JLabel();
         home = new javax.swing.JPanel();
         tab1 = new javax.swing.JLabel();
-        registerAccount = new javax.swing.JPanel();
-        tab2 = new javax.swing.JLabel();
         editAccount = new javax.swing.JPanel();
-        tab3 = new javax.swing.JLabel();
+        tab2 = new javax.swing.JLabel();
         topUp = new javax.swing.JPanel();
-        tab4 = new javax.swing.JLabel();
+        tab3 = new javax.swing.JLabel();
         logOut = new javax.swing.JPanel();
-        tab5 = new javax.swing.JLabel();
+        tab4 = new javax.swing.JLabel();
         pic = new javax.swing.JLabel();
         main = new javax.swing.JPanel();
         jp1 = new javax.swing.JPanel();
@@ -150,22 +148,6 @@ public class AdDashboard extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         employeeTable1 = new javax.swing.JTable();
         jp2 = new javax.swing.JPanel();
-        title_label1 = new javax.swing.JLabel();
-        usernameLabel = new javax.swing.JLabel();
-        phoneNumberNo = new javax.swing.JLabel();
-        usernameField = new javax.swing.JTextField();
-        pwLabel = new javax.swing.JLabel();
-        pwField = new javax.swing.JPasswordField();
-        cPwLabel = new javax.swing.JLabel();
-        cPwField = new javax.swing.JPasswordField();
-        rolesField = new javax.swing.JComboBox<>();
-        rolesLabel = new javax.swing.JLabel();
-        clearBtn = new javax.swing.JButton();
-        registerBtn = new javax.swing.JButton();
-        phoneNoField = new javax.swing.JTextField();
-        showPw = new javax.swing.JCheckBox();
-        backBtn = new javax.swing.JButton();
-        jp3 = new javax.swing.JPanel();
         title_label3 = new javax.swing.JLabel();
         nametxt = new javax.swing.JTextField();
         updatebtn = new javax.swing.JButton();
@@ -190,7 +172,7 @@ public class AdDashboard extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         addbtn = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jp4 = new javax.swing.JPanel();
+        jp3 = new javax.swing.JPanel();
         title_label4 = new javax.swing.JLabel();
 
         menu1.setLabel("File");
@@ -245,30 +227,10 @@ public class AdDashboard extends javax.swing.JFrame {
 
         tab2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         tab2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        tab2.setText("Register Account");
+        tab2.setText("Create / Edit Account");
         tab2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tab2MouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout registerAccountLayout = new javax.swing.GroupLayout(registerAccount);
-        registerAccount.setLayout(registerAccountLayout);
-        registerAccountLayout.setHorizontalGroup(
-            registerAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tab2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        registerAccountLayout.setVerticalGroup(
-            registerAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tab2, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-        );
-
-        tab3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        tab3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        tab3.setText("Edit Account");
-        tab3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tab3MouseClicked(evt);
             }
         });
 
@@ -276,19 +238,19 @@ public class AdDashboard extends javax.swing.JFrame {
         editAccount.setLayout(editAccountLayout);
         editAccountLayout.setHorizontalGroup(
             editAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tab3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(tab2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         editAccountLayout.setVerticalGroup(
             editAccountLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tab3, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+            .addComponent(tab2, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
-        tab4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        tab4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        tab4.setText("Top-Up");
-        tab4.addMouseListener(new java.awt.event.MouseAdapter() {
+        tab3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        tab3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tab3.setText("Top-Up");
+        tab3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tab4MouseClicked(evt);
+                tab3MouseClicked(evt);
             }
         });
 
@@ -296,19 +258,19 @@ public class AdDashboard extends javax.swing.JFrame {
         topUp.setLayout(topUpLayout);
         topUpLayout.setHorizontalGroup(
             topUpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tab4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(tab3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         topUpLayout.setVerticalGroup(
             topUpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tab4, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+            .addComponent(tab3, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
-        tab5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        tab5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        tab5.setText("Logout");
-        tab5.addMouseListener(new java.awt.event.MouseAdapter() {
+        tab4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        tab4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tab4.setText("Logout");
+        tab4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tab5MouseClicked(evt);
+                tab4MouseClicked(evt);
             }
         });
 
@@ -316,11 +278,11 @@ public class AdDashboard extends javax.swing.JFrame {
         logOut.setLayout(logOutLayout);
         logOutLayout.setHorizontalGroup(
             logOutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tab5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(tab4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         logOutLayout.setVerticalGroup(
             logOutLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tab5, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+            .addComponent(tab4, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
         pic.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -336,7 +298,6 @@ public class AdDashboard extends javax.swing.JFrame {
                     .addComponent(logOut, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(topUp, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(editAccount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(registerAccount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(home, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, NavigationLayout.createSequentialGroup()
                         .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, 49, Short.MAX_VALUE)
@@ -355,14 +316,12 @@ public class AdDashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(home, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(registerAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(editAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(topUp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(logOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 217, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         title_label2.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
@@ -402,7 +361,7 @@ public class AdDashboard extends javax.swing.JFrame {
             .addGroup(jp1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1014, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1022, Short.MAX_VALUE)
                     .addGroup(jp1Layout.createSequentialGroup()
                         .addComponent(title_label2)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -414,137 +373,8 @@ public class AdDashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(title_label2)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
                 .addContainerGap())
-        );
-
-        title_label1.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
-        title_label1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        title_label1.setText("Register your Account");
-
-        usernameLabel.setFont(new java.awt.Font("Tw Cen MT", 0, 18)); // NOI18N
-        usernameLabel.setText("Username:");
-
-        phoneNumberNo.setFont(new java.awt.Font("Tw Cen MT", 0, 18)); // NOI18N
-        phoneNumberNo.setText("Phone Number:");
-
-        pwLabel.setFont(new java.awt.Font("Tw Cen MT", 0, 18)); // NOI18N
-        pwLabel.setText("Password:");
-
-        pwField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pwFieldActionPerformed(evt);
-            }
-        });
-
-        cPwLabel.setFont(new java.awt.Font("Tw Cen MT", 0, 18)); // NOI18N
-        cPwLabel.setText("Confirm Password:");
-
-        cPwField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cPwFieldActionPerformed(evt);
-            }
-        });
-
-        rolesField.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Customer", "Vendor", "Delivery Runner"}));
-
-        rolesLabel.setFont(new java.awt.Font("Tw Cen MT", 0, 18)); // NOI18N
-        rolesLabel.setText("Roles:");
-
-        clearBtn.setText("Clear");
-        clearBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearBtnActionPerformed(evt);
-            }
-        });
-
-        registerBtn.setText("Register");
-
-        phoneNoField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                phoneNoFieldActionPerformed(evt);
-            }
-        });
-
-        showPw.setText("Show Password");
-        showPw.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showPwActionPerformed(evt);
-            }
-        });
-
-        backBtn.setText("Back");
-        backBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                backBtnMouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jp2Layout = new javax.swing.GroupLayout(jp2);
-        jp2.setLayout(jp2Layout);
-        jp2Layout.setHorizontalGroup(
-            jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jp2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jp2Layout.createSequentialGroup()
-                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(rolesLabel)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2Layout.createSequentialGroup()
-                                .addComponent(backBtn)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(clearBtn)
-                                .addGap(18, 18, 18)
-                                .addComponent(registerBtn))
-                            .addGroup(jp2Layout.createSequentialGroup()
-                                .addComponent(rolesField, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 300, Short.MAX_VALUE)
-                                .addComponent(showPw))
-                            .addComponent(phoneNumberNo)
-                            .addComponent(usernameLabel)
-                            .addComponent(pwLabel)
-                            .addComponent(cPwLabel)
-                            .addComponent(pwField)
-                            .addComponent(cPwField)
-                            .addComponent(usernameField)
-                            .addComponent(phoneNoField))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(title_label1, javax.swing.GroupLayout.DEFAULT_SIZE, 1015, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jp2Layout.setVerticalGroup(
-            jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jp2Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(title_label1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(usernameLabel)
-                .addGap(10, 10, 10)
-                .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(phoneNumberNo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(phoneNoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(pwLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pwField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(cPwLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cPwField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(rolesLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rolesField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(showPw))
-                .addGap(40, 40, 40)
-                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(registerBtn)
-                    .addComponent(clearBtn)
-                    .addComponent(backBtn))
-                .addContainerGap(110, Short.MAX_VALUE))
         );
 
         title_label3.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
@@ -622,7 +452,7 @@ public class AdDashboard extends javax.swing.JFrame {
 
         jLabel3.setText("name:");
 
-        addbtn.setText("Add");
+        addbtn.setText("Register");
         addbtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addbtnActionPerformed(evt);
@@ -636,110 +466,117 @@ public class AdDashboard extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jp3Layout = new javax.swing.GroupLayout(jp3);
-        jp3.setLayout(jp3Layout);
-        jp3Layout.setHorizontalGroup(
-            jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jp3Layout.createSequentialGroup()
+        javax.swing.GroupLayout jp2Layout = new javax.swing.GroupLayout(jp2);
+        jp2.setLayout(jp2Layout);
+        jp2Layout.setHorizontalGroup(
+            jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jp2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jp3Layout.createSequentialGroup()
+                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jp2Layout.createSequentialGroup()
                         .addComponent(title_label3)
                         .addGap(118, 118, 118))
-                    .addGroup(jp3Layout.createSequentialGroup()
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jp3Layout.createSequentialGroup()
-                                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jp3Layout.createSequentialGroup()
+                    .addGroup(jp2Layout.createSequentialGroup()
+                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jp2Layout.createSequentialGroup()
+                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jp2Layout.createSequentialGroup()
                                         .addGap(10, 10, 10)
-                                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(jLabel3)
                                             .addComponent(jLabel2)
                                             .addComponent(jLabel4)))
                                     .addComponent(jLabel5))
                                 .addGap(23, 23, 23)
-                                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(idtxt)
+                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(idtxt, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
                                     .addComponent(nametxt)
                                     .addComponent(addresstxt)
                                     .addComponent(phonenotxt)
                                     .addComponent(usernametxt)))
-                            .addComponent(jLabel6)
-                            .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jp3Layout.createSequentialGroup()
-                                    .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(updatebtn)
-                                        .addGroup(jp3Layout.createSequentialGroup()
-                                            .addComponent(jButton1)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(clearbtn)))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(deletebtn)
-                                        .addComponent(addbtn)))
-                                .addGroup(jp3Layout.createSequentialGroup()
-                                    .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel8)
-                                        .addComponent(jLabel7))
-                                    .addGap(28, 28, 28)
-                                    .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jp2Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2Layout.createSequentialGroup()
+                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel7))
+                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jp2Layout.createSequentialGroup()
+                                        .addGap(28, 28, 28)
                                         .addComponent(rolecbx, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(passwordtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addGap(100, 100, 100))
+                                    .addGroup(jp2Layout.createSequentialGroup()
+                                        .addGap(29, 29, 29)
+                                        .addComponent(passwordtxt))))
+                            .addGroup(jp2Layout.createSequentialGroup()
+                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jp2Layout.createSequentialGroup()
+                                        .addComponent(jButton1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(clearbtn))
+                                    .addGroup(jp2Layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(updatebtn)))
+                                .addGap(18, 18, 18)
+                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(deletebtn)
+                                    .addComponent(addbtn, javax.swing.GroupLayout.Alignment.TRAILING))))
                         .addGap(18, 18, 18)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jp3Layout.createSequentialGroup()
+                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jp2Layout.createSequentialGroup()
                                 .addComponent(jLabel9)
                                 .addGap(27, 27, 27)
                                 .addComponent(searchtxt))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(140, 140, 140))))
         );
-        jp3Layout.setVerticalGroup(
-            jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jp3Layout.createSequentialGroup()
+        jp2Layout.setVerticalGroup(
+            jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jp2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(title_label3)
-                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jp3Layout.createSequentialGroup()
+                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jp2Layout.createSequentialGroup()
                         .addGap(50, 50, 50)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(idtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(nametxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(addresstxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(phonenotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(21, 21, 21)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
                             .addComponent(usernametxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
                             .addComponent(passwordtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
                             .addComponent(rolecbx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(updatebtn)
                             .addComponent(addbtn))
                         .addGap(18, 18, 18)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(clearbtn)
                             .addComponent(deletebtn)
                             .addComponent(jButton1)))
-                    .addGroup(jp3Layout.createSequentialGroup()
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(jp2Layout.createSequentialGroup()
+                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(searchtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel9))
                         .addGap(18, 18, 18)
@@ -751,18 +588,18 @@ public class AdDashboard extends javax.swing.JFrame {
         title_label4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         title_label4.setText("Top-up Approval");
 
-        javax.swing.GroupLayout jp4Layout = new javax.swing.GroupLayout(jp4);
-        jp4.setLayout(jp4Layout);
-        jp4Layout.setHorizontalGroup(
-            jp4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jp4Layout.createSequentialGroup()
+        javax.swing.GroupLayout jp3Layout = new javax.swing.GroupLayout(jp3);
+        jp3.setLayout(jp3Layout);
+        jp3Layout.setHorizontalGroup(
+            jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jp3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(title_label4, javax.swing.GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE)
+                .addComponent(title_label4, javax.swing.GroupLayout.DEFAULT_SIZE, 1022, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jp4Layout.setVerticalGroup(
-            jp4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jp4Layout.createSequentialGroup()
+        jp3Layout.setVerticalGroup(
+            jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jp3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(title_label4)
                 .addContainerGap(489, Short.MAX_VALUE))
@@ -785,11 +622,6 @@ public class AdDashboard extends javax.swing.JFrame {
                     .addGap(3, 3, 3)
                     .addComponent(jp3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGap(3, 3, 3)))
-            .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainLayout.createSequentialGroup()
-                    .addGap(3, 3, 3)
-                    .addComponent(jp4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGap(3, 3, 3)))
         );
         mainLayout.setVerticalGroup(
             mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -803,11 +635,6 @@ public class AdDashboard extends javax.swing.JFrame {
                 .addGroup(mainLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(jp3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap()))
-            .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jp4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addContainerGap()))
         );
 
@@ -837,78 +664,32 @@ public class AdDashboard extends javax.swing.JFrame {
         refreshData();
         jp1.setVisible(true);
         jp2.setVisible(false);
+        jp2.setVisible(false);
         jp3.setVisible(false);
-        jp4.setVisible(false);
     }//GEN-LAST:event_tab1MouseClicked
 
     private void tab2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab2MouseClicked
         jp1.setVisible(false);
+        jp2.setVisible(false);
         jp2.setVisible(true);
         jp3.setVisible(false);
-        jp4.setVisible(false);
-        usernameField.setText("");
-        phoneNoField.setText("");
-        pwField.setText("");
-        cPwField.setText("");
     }//GEN-LAST:event_tab2MouseClicked
 
     private void tab3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab3MouseClicked
         jp1.setVisible(false);
         jp2.setVisible(false);
+        jp2.setVisible(false);
         jp3.setVisible(true);
-        jp4.setVisible(false);
     }//GEN-LAST:event_tab3MouseClicked
 
     private void tab4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab4MouseClicked
-        jp1.setVisible(false);
-        jp2.setVisible(false);
-        jp3.setVisible(false);
-        jp4.setVisible(true);
-    }//GEN-LAST:event_tab4MouseClicked
-
-    private void tab5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab5MouseClicked
         JOptionPane.showMessageDialog(this, "Logout successfully!");
         goToLogout();
-    }//GEN-LAST:event_tab5MouseClicked
-
-    private void pwFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pwFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_pwFieldActionPerformed
-
-    private void cPwFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cPwFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cPwFieldActionPerformed
-
-    private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBtnActionPerformed
-        usernameField.setText("");
-        phoneNoField.setText("");
-        pwField.setText("");
-        cPwField.setText("");
-    }//GEN-LAST:event_clearBtnActionPerformed
-
-    private void showPwActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPwActionPerformed
-        if (showPw.isSelected()) {
-            pwField.setEchoChar((char)0);
-        } else {
-            pwField.setEchoChar('*');
-        }
-    }//GEN-LAST:event_showPwActionPerformed
-
-    private void backBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backBtnMouseClicked
-        jp1.setVisible(true);
-        jp2.setVisible(false);
-        jp3.setVisible(false);
-        jp4.setVisible(false);
-    }//GEN-LAST:event_backBtnMouseClicked
-
-    private void phoneNoFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneNoFieldActionPerformed
-        getPhoneNo();
-    }//GEN-LAST:event_phoneNoFieldActionPerformed
+    }//GEN-LAST:event_tab4MouseClicked
 
     private void updatebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatebtnActionPerformed
         try {
-            // Get the new data from the form
-            String newId = idtxt.getText(); // New ID entered by the user
+            String newId = idtxt.getText();
             String name = nametxt.getText();
             String address = addresstxt.getText();
             String phoneno = phonenotxt.getText();
@@ -916,25 +697,33 @@ public class AdDashboard extends javax.swing.JFrame {
             String password = new String(passwordtxt.getPassword());
             String role = rolecbx.getSelectedItem().toString();
 
-            // Validate that a row is selected
             int selectedRow = employeeTable.getSelectedRow();
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(null, "No record selected for editing!");
                 return;
             }
 
-            // Get the original ID from the selected row in the table
-            String originalId = (String) employeeTable.getValueAt(selectedRow, 0);
+            if (newId.trim().isEmpty() || 
+                name.trim().isEmpty() || 
+                address.trim().isEmpty() || 
+                phoneno.trim().isEmpty() || 
+                username.trim().isEmpty() || 
+                password.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please fill in all the fields.");
+                return;
+            }
 
-            // Read all data from the file into a list
+            String originalId = (String) employeeTable.getValueAt(selectedRow, 0); // get id from selected row
+
             BufferedReader br = new BufferedReader(new FileReader("users.txt"));
             ArrayList<String> lines = new ArrayList<>();
             String line;
+            
             while ((line = br.readLine()) != null) {
                 lines.add(line);
             }
             br.close();
-
+            
             // Validate that the new ID does not already exist (except for the original ID)
             for (String existingLine : lines) {
                 String[] data = existingLine.split(";");
@@ -943,34 +732,31 @@ public class AdDashboard extends javax.swing.JFrame {
                     return;
                 }
             }
-
+            
             // Rewrite file with updated record
-            FileWriter fw = new FileWriter("users.txt");
-            for (int i = 0; i < lines.size(); i++) {
-                String existingLine = lines.get(i);
-                String[] data = existingLine.split(";");
-
-                if (idtxt.getText().trim().isEmpty() || nametxt.getText().trim().isEmpty() || addresstxt.getText().trim().isEmpty() || phonenotxt.getText().trim().isEmpty() || usernametxt.getText().trim().isEmpty() || passwordtxt.getText().trim().isEmpty()){
-                    JOptionPane.showMessageDialog(null, "Please fill in the blank space");
-                } else { // Match using the original ID
-                    // Write the updated record with the new ID and other details
-                    fw.write(
-                        newId + ";"
-                        + name + ";"
-                        + address + ";"
-                        + phoneno + ";"
-                        + username + ";"
-                        + password + ";"
-                        + role + ";"
-                        + login.getUsername() + "\n"
-                    );
+            try (FileWriter fw = new FileWriter("users.txt")) {
+                for (String existingLine : lines) {
+                    String[] data = existingLine.split(";");
+                    if (data[0].equals(originalId)) { // Match using the original ID
+                        // Write the updated record
+                        fw.write(
+                                newId + ";"
+                                + name + ";"
+                                + address + ";"
+                                + phoneno + ";"
+                                + username + ";"
+                                + password + ";"
+                                + role + ";"
+                                + login.getUsername() + "\n"
+                        );
+                    } else {
+                        // Write the existing record as-is
+                        fw.write(existingLine + "\n");
+                    }
                 }
             }
-            fw.close();
 
             JOptionPane.showMessageDialog(null, "Record updated successfully!");
-
-            // Refresh the table data
             this.refreshData();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error updating record: " + e.getMessage());
@@ -1050,9 +836,9 @@ public class AdDashboard extends javax.swing.JFrame {
                 String name = data[1].trim();
                 String address = data[2].trim();
                 String phoneno = data[3].trim();
-                String username = data[3].trim();
-                String password = data[4].trim();
-                String role = data[5].trim();
+                String username = data[4].trim();
+                String password = data[5].trim();
+                String role = data[6].trim();
 
                 // Check if any field matches the search text
                 if (id.equalsIgnoreCase(searchText)
@@ -1133,8 +919,8 @@ public class AdDashboard extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         jp1.setVisible(true);
         jp2.setVisible(false);
+        jp2.setVisible(false);
         jp3.setVisible(false);
-        jp4.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void goToLogout(){
@@ -1179,10 +965,6 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel Navigation;
     private javax.swing.JButton addbtn;
     private javax.swing.JTextField addresstxt;
-    private javax.swing.JButton backBtn;
-    private javax.swing.JPasswordField cPwField;
-    private javax.swing.JLabel cPwLabel;
-    private javax.swing.JButton clearBtn;
     private javax.swing.JButton clearbtn;
     private javax.swing.JButton deletebtn;
     private javax.swing.JPanel editAccount;
@@ -1206,7 +988,6 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jp1;
     private javax.swing.JPanel jp2;
     private javax.swing.JPanel jp3;
-    private javax.swing.JPanel jp4;
     private javax.swing.JPanel logOut;
     private javax.swing.JPanel main;
     private java.awt.Menu menu1;
@@ -1217,36 +998,23 @@ public class AdDashboard extends javax.swing.JFrame {
     private java.awt.MenuBar menuBar2;
     private javax.swing.JTextField nametxt;
     private javax.swing.JPasswordField passwordtxt;
-    private javax.swing.JTextField phoneNoField;
-    private javax.swing.JLabel phoneNumberNo;
     private javax.swing.JTextField phonenotxt;
     private javax.swing.JLabel pic;
     private java.awt.PopupMenu popupMenu1;
     private java.awt.PopupMenu popupMenu2;
     private java.awt.PopupMenu popupMenu3;
-    private javax.swing.JPasswordField pwField;
-    private javax.swing.JLabel pwLabel;
-    private javax.swing.JPanel registerAccount;
-    private javax.swing.JButton registerBtn;
     private javax.swing.JComboBox<String> rolecbx;
-    private javax.swing.JComboBox<String> rolesField;
-    private javax.swing.JLabel rolesLabel;
     private javax.swing.JTextField searchtxt;
-    private javax.swing.JCheckBox showPw;
     private javax.swing.JLabel tab1;
     private javax.swing.JLabel tab2;
     private javax.swing.JLabel tab3;
     private javax.swing.JLabel tab4;
-    private javax.swing.JLabel tab5;
     private javax.swing.JLabel title_label;
-    private javax.swing.JLabel title_label1;
     private javax.swing.JLabel title_label2;
     private javax.swing.JLabel title_label3;
     private javax.swing.JLabel title_label4;
     private javax.swing.JPanel topUp;
     private javax.swing.JButton updatebtn;
-    private javax.swing.JTextField usernameField;
-    private javax.swing.JLabel usernameLabel;
     private javax.swing.JTextField usernametxt;
     // End of variables declaration//GEN-END:variables
 }

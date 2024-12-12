@@ -1,0 +1,3 @@
+01;najib;najib;999;customer@test;123;Customer;admin
+02;najib;najib;999;vendor@test;123;Vendor;admin
+03;najib;najib;999;dr@test;123;Delivery Runner;admin

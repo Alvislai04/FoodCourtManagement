@@ -145,19 +145,27 @@
     <Component class="javax.swing.JPasswordField" name="passwordtxt">
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="passwordtxtActionPerformed"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="passwordtxtKeyPressed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="login_btn">
       <Properties>
         <Property name="text" type="java.lang.String" value="Login"/>
+        <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+          <Color id="Hand Cursor"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="login_btnActionPerformed"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="login_btnKeyPressed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="clear_btn">
       <Properties>
         <Property name="text" type="java.lang.String" value="Clear"/>
+        <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+          <Color id="Hand Cursor"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="clear_btnActionPerformed"/>
@@ -176,6 +184,9 @@
     <Component class="javax.swing.JCheckBox" name="showPw">
       <Properties>
         <Property name="text" type="java.lang.String" value="Show Password"/>
+        <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+          <Color id="Default Cursor"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="showPwMouseClicked"/>

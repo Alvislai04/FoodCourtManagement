@@ -1,5 +1,9 @@
 package com.system;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -77,15 +81,27 @@ public class Login extends javax.swing.JFrame {
                 passwordtxtActionPerformed(evt);
             }
         });
+        passwordtxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                passwordtxtKeyPressed(evt);
+            }
+        });
 
         login_btn.setText("Login");
+        login_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         login_btn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 login_btnActionPerformed(evt);
             }
         });
+        login_btn.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                login_btnKeyPressed(evt);
+            }
+        });
 
         clear_btn.setText("Clear");
+        clear_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         clear_btn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clear_btnActionPerformed(evt);
@@ -96,6 +112,7 @@ public class Login extends javax.swing.JFrame {
         noacc_lbl.setText("No account? Kindly seek Administrator for help.");
 
         showPw.setText("Show Password");
+        showPw.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         showPw.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 showPwMouseClicked(evt);
@@ -170,91 +187,103 @@ public class Login extends javax.swing.JFrame {
 
     private void login_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_btnActionPerformed
         try {
-    String[] filenames = {"admin.txt", "users.txt"};
-    boolean found = false;
-    boolean isAdmin = false;
-    boolean isCustomer = false;
-    boolean isVendor = false;
-    boolean isDeliveryRunner = false;
+            String[] filenames = {"admin.txt", "users.txt"};
+            boolean found = false;
+            boolean isAdmin = false;
+            boolean isManager = false;
+            boolean isCustomer = false;
+            boolean isVendor = false;
+            boolean isDeliveryRunner = false;
 
-    String usernameGui = usernametxt.getText();
-    String passwordGui = new String(passwordtxt.getPassword());
+            String usernameGui = usernametxt.getText();
+            String passwordGui = new String(passwordtxt.getPassword());
 
-    for (String filename : filenames) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            String read;
-            
-            while ((read = br.readLine()) != null) {
-                String[] credentials = read.split(";");
-                
-                if (filename.equals("admin.txt")) {
-                    
-                    if (credentials.length >= 2) {
-                        String usernameFile = credentials[0];
-                        String passwordFile = credentials[1];
-                        
-                        if (usernameGui.equals(usernameFile) && passwordGui.equals(passwordFile)) {
-                            found = true;
-                            isAdmin = true;
-                            setUsername(usernameGui);
-                            break;
+            for (String filename : filenames) {
+                try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+                    String read;
+
+                    while ((read = br.readLine()) != null) {
+                        String[] credentials = read.split(";");
+
+                        if (filename.equals("admin.txt")) {
+
+                            if (credentials.length >= 2) {
+                                String usernameFile = credentials[0];
+                                String passwordFile = credentials[1];
+                                String roles = credentials[2];
+
+                                if (usernameGui.equals(usernameFile) && passwordGui.equals(passwordFile) && roles.equals("Admin")) {
+                                    found = true;
+                                    isAdmin = true;
+                                    setUsername(usernameGui);
+                                    break;
+                                } else if (usernameGui.equals(usernameFile) && passwordGui.equals(passwordFile) && roles.equals("Manager")){
+                                    found = true;
+                                    isManager = true;
+                                    setUsername(usernameGui);
+                                    break;
+                                }
+                            }
+                        } else if (filename.equals("users.txt")) {
+
+                            if (credentials.length >= 7) {
+                                String usernameFile = credentials[4];
+                                String passwordFile = credentials[5];
+                                String userType = credentials[6];
+
+                                if (usernameGui.equals(usernameFile) && passwordGui.equals(passwordFile)) {
+                                    found = true;
+                                    setUsername(usernameGui);
+
+                                    if ("Customer".equalsIgnoreCase(userType)) {
+                                        isCustomer = true;
+                                    } else if ("Vendor".equalsIgnoreCase(userType)) {
+                                        isVendor = true;
+                                    } else if ("Delivery Runner".equalsIgnoreCase(userType)) {
+                                        isDeliveryRunner = true;
+                                    }
+                                    break;
+                                }
+                            }
                         }
                     }
-                } else if (filename.equals("users.txt")) {
-                    
-                    if (credentials.length >= 7) {
-                        String usernameFile = credentials[4];
-                        String passwordFile = credentials[5];
-                        String userType = credentials[6];
 
-                        if (usernameGui.equals(usernameFile) && passwordGui.equals(passwordFile)) {
-                            found = true;
-                            setUsername(usernameGui);
-
-                            if ("Customer".equalsIgnoreCase(userType)) {
-                                isCustomer = true;
-                            } else if ("Vendor".equalsIgnoreCase(userType)) {
-                                isVendor = true;
-                            } else if ("Delivery Runner".equalsIgnoreCase(userType)) {
-                                isDeliveryRunner = true;
-                            }
-                            break;
-                        }
+                    if (found) {
+                        break;
                     }
                 }
             }
 
             if (found) {
-                break;
+                if (isAdmin) { // Admin
+                    JOptionPane.showMessageDialog(null, "Successfully logged in as Admin");
+                    this.dispose();
+                    new AdDashboard().setVisible(true);
+                } else if (isCustomer) { // Customer
+                    JOptionPane.showMessageDialog(null, "Successfully logged in");
+                    this.dispose();
+                    goToDashboard();
+                } else if (isVendor) { // Vendor
+                    JOptionPane.showMessageDialog(null, "Successfully logged in as Vendor");
+                    this.dispose();
+                    goToVDashboard();
+                } else if (isDeliveryRunner) { // Delivery Runner
+                    JOptionPane.showMessageDialog(null, "Successfully logged in as Delivery Runner");
+                    this.dispose();
+                    goToDrDashboard();
+                } else if (isManager){ // Manager
+                    JOptionPane.showMessageDialog(null, "Sucessfully log in as Manager");
+                    this.dispose();
+                    goToMDashboard();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Invalid login!");
+                passwordtxt.setText("");
             }
-        }
-    }
-    
-    if (found) {
-        if (isAdmin) { // Admin
-            JOptionPane.showMessageDialog(null, "Successfully logged in as Admin");
-            this.dispose();
-            new AdDashboard().setVisible(true);
-        } else if (isCustomer) { // Customer
-            JOptionPane.showMessageDialog(null, "Successfully logged in");
-            this.dispose();
-            goToDashboard();
-        } else if (isVendor) { // Vendor
-            JOptionPane.showMessageDialog(null, "Successfully logged in as Vendor");
-            this.dispose();
-            goToVDashboard();
-        } else if (isDeliveryRunner) { // Delivery Runner
-            JOptionPane.showMessageDialog(null, "Successfully logged in as Delivery Runner");
-            this.dispose();
-            goToDrDashboard();
-        }
-    } else {
-        JOptionPane.showMessageDialog(null, "Invalid login!");
-    }
 
-} catch (IOException e) {
-    JOptionPane.showMessageDialog(null, e.getMessage());
-}
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
     }//GEN-LAST:event_login_btnActionPerformed
 
     private void showPwActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPwActionPerformed
@@ -269,27 +298,43 @@ public class Login extends javax.swing.JFrame {
 
     }//GEN-LAST:event_showPwMouseClicked
 
-    private void goToDashboard(){
+    private void login_btnKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_login_btnKeyPressed
+        
+    }//GEN-LAST:event_login_btnKeyPressed
+
+    private void passwordtxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordtxtKeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            login_btn.doClick();
+        }
+    }//GEN-LAST:event_passwordtxtKeyPressed
+
+    private void goToDashboard(){ //Customer Dashboard
         Dashboard usersframe = new Dashboard();
         usersframe.setVisible(true);
         dispose();
     }
     
-    private void goToVDashboard(){
+    private void goToVDashboard(){ // Vendor Dashboard
         VDashboard vendorframe = new VDashboard();
         vendorframe.setVisible(true);
         dispose();
     }
     
-    private void goToDrDashboard(){
+    private void goToDrDashboard(){ // Delivery Runner Dashboard
         DrDashboard drframe = new DrDashboard();
         drframe.setVisible(true);
         dispose();
     }
     
-    private void goToAdminDashboard(){
+    private void goToAdminDashboard(){ // Admin Dashboard
         AdDashboard adminFrame = new AdDashboard();
         adminFrame.setVisible(true);
+        dispose();
+    }
+    
+    private void goToMDashboard(){
+        MDashboard managerFrame = new MDashboard();
+        managerFrame.setVisible(true);
         dispose();
     }
     
@@ -339,4 +384,8 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel username_lbl;
     private javax.swing.JTextField usernametxt;
     // End of variables declaration//GEN-END:variables
+
+    private void login_btnActionPerformed() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

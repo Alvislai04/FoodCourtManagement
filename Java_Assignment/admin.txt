@@ -1,1 +1,2 @@
-admin;admin123
+admin;admin123;Admin
+manager;manager123;Manager

@@ -1,6 +1,8 @@
 // Admin Dashboard
 package com.system;
 
+import java.awt.Color;
+import static java.awt.Color.red;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -117,17 +119,6 @@ public class AdDashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        menuBar1 = new java.awt.MenuBar();
-        menu1 = new java.awt.Menu();
-        menu2 = new java.awt.Menu();
-        menuBar2 = new java.awt.MenuBar();
-        menu3 = new java.awt.Menu();
-        menu4 = new java.awt.Menu();
-        popupMenu1 = new java.awt.PopupMenu();
-        popupMenu2 = new java.awt.PopupMenu();
-        popupMenu3 = new java.awt.PopupMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
         Navigation = new javax.swing.JPanel();
         title_label = new javax.swing.JLabel();
         home = new javax.swing.JPanel();
@@ -172,42 +163,43 @@ public class AdDashboard extends javax.swing.JFrame {
         jp3 = new javax.swing.JPanel();
         title_label4 = new javax.swing.JLabel();
 
-        menu1.setLabel("File");
-        menuBar1.add(menu1);
-
-        menu2.setLabel("Edit");
-        menuBar1.add(menu2);
-
-        menu3.setLabel("File");
-        menuBar2.add(menu3);
-
-        menu4.setLabel("Edit");
-        menuBar2.add(menu4);
-
-        popupMenu1.setLabel("popupMenu1");
-
-        popupMenu2.setLabel("popupMenu2");
-
-        popupMenu3.setLabel("popupMenu3");
-
-        jMenuItem1.setText("jMenuItem1");
-
-        jMenu1.setText("jMenu1");
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(java.awt.Color.gray);
 
-        Navigation.setBackground(new java.awt.Color(153, 153, 153));
+        Navigation.setBackground(java.awt.Color.gray);
 
         title_label.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
         title_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         title_label.setText("Nasty food court");
 
+        home.setBackground(java.awt.Color.gray);
+
+        tab1.setBackground(java.awt.Color.gray);
         tab1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         tab1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tab1.setText("Home");
+        tab1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        tab1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tab1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                tab1MouseMoved(evt);
+            }
+        });
         tab1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tab1MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                tab1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                tab1MouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tab1MousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tab1MouseReleased(evt);
             }
         });
 
@@ -215,19 +207,35 @@ public class AdDashboard extends javax.swing.JFrame {
         home.setLayout(homeLayout);
         homeLayout.setHorizontalGroup(
             homeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tab1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(tab1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         homeLayout.setVerticalGroup(
             homeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(tab1, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
+        editAccount.setBackground(java.awt.Color.gray);
+
         tab2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         tab2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tab2.setText("Create / Edit Account");
+        tab2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        tab2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         tab2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tab2MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                tab2MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                tab2MouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tab2MousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tab2MouseReleased(evt);
             }
         });
 
@@ -242,12 +250,28 @@ public class AdDashboard extends javax.swing.JFrame {
             .addComponent(tab2, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
+        topUp.setBackground(java.awt.Color.gray);
+
         tab3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         tab3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tab3.setText("Top-Up");
+        tab3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        tab3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         tab3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tab3MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                tab3MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                tab3MouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tab3MousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tab3MouseReleased(evt);
             }
         });
 
@@ -262,12 +286,28 @@ public class AdDashboard extends javax.swing.JFrame {
             .addComponent(tab3, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
+        logOut.setBackground(java.awt.Color.gray);
+
         tab4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         tab4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tab4.setText("Logout");
+        tab4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        tab4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         tab4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tab4MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                tab4MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                tab4MouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tab4MousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tab4MouseReleased(evt);
             }
         });
 
@@ -920,6 +960,74 @@ public class AdDashboard extends javax.swing.JFrame {
         jp3.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void tab1MouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab1MouseMoved
+
+    }//GEN-LAST:event_tab1MouseMoved
+
+    private void tab1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab1MouseEntered
+        home.setBackground(Color.LIGHT_GRAY);
+    }//GEN-LAST:event_tab1MouseEntered
+
+    private void tab1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab1MouseExited
+        home.setBackground(Color.GRAY);
+    }//GEN-LAST:event_tab1MouseExited
+
+    private void tab2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab2MouseEntered
+        editAccount.setBackground(Color.LIGHT_GRAY);
+    }//GEN-LAST:event_tab2MouseEntered
+
+    private void tab2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab2MouseExited
+        editAccount.setBackground(Color.GRAY);
+    }//GEN-LAST:event_tab2MouseExited
+
+    private void tab3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab3MouseEntered
+        topUp.setBackground(Color.LIGHT_GRAY);
+    }//GEN-LAST:event_tab3MouseEntered
+
+    private void tab3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab3MouseExited
+        topUp.setBackground(Color.GRAY);
+    }//GEN-LAST:event_tab3MouseExited
+
+    private void tab4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab4MouseEntered
+        logOut.setBackground(Color.LIGHT_GRAY);
+    }//GEN-LAST:event_tab4MouseEntered
+
+    private void tab4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab4MouseExited
+        logOut.setBackground(Color.GRAY);
+    }//GEN-LAST:event_tab4MouseExited
+
+    private void tab1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab1MousePressed
+        home.setBackground(Color.DARK_GRAY);
+    }//GEN-LAST:event_tab1MousePressed
+
+    private void tab1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab1MouseReleased
+        home.setBackground(Color.GRAY);
+    }//GEN-LAST:event_tab1MouseReleased
+
+    private void tab2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab2MousePressed
+        editAccount.setBackground(Color.DARK_GRAY);
+    }//GEN-LAST:event_tab2MousePressed
+
+    private void tab2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab2MouseReleased
+        editAccount.setBackground(Color.GRAY);
+    }//GEN-LAST:event_tab2MouseReleased
+
+    private void tab3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab3MousePressed
+        topUp.setBackground(Color.DARK_GRAY);
+    }//GEN-LAST:event_tab3MousePressed
+
+    private void tab3MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab3MouseReleased
+        topUp.setBackground(Color.GRAY);
+    }//GEN-LAST:event_tab3MouseReleased
+
+    private void tab4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab4MousePressed
+        logOut.setBackground(Color.DARK_GRAY);
+    }//GEN-LAST:event_tab4MousePressed
+
+    private void tab4MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab4MouseReleased
+        logOut.setBackground(Color.GRAY);
+    }//GEN-LAST:event_tab4MouseReleased
+    
     private void goToLogout(){
         Login loginframe = new Login();
         loginframe.setVisible(true);
@@ -978,8 +1086,6 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel jp1;
@@ -987,19 +1093,10 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jp3;
     private javax.swing.JPanel logOut;
     private javax.swing.JPanel main;
-    private java.awt.Menu menu1;
-    private java.awt.Menu menu2;
-    private java.awt.Menu menu3;
-    private java.awt.Menu menu4;
-    private java.awt.MenuBar menuBar1;
-    private java.awt.MenuBar menuBar2;
     private javax.swing.JTextField nametxt;
     private javax.swing.JPasswordField passwordtxt;
     private javax.swing.JTextField phonenotxt;
     private javax.swing.JLabel pic;
-    private java.awt.PopupMenu popupMenu1;
-    private java.awt.PopupMenu popupMenu2;
-    private java.awt.PopupMenu popupMenu3;
     private javax.swing.JComboBox<String> rolecbx;
     private javax.swing.JTextField searchtxt;
     private javax.swing.JLabel tab1;

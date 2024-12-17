@@ -1,3 +1,4 @@
+com\system\MDashboard.class
 com\system\AdDashboard$10.class
 com\system\AdDashboard$3.class
 com\system\DrDashboard$1.class
@@ -10,13 +11,16 @@ com\system\Dashboard$2.class
 com\system\VDashboard$1.class
 com\system\AdDashboard$13.class
 com\system\AdDashboard$6.class
+com\system\MDashboard$1.class
 com\system\AdDashboard$1.class
 com\system\AdDashboard$4.class
 com\system\AdDashboard$9.class
 com\system\Dashboard.class
+com\system\Login$7.class
 com\system\AdDashboard$2.class
 com\system\DrDashboard$2.class
 com\system\Login$3.class
+com\system\Login$8.class
 com\system\Login.class
 com\system\VDashboard$2.class
 com\system\AdDashboard$7.class
@@ -29,3 +33,4 @@ com\system\Dashboard$1.class
 com\system\AdDashboard$11.class
 com\system\AdDashboard$5.class
 com\system\VDashboard.class
+com\system\MDashboard$2.class

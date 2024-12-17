@@ -1,4 +1,4 @@
-
+// Admin Dashboard
 package com.system;
 
 import java.io.BufferedReader;
@@ -11,9 +11,6 @@ import javax.swing.table.DefaultTableModel;
 
 public class AdDashboard extends javax.swing.JFrame {
 
-    /**
-     * Creates new form AdDashboard
-     */
     Login login = new Login();
     
     private String username;

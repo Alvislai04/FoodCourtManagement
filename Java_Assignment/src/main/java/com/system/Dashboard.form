@@ -23,24 +23,76 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="western" alignment="0" pref="230" max="32767" attributes="0"/>
+                  <Component id="logo4" alignment="0" max="32767" attributes="0"/>
+                  <Component id="malay" alignment="0" max="32767" attributes="0"/>
+                  <Component id="logo1" alignment="0" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="logo5" max="32767" attributes="0"/>
+                  <Component id="logo2" alignment="0" max="32767" attributes="0"/>
+                  <Component id="chinese" alignment="0" max="32767" attributes="0"/>
+                  <Component id="japanese" pref="230" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="logo3" max="32767" attributes="0"/>
+                  <Component id="indian" pref="230" max="32767" attributes="0"/>
+                  <Component id="logo6" alignment="0" max="32767" attributes="0"/>
+                  <Component id="drink" alignment="0" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="556" max="32767" attributes="0"/>
+              <Component id="logo" min="-2" pref="100" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="jLabel1" min="-2" pref="522" max="-2" attributes="0"/>
+              <EmptySpace pref="54" max="32767" attributes="0"/>
               <Component id="logoutBtn" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="logo" max="32767" attributes="0"/>
+                  <Component id="jLabel1" alignment="0" pref="100" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                      <Component id="logoutBtn" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="logo1" alignment="0" min="-2" pref="230" max="-2" attributes="0"/>
+                  <Component id="logo3" alignment="3" min="-2" pref="230" max="-2" attributes="0"/>
+                  <Component id="logo2" alignment="3" min="-2" pref="230" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="malay" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="chinese" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="indian" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="logo4" alignment="3" min="-2" pref="230" max="-2" attributes="0"/>
+                  <Component id="logo5" alignment="3" min="-2" pref="230" max="-2" attributes="0"/>
+                  <Component id="logo6" alignment="3" min="-2" pref="230" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel1" alignment="3" min="-2" pref="61" max="-2" attributes="0"/>
-                  <Component id="logoutBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="western" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="japanese" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="drink" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="475" max="32767" attributes="0"/>
+              <EmptySpace pref="26" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -51,7 +103,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="36" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="User&apos;s dashboard"/>
+        <Property name="text" type="java.lang.String" value="Welcome to Nasty Food Court"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="logoutBtn">
@@ -61,6 +113,94 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="logoutBtnActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="logo4">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Western"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="western">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Western"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="westernActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="logo">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Logo"/>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="logo2">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Chinese"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="chinese">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Chinese"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chineseActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="logo1">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Malay"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="malay">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Malay"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="malayActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="logo3">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Indian"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="logo5">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Japanese"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="logo6">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Drink"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="indian">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Indian"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="indianActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="japanese">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Japanese"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="japaneseActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="drink">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Drink"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

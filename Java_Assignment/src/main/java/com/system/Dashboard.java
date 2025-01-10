@@ -141,6 +141,11 @@ public class Dashboard extends javax.swing.JFrame {
         });
 
         drink.setText("Drink");
+        drink.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                drinkActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -216,23 +221,39 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void westernActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_westernActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+        new Western().setVisible(true);
     }//GEN-LAST:event_westernActionPerformed
 
     private void chineseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chineseActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+        new Chinese().setVisible(true);
     }//GEN-LAST:event_chineseActionPerformed
 
     private void malayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_malayActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+        new Malay().setVisible(true);
     }//GEN-LAST:event_malayActionPerformed
 
     private void indianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indianActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+        new Indian().setVisible(true);
     }//GEN-LAST:event_indianActionPerformed
 
     private void japaneseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_japaneseActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+        new Japanese().setVisible(true);
     }//GEN-LAST:event_japaneseActionPerformed
+
+    private void drinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drinkActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        new Drink().setVisible(true);
+    }//GEN-LAST:event_drinkActionPerformed
 
     private void goToLogout(){
         Login loginframe = new Login();

@@ -1,5 +1,7 @@
 // Manager's Dashboard
-package com.system;
+package system.Manager;
+
+import com.system.Login;
 
 public class MDashboard extends javax.swing.JFrame {
 

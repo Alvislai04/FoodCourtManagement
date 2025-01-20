@@ -1,8 +1,12 @@
 package com.system;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
+// LOGIN PAGE
+
+import system.Manager.MDashboard;
+import system.Vendor.VDashboard;
+import system.DeliveryRunner.DrDashboard;
+import system.customer.Dashboard;
+import system.admin.AdDashboard;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -16,6 +20,8 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         
         this.pack();
+        this.setLocationRelativeTo(null);
+
     }
 
     public void setUsername(String username){
@@ -33,7 +39,7 @@ public class Login extends javax.swing.JFrame {
         jFrame1 = new javax.swing.JFrame();
         jFrame2 = new javax.swing.JFrame();
         jPopupMenu1 = new javax.swing.JPopupMenu();
-        title_label = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         username_lbl = new javax.swing.JLabel();
         password_lbl = new javax.swing.JLabel();
         passwordtxt = new javax.swing.JPasswordField();
@@ -42,6 +48,10 @@ public class Login extends javax.swing.JFrame {
         noacc_lbl = new javax.swing.JLabel();
         usernametxt = new javax.swing.JTextField();
         showPw = new javax.swing.JCheckBox();
+        title_lbl1 = new javax.swing.JLabel();
+        title_lbl2 = new javax.swing.JLabel();
+        title_lbl3 = new javax.swing.JLabel();
+        loginCover = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -66,15 +76,23 @@ public class Login extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setIconImages(null);
+        setLocation(new java.awt.Point(0, 0));
+        setMaximumSize(new java.awt.Dimension(720, 520));
+        setResizable(false);
 
-        title_label.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
-        title_label.setText("Nasty Food Court");
+        jPanel1.setBackground(new java.awt.Color(254, 254, 254));
+        jPanel1.setLayout(null);
 
-        username_lbl.setFont(new java.awt.Font("Tw Cen MT", 0, 18)); // NOI18N
-        username_lbl.setText("Username:");
+        username_lbl.setFont(new java.awt.Font("Tw Cen MT Condensed", 1, 18)); // NOI18N
+        username_lbl.setText("Username");
+        jPanel1.add(username_lbl);
+        username_lbl.setBounds(50, 190, 80, 20);
 
-        password_lbl.setFont(new java.awt.Font("Tw Cen MT", 0, 18)); // NOI18N
-        password_lbl.setText("Password:");
+        password_lbl.setFont(new java.awt.Font("Tw Cen MT Condensed", 1, 18)); // NOI18N
+        password_lbl.setText("Password");
+        jPanel1.add(password_lbl);
+        password_lbl.setBounds(50, 270, 71, 20);
 
         passwordtxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -86,6 +104,8 @@ public class Login extends javax.swing.JFrame {
                 passwordtxtKeyPressed(evt);
             }
         });
+        jPanel1.add(passwordtxt);
+        passwordtxt.setBounds(50, 292, 270, 30);
 
         login_btn.setText("Login");
         login_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -99,6 +119,8 @@ public class Login extends javax.swing.JFrame {
                 login_btnKeyPressed(evt);
             }
         });
+        jPanel1.add(login_btn);
+        login_btn.setBounds(250, 370, 72, 23);
 
         clear_btn.setText("Clear");
         clear_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -107,10 +129,17 @@ public class Login extends javax.swing.JFrame {
                 clear_btnActionPerformed(evt);
             }
         });
+        jPanel1.add(clear_btn);
+        clear_btn.setBounds(50, 370, 72, 23);
 
-        noacc_lbl.setFont(new java.awt.Font("Segoe UI Symbol", 0, 12)); // NOI18N
+        noacc_lbl.setFont(new java.awt.Font("Tw Cen MT", 1, 12)); // NOI18N
         noacc_lbl.setText("No account? Kindly seek Administrator for help.");
+        jPanel1.add(noacc_lbl);
+        noacc_lbl.setBounds(50, 420, 252, 14);
+        jPanel1.add(usernametxt);
+        usernametxt.setBounds(50, 220, 270, 30);
 
+        showPw.setFont(new java.awt.Font("Tw Cen MT Condensed", 1, 14)); // NOI18N
         showPw.setText("Show Password");
         showPw.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         showPw.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -123,54 +152,48 @@ public class Login extends javax.swing.JFrame {
                 showPwActionPerformed(evt);
             }
         });
+        jPanel1.add(showPw);
+        showPw.setBounds(50, 330, 120, 20);
+
+        title_lbl1.setFont(new java.awt.Font("Segoe UI Black", 0, 48)); // NOI18N
+        title_lbl1.setForeground(new java.awt.Color(0, 0, 0));
+        title_lbl1.setText("TAS");
+        jPanel1.add(title_lbl1);
+        title_lbl1.setBounds(82, 60, 94, 66);
+
+        title_lbl2.setBackground(new java.awt.Color(0, 0, 0));
+        title_lbl2.setFont(new java.awt.Font("Segoe UI Black", 0, 48)); // NOI18N
+        title_lbl2.setForeground(new java.awt.Color(153, 89, 16));
+        title_lbl2.setText("TIES");
+        jPanel1.add(title_lbl2);
+        title_lbl2.setBounds(178, 60, 110, 66);
+
+        title_lbl3.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        title_lbl3.setForeground(new java.awt.Color(0, 0, 0));
+        title_lbl3.setText("Food Court");
+        jPanel1.add(title_lbl3);
+        title_lbl3.setBounds(140, 100, 100, 60);
+
+        loginCover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/loginCover.jpg"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(152, 152, 152)
-                        .addComponent(title_label))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(91, 91, 91)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(passwordtxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(password_lbl, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(username_lbl, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(usernametxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 494, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(noacc_lbl, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(showPw)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(clear_btn)
-                                .addGap(18, 18, 18)
-                                .addComponent(login_btn)))))
-                .addGap(86, 86, 86))
+                .addGap(0, 0, 0)
+                .addComponent(loginCover)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addComponent(title_label)
-                .addGap(19, 19, 19)
-                .addComponent(username_lbl)
-                .addGap(10, 10, 10)
-                .addComponent(usernametxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(password_lbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(passwordtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(showPw)
-                    .addComponent(clear_btn)
-                    .addComponent(login_btn))
-                .addGap(18, 18, 18)
-                .addComponent(noacc_lbl)
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(loginCover))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -325,13 +348,7 @@ public class Login extends javax.swing.JFrame {
         drframe.setVisible(true);
         dispose();
     }
-    
-    private void goToAdminDashboard(){ // Admin Dashboard
-        AdDashboard adminFrame = new AdDashboard();
-        adminFrame.setVisible(true);
-        dispose();
-    }
-    
+        
     private void goToMDashboard(){
         MDashboard managerFrame = new MDashboard();
         managerFrame.setVisible(true);
@@ -374,13 +391,17 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton clear_btn;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JLabel loginCover;
     private javax.swing.JButton login_btn;
     private javax.swing.JLabel noacc_lbl;
     private javax.swing.JLabel password_lbl;
     private javax.swing.JPasswordField passwordtxt;
     private javax.swing.JCheckBox showPw;
-    private javax.swing.JLabel title_label;
+    private javax.swing.JLabel title_lbl1;
+    private javax.swing.JLabel title_lbl2;
+    private javax.swing.JLabel title_lbl3;
     private javax.swing.JLabel username_lbl;
     private javax.swing.JTextField usernametxt;
     // End of variables declaration//GEN-END:variables

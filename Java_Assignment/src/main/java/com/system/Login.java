@@ -156,7 +156,6 @@ public class Login extends javax.swing.JFrame {
         showPw.setBounds(50, 330, 120, 20);
 
         title_lbl1.setFont(new java.awt.Font("Segoe UI Black", 0, 48)); // NOI18N
-        title_lbl1.setForeground(new java.awt.Color(0, 0, 0));
         title_lbl1.setText("TAS");
         jPanel1.add(title_lbl1);
         title_lbl1.setBounds(82, 60, 94, 66);
@@ -169,10 +168,9 @@ public class Login extends javax.swing.JFrame {
         title_lbl2.setBounds(178, 60, 110, 66);
 
         title_lbl3.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
-        title_lbl3.setForeground(new java.awt.Color(0, 0, 0));
         title_lbl3.setText("Food Court");
         jPanel1.add(title_lbl3);
-        title_lbl3.setBounds(140, 100, 100, 60);
+        title_lbl3.setBounds(140, 100, 130, 60);
 
         loginCover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/loginCover.jpg"))); // NOI18N
 

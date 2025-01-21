@@ -253,13 +253,13 @@ public class DrDashboard extends javax.swing.JFrame {
         welcometxt.setText("WELCOME,");
         welcometxt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         welcomePanel.add(welcometxt);
-        welcometxt.setBounds(49, 0, 202, 460);
+        welcometxt.setBounds(49, 0, 196, 460);
 
         usernametxt.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
         usernametxt.setText("username");
         usernametxt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         welcomePanel.add(usernametxt);
-        usernametxt.setBounds(269, 0, 173, 460);
+        usernametxt.setBounds(269, 0, 171, 460);
 
         notificationsPanel.setBackground(new java.awt.Color(102, 255, 102));
 

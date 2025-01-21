@@ -47,10 +47,10 @@ public class AdDashboard extends javax.swing.JFrame {
 
             @Override
             public void onDelete(int row) {
-                if(topupTable.isEditing()){
-                    topupTable.getCellEditor().stopCellEditing();
+                if(employeeTable.isEditing()){
+                    employeeTable.getCellEditor().stopCellEditing();
                 }
-                DefaultTableModel model = (DefaultTableModel) topupTable.getModel();
+                DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
                 model.removeRow(row);
             }
 
@@ -58,24 +58,24 @@ public class AdDashboard extends javax.swing.JFrame {
             public void onView(int row) {
                 System.out.println("View row: " + row);
             }
-            
+        };
+        
+        TopupTableActionEvent topupEvent = new TopupTableActionEvent(){
             @Override
             public void onApprove(int row) {
-                System.out.println("Edit row: " + row);
+                System.out.println("Approve row: " + row);
             }
             
             @Override
             public void onDecline(int row) {
-                System.out.println("Edit row: " + row);
+                System.out.println("Decline row: " + row);
             }
         };
-        
-        
-        
+
         employeeTable.getColumnModel().getColumn(7).setCellRenderer(new TableActionCellRender());
         employeeTable.getColumnModel().getColumn(7).setCellEditor(new TableActionCellEditor(event));
-        topupTable.getColumnModel().getColumn(6).setCellRenderer(new TableActionCellRender());
-        topupTable.getColumnModel().getColumn(6).setCellEditor(new TableActionCellEditor(event));
+        topupTable.getColumnModel().getColumn(6).setCellRenderer(new TopupTableActionCellRender());
+        topupTable.getColumnModel().getColumn(6).setCellEditor(new TopupTableActionCellEditor(topupEvent));
         Navigation.setVisible(false);
         jp1.setVisible(true);
         jp2.setVisible(false);
@@ -217,7 +217,7 @@ public class AdDashboard extends javax.swing.JFrame {
 
         title_label.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
         title_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        title_label.setText("Tasties food court");
+        title_label.setText("Navigation");
 
         home.setBackground(java.awt.Color.gray);
 
@@ -479,7 +479,7 @@ public class AdDashboard extends javax.swing.JFrame {
         jp2.setPreferredSize(new java.awt.Dimension(1300, 563));
 
         title_label3.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
-        title_label3.setText("Edit account details");
+        title_label3.setText("Manage account details");
 
         updatebtn.setText("Update");
         updatebtn.addActionListener(new java.awt.event.ActionListener() {
@@ -513,6 +513,7 @@ public class AdDashboard extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        employeeTable.setMinimumSize(new java.awt.Dimension(120, 700));
         employeeTable.setRowHeight(40);
         jScrollPane1.setViewportView(employeeTable);
         if (employeeTable.getColumnModel().getColumnCount() > 0) {
@@ -694,7 +695,7 @@ public class AdDashboard extends javax.swing.JFrame {
         );
 
         title_label4.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
-        title_label4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        title_label4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         title_label4.setText("Top-up Approval");
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image-40x35.jpg"))); // NOI18N
@@ -743,14 +744,12 @@ public class AdDashboard extends javax.swing.JFrame {
             .addGroup(jp3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jp3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1266, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1266, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jp3Layout.createSequentialGroup()
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(title_label4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(title_label4)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jp3Layout.setVerticalGroup(
             jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -38,7 +38,6 @@ public class AdDashboard extends javax.swing.JFrame {
     public AdDashboard() {
         initComponents();
         
-//        Need to add new topupevent here
         TableActionEvent event = new TableActionEvent(){
             @Override
             public void onEdit(int row) {
@@ -529,6 +528,12 @@ public class AdDashboard extends javax.swing.JFrame {
 
         jLabel5.setText("Phone No.:");
 
+        phonenotxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                phonenotxtActionPerformed(evt);
+            }
+        });
+
         searchtxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchtxtKeyReleased(evt);
@@ -971,33 +976,43 @@ public class AdDashboard extends javax.swing.JFrame {
                 (usernametxt == null || usernametxt.getText().trim().isEmpty()) ||
                 (passwordtxt == null || new String(passwordtxt.getPassword()).trim().isEmpty())) {
                 JOptionPane.showMessageDialog(null, "Please fill in all the fields!");
-            } else {
-                // Write data to the file
-                fw.write(
-                    idtxt.getText().trim() + ";"
-                    + nametxt.getText().trim() + ";"
-                    + addresstxt.getText().trim() + ";"
-                    + phonenotxt.getText().trim() + ";"
-                    + usernametxt.getText().trim() + ";"
-                    + new String(passwordtxt.getPassword()).trim() + ";"
-                    + rolecbx.getSelectedItem().toString() + ";"
-                    + login.getUsername() + "\n"
-                );
-                fw.close();
-
-                JOptionPane.showMessageDialog(null, "Successfully added the data!");
-                refreshData();
-
-                // Reset all fields
-                idtxt.setEnabled(true);
-                idtxt.setText("");
-                nametxt.setText("");
-                addresstxt.setText("");
-                phonenotxt.setText("");
-                usernametxt.setText("");
-                passwordtxt.setText("");
-                rolecbx.setSelectedIndex(0);
+                return;
             }
+
+            // Validate that the phone number is numeric
+            String phoneNumber = phonenotxt.getText().trim();
+            try {
+                Integer.parseInt(phoneNumber);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Phone number must be numeric!");
+                return;
+            }
+
+            // Write data to the file
+            fw.write(
+                idtxt.getText().trim() + ";"
+                + nametxt.getText().trim() + ";"
+                + addresstxt.getText().trim() + ";"
+                + phoneNumber + ";"
+                + usernametxt.getText().trim() + ";"
+                + new String(passwordtxt.getPassword()).trim() + ";"
+                + rolecbx.getSelectedItem().toString() + ";"
+                + login.getUsername() + "\n"
+            );
+            fw.close();
+
+            JOptionPane.showMessageDialog(null, "Successfully added the data!");
+            refreshData();
+
+            // Reset all fields
+            idtxt.setEnabled(true);
+            idtxt.setText("");
+            nametxt.setText("");
+            addresstxt.setText("");
+            phonenotxt.setText("");
+            usernametxt.setText("");
+            passwordtxt.setText("");
+            rolecbx.setSelectedIndex(0);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
@@ -1192,6 +1207,10 @@ public class AdDashboard extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error updating record: " + e.getMessage());
         }
     }//GEN-LAST:event_updatebtnActionPerformed
+
+    private void phonenotxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phonenotxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_phonenotxtActionPerformed
     
     public void goToLogout(){
         Login loginframe = new Login();

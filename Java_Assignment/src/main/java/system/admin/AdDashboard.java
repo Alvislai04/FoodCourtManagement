@@ -37,6 +37,8 @@ public class AdDashboard extends javax.swing.JFrame {
 
     public AdDashboard() {
         initComponents();
+        
+//        Need to add new topupevent here
         TableActionEvent event = new TableActionEvent(){
             @Override
             public void onEdit(int row) {
@@ -57,7 +59,19 @@ public class AdDashboard extends javax.swing.JFrame {
                 System.out.println("View row: " + row);
             }
             
+            @Override
+            public void onApprove(int row) {
+                System.out.println("Edit row: " + row);
+            }
+            
+            @Override
+            public void onDecline(int row) {
+                System.out.println("Edit row: " + row);
+            }
         };
+        
+        
+        
         employeeTable.getColumnModel().getColumn(7).setCellRenderer(new TableActionCellRender());
         employeeTable.getColumnModel().getColumn(7).setCellEditor(new TableActionCellEditor(event));
         topupTable.getColumnModel().getColumn(6).setCellRenderer(new TableActionCellRender());
@@ -203,7 +217,7 @@ public class AdDashboard extends javax.swing.JFrame {
 
         title_label.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
         title_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        title_label.setText("Nasty food court");
+        title_label.setText("Tasties food court");
 
         home.setBackground(java.awt.Color.gray);
 
@@ -756,7 +770,7 @@ public class AdDashboard extends javax.swing.JFrame {
             mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainLayout.createSequentialGroup()
                 .addComponent(jp1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainLayout.createSequentialGroup()
                     .addGap(3, 3, 3)

@@ -1,4 +1,4 @@
-// Delivery Runner Dashboard
+  // Delivery Runner Dashboard
 package system.DeliveryRunner;
 
 import com.system.Login;
@@ -8,10 +8,14 @@ public class DrDashboard extends javax.swing.JFrame {
     Color DefaultColor, ClickedColor;
     
     Login Login = new Login();
+    
 
     public DrDashboard() {
         initComponents();
         usernametxt.setText(Login.getUsername());
+        
+        this.setSize(776, 496);
+        this.setResizable(false);
         
         DefaultColor = new Color(153,89,16);
         ClickedColor = new Color(0,0,0);

@@ -7,6 +7,9 @@ public class MDashboard extends javax.swing.JFrame {
 
     public MDashboard() {
         initComponents();
+        
+        this.setSize(798, 417);
+        this.setResizable(false);
     }
 
     @SuppressWarnings("unchecked")

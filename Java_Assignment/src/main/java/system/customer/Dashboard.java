@@ -4,6 +4,11 @@
  */
 package system.customer;
 
+import com.system.Login;
+import java.awt.Color;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author nickkhawchunmin
@@ -15,6 +20,31 @@ public class Dashboard extends javax.swing.JFrame {
      */
     public Dashboard() {
         initComponents();
+        this.setLocationRelativeTo(null);//to center the gui form
+        this.pack();//to make gui full screen
+        
+        this.setSize(801, 561);// Set the size of the frame
+        this.setResizable(false);// Prevent the frame from being resizable
+        
+        OrderTab.setBackground(Color.black);//set OrderTab to black and order Opened after login
+        
+        ImageIcon img1 = new ImageIcon(getClass().getResource("/malay.jpg"));
+        Image scaledImage1 = img1.getImage().getScaledInstance(145, 145, Image.SCALE_SMOOTH);//Width: 145px, Height: 145px
+        ImageIcon scaledIcon1 = new ImageIcon(scaledImage1);
+        logo1.setText("");//remove the text
+        logo1.setIcon(scaledIcon1);//get the image
+        
+        ImageIcon img2 = new ImageIcon(getClass().getResource("/chinese.jpg"));
+        Image scaledImage2 = img2.getImage().getScaledInstance(145, 145, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon2 = new ImageIcon(scaledImage2);
+        logo2.setText("");
+        logo2.setIcon(scaledIcon2);
+        
+        ImageIcon img3 = new ImageIcon(getClass().getResource("/indian.jpg"));
+        Image scaledImage3 = img3.getImage().getScaledInstance(145, 145, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon3 = new ImageIcon(scaledImage3);
+        logo3.setText("");
+        logo3.setIcon(scaledIcon3);
     }
 
     /**
@@ -26,22 +56,346 @@ public class Dashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        title = new javax.swing.JPanel();
+        title_lbl1 = new javax.swing.JLabel();
+        title_lbl2 = new javax.swing.JLabel();
+        menubar = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        OrderTab = new javax.swing.JLabel();
+        OrderStatusTab = new javax.swing.JLabel();
+        OrderHistoryTab = new javax.swing.JLabel();
+        CommentTab = new javax.swing.JLabel();
+        logout = new javax.swing.JButton();
+        line = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        OrderPanel = new javax.swing.JPanel();
+        logo1 = new javax.swing.JLabel();
+        logo2 = new javax.swing.JLabel();
+        logo3 = new javax.swing.JLabel();
+        jScrollBar1 = new javax.swing.JScrollBar();
+        OrderStatusPanel = new javax.swing.JPanel();
+        OrderHistoryPanel = new javax.swing.JPanel();
+        CommentPanel = new javax.swing.JPanel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        title.setBackground(new java.awt.Color(0, 0, 0));
+
+        title_lbl1.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
+        title_lbl1.setForeground(new java.awt.Color(255, 255, 255));
+        title_lbl1.setText("TAS");
+
+        title_lbl2.setBackground(new java.awt.Color(0, 0, 0));
+        title_lbl2.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
+        title_lbl2.setForeground(new java.awt.Color(153, 89, 16));
+        title_lbl2.setText("TIES");
+
+        javax.swing.GroupLayout titleLayout = new javax.swing.GroupLayout(title);
+        title.setLayout(titleLayout);
+        titleLayout.setHorizontalGroup(
+            titleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(titleLayout.createSequentialGroup()
+                .addComponent(title_lbl1)
+                .addGap(1, 1, 1)
+                .addComponent(title_lbl2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        titleLayout.setVerticalGroup(
+            titleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(titleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(title_lbl1)
+                .addComponent(title_lbl2))
+        );
+
+        menubar.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Dashboard");
+
+        OrderTab.setBackground(new java.awt.Color(153, 89, 16));
+        OrderTab.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        OrderTab.setForeground(new java.awt.Color(255, 255, 255));
+        OrderTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        OrderTab.setText("Order");
+        OrderTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        OrderTab.setOpaque(true);
+        OrderTab.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                OrderTabMousePressed(evt);
+            }
+        });
+
+        OrderStatusTab.setBackground(new java.awt.Color(153, 89, 16));
+        OrderStatusTab.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        OrderStatusTab.setForeground(new java.awt.Color(255, 255, 255));
+        OrderStatusTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        OrderStatusTab.setText("Order Status");
+        OrderStatusTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        OrderStatusTab.setOpaque(true);
+        OrderStatusTab.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                OrderStatusTabMousePressed(evt);
+            }
+        });
+
+        OrderHistoryTab.setBackground(new java.awt.Color(153, 89, 16));
+        OrderHistoryTab.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        OrderHistoryTab.setForeground(new java.awt.Color(255, 255, 255));
+        OrderHistoryTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        OrderHistoryTab.setText("Order History");
+        OrderHistoryTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        OrderHistoryTab.setOpaque(true);
+        OrderHistoryTab.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                OrderHistoryTabMousePressed(evt);
+            }
+        });
+
+        CommentTab.setBackground(new java.awt.Color(153, 89, 16));
+        CommentTab.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        CommentTab.setForeground(new java.awt.Color(255, 255, 255));
+        CommentTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        CommentTab.setText("Comment");
+        CommentTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        CommentTab.setOpaque(true);
+        CommentTab.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                CommentTabMousePressed(evt);
+            }
+        });
+
+        logout.setText("Logout");
+        logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout menubarLayout = new javax.swing.GroupLayout(menubar);
+        menubar.setLayout(menubarLayout);
+        menubarLayout.setHorizontalGroup(
+            menubarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menubarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(menubarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(CommentTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(OrderHistoryTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(OrderStatusTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(OrderTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(menubarLayout.createSequentialGroup()
+                .addComponent(logout)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        menubarLayout.setVerticalGroup(
+            menubarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menubarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(OrderTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(OrderStatusTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(OrderHistoryTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(CommentTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(logout)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        line.setBackground(new java.awt.Color(0, 0, 0));
+
+        javax.swing.GroupLayout lineLayout = new javax.swing.GroupLayout(line);
+        line.setLayout(lineLayout);
+        lineLayout.setHorizontalGroup(
+            lineLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+        lineLayout.setVerticalGroup(
+            lineLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(new javax.swing.OverlayLayout(jPanel1));
+
+        OrderPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        logo1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        logo1.setText("Malay");
+        logo1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        logo2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        logo2.setText("Chinese");
+        logo2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        logo3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        logo3.setText("Indian");
+        logo3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        javax.swing.GroupLayout OrderPanelLayout = new javax.swing.GroupLayout(OrderPanel);
+        OrderPanel.setLayout(OrderPanelLayout);
+        OrderPanelLayout.setHorizontalGroup(
+            OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(OrderPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logo1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(logo2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(logo3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        OrderPanelLayout.setVerticalGroup(
+            OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(OrderPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(logo3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(logo2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(logo1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(380, Short.MAX_VALUE))
+        );
+
+        jPanel1.add(OrderPanel);
+
+        OrderStatusPanel.setBackground(new java.awt.Color(0, 51, 255));
+
+        javax.swing.GroupLayout OrderStatusPanelLayout = new javax.swing.GroupLayout(OrderStatusPanel);
+        OrderStatusPanel.setLayout(OrderStatusPanelLayout);
+        OrderStatusPanelLayout.setHorizontalGroup(
+            OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 505, Short.MAX_VALUE)
+        );
+        OrderStatusPanelLayout.setVerticalGroup(
+            OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 531, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(OrderStatusPanel);
+
+        OrderHistoryPanel.setBackground(new java.awt.Color(51, 255, 51));
+
+        javax.swing.GroupLayout OrderHistoryPanelLayout = new javax.swing.GroupLayout(OrderHistoryPanel);
+        OrderHistoryPanel.setLayout(OrderHistoryPanelLayout);
+        OrderHistoryPanelLayout.setHorizontalGroup(
+            OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 505, Short.MAX_VALUE)
+        );
+        OrderHistoryPanelLayout.setVerticalGroup(
+            OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 531, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(OrderHistoryPanel);
+
+        CommentPanel.setBackground(new java.awt.Color(255, 0, 255));
+
+        javax.swing.GroupLayout CommentPanelLayout = new javax.swing.GroupLayout(CommentPanel);
+        CommentPanel.setLayout(CommentPanelLayout);
+        CommentPanelLayout.setHorizontalGroup(
+            CommentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 505, Short.MAX_VALUE)
+        );
+        CommentPanelLayout.setVerticalGroup(
+            CommentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 531, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(CommentPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(title, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(menubar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(line, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(menubar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(line, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+        // TODO add your handling code here:
+        goToLogout();
+    }//GEN-LAST:event_logoutActionPerformed
+
+    private void OrderTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderTabMousePressed
+        // TODO add your handling code here:
+        OrderPanel.setVisible(true);
+        OrderStatusPanel.setVisible(false);
+        OrderHistoryPanel.setVisible(false);
+        CommentPanel.setVisible(false);
+        OrderTab.setBackground(Color.black);
+        OrderStatusTab.setBackground(new Color(153,89,16));
+        OrderHistoryTab.setBackground(new Color(153,89,16));
+        CommentTab.setBackground(new Color(153,89,16));
+    }//GEN-LAST:event_OrderTabMousePressed
+
+    private void OrderStatusTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderStatusTabMousePressed
+        // TODO add your handling code here:
+        OrderPanel.setVisible(false);
+        OrderStatusPanel.setVisible(true);
+        OrderHistoryPanel.setVisible(false);
+        CommentPanel.setVisible(false);
+        OrderStatusTab.setBackground(Color.black);
+        OrderTab.setBackground(new Color(153,89,16));
+        OrderHistoryTab.setBackground(new Color(153,89,16));
+        CommentTab.setBackground(new Color(153,89,16));
+    }//GEN-LAST:event_OrderStatusTabMousePressed
+
+    private void OrderHistoryTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderHistoryTabMousePressed
+        // TODO add your handling code here:
+        OrderPanel.setVisible(false);
+        OrderStatusPanel.setVisible(false);
+        OrderHistoryPanel.setVisible(true);
+        CommentPanel.setVisible(false);
+        OrderHistoryTab.setBackground(Color.black);
+        OrderStatusTab.setBackground(new Color(153,89,16));
+        OrderTab.setBackground(new Color(153,89,16));
+        CommentTab.setBackground(new Color(153,89,16));
+    }//GEN-LAST:event_OrderHistoryTabMousePressed
+
+    private void CommentTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CommentTabMousePressed
+        // TODO add your handling code here:
+        OrderPanel.setVisible(false);
+        OrderStatusPanel.setVisible(false);
+        OrderHistoryPanel.setVisible(false);
+        CommentPanel.setVisible(true);
+        CommentTab.setBackground(Color.black);
+        OrderStatusTab.setBackground(new Color(153,89,16));
+        OrderHistoryTab.setBackground(new Color(153,89,16));
+        OrderTab.setBackground(new Color(153,89,16));
+    }//GEN-LAST:event_CommentTabMousePressed
+
+    private void goToLogout(){
+        Login loginframe = new Login();
+        loginframe.setVisible(true);
+        dispose();
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -78,5 +432,25 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel CommentPanel;
+    private javax.swing.JLabel CommentTab;
+    private javax.swing.JPanel OrderHistoryPanel;
+    private javax.swing.JLabel OrderHistoryTab;
+    private javax.swing.JPanel OrderPanel;
+    private javax.swing.JPanel OrderStatusPanel;
+    private javax.swing.JLabel OrderStatusTab;
+    private javax.swing.JLabel OrderTab;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollBar jScrollBar1;
+    private javax.swing.JPanel line;
+    private javax.swing.JLabel logo1;
+    private javax.swing.JLabel logo2;
+    private javax.swing.JLabel logo3;
+    private javax.swing.JButton logout;
+    private javax.swing.JPanel menubar;
+    private javax.swing.JPanel title;
+    private javax.swing.JLabel title_lbl1;
+    private javax.swing.JLabel title_lbl2;
     // End of variables declaration//GEN-END:variables
 }

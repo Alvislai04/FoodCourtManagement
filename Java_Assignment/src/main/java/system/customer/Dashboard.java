@@ -28,23 +28,29 @@ public class Dashboard extends javax.swing.JFrame {
         
         OrderTab.setBackground(Color.black);//set OrderTab to black and order Opened after login
         
-        ImageIcon img1 = new ImageIcon(getClass().getResource("/malay.jpg"));
-        Image scaledImage1 = img1.getImage().getScaledInstance(145, 145, Image.SCALE_SMOOTH);//Width: 145px, Height: 145px
+        ImageIcon img1 = new ImageIcon(getClass().getResource("/NLA.goreng.jpg"));
+        Image scaledImage1 = img1.getImage().getScaledInstance(155, 100, Image.SCALE_SMOOTH);//Width: 100px, Height: 130px
         ImageIcon scaledIcon1 = new ImageIcon(scaledImage1);
-        logo1.setText("");//remove the text
-        logo1.setIcon(scaledIcon1);//get the image
+        img_1.setText("");//remove the text
+        img_1.setIcon(scaledIcon1);//get the image
         
-        ImageIcon img2 = new ImageIcon(getClass().getResource("/chinese.jpg"));
-        Image scaledImage2 = img2.getImage().getScaledInstance(145, 145, Image.SCALE_SMOOTH);
+        ImageIcon img2 = new ImageIcon(getClass().getResource("/NLA.rendang.jpg"));
+        Image scaledImage2 = img2.getImage().getScaledInstance(155, 100, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon2 = new ImageIcon(scaledImage2);
-        logo2.setText("");
-        logo2.setIcon(scaledIcon2);
+        img_2.setText("");
+        img_2.setIcon(scaledIcon2);
         
-        ImageIcon img3 = new ImageIcon(getClass().getResource("/indian.jpg"));
-        Image scaledImage3 = img3.getImage().getScaledInstance(145, 145, Image.SCALE_SMOOTH);
+        ImageIcon img3 = new ImageIcon(getClass().getResource("/C.satay.jpg"));
+        Image scaledImage3 = img3.getImage().getScaledInstance(155, 100, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon3 = new ImageIcon(scaledImage3);
-        logo3.setText("");
-        logo3.setIcon(scaledIcon3);
+        img_3.setText("");
+        img_3.setIcon(scaledIcon3);
+        
+        ImageIcon img4 = new ImageIcon(getClass().getResource("/B.satay.jpg"));
+        Image scaledImage4 = img4.getImage().getScaledInstance(155, 100, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon4 = new ImageIcon(scaledImage4);
+        img_4.setText("");
+        img_4.setIcon(scaledIcon4);
     }
 
     /**
@@ -69,10 +75,27 @@ public class Dashboard extends javax.swing.JFrame {
         line = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         OrderPanel = new javax.swing.JPanel();
-        logo1 = new javax.swing.JLabel();
-        logo2 = new javax.swing.JLabel();
-        logo3 = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        malay = new javax.swing.JPanel();
+        img_1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        img_2 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        img_3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        img_4 = new javax.swing.JLabel();
         jScrollBar1 = new javax.swing.JScrollBar();
+        jLabel6 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollBar2 = new javax.swing.JScrollBar();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollBar3 = new javax.swing.JScrollBar();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollBar4 = new javax.swing.JScrollBar();
+        jPanel5 = new javax.swing.JPanel();
+        jScrollBar5 = new javax.swing.JScrollBar();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollBar6 = new javax.swing.JScrollBar();
         OrderStatusPanel = new javax.swing.JPanel();
         OrderHistoryPanel = new javax.swing.JPanel();
         CommentPanel = new javax.swing.JPanel();
@@ -225,42 +248,164 @@ public class Dashboard extends javax.swing.JFrame {
 
         OrderPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        logo1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        logo1.setText("Malay");
-        logo1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        img_1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        img_1.setText("Img1");
+        img_1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        logo2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        logo2.setText("Chinese");
-        logo2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Nasi Lemak Ayam Goreng");
 
-        logo3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        logo3.setText("Indian");
-        logo3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        img_2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        img_2.setText("Img2");
+        img_2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("Chicken Satay");
+
+        img_3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        img_3.setText("Img3");
+        img_3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Beef Satay");
+
+        img_4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        img_4.setText("Img4");
+        img_4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Nasi Lemak Ayam Rendang");
+
+        javax.swing.GroupLayout malayLayout = new javax.swing.GroupLayout(malay);
+        malay.setLayout(malayLayout);
+        malayLayout.setHorizontalGroup(
+            malayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(malayLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(malayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(img_4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                    .addComponent(img_1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(malayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(img_2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(malayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(img_3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
+        );
+        malayLayout.setVerticalGroup(
+            malayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(malayLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(malayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(img_3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(img_2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(img_1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(malayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel5))
+                .addGap(18, 18, 18)
+                .addComponent(img_4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addContainerGap(247, Short.MAX_VALUE))
+            .addComponent(jScrollBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Malay", malay);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(0, 580, Short.MAX_VALUE)
+                .addComponent(jScrollBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollBar2, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Chinese", jPanel3);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(0, 580, Short.MAX_VALUE)
+                .addComponent(jScrollBar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollBar3, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Indian", jPanel4);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 580, Short.MAX_VALUE)
+                .addComponent(jScrollBar4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollBar4, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Western", jPanel2);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGap(0, 580, Short.MAX_VALUE)
+                .addComponent(jScrollBar5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollBar5, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Japanese", jPanel5);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addGap(0, 580, Short.MAX_VALUE)
+                .addComponent(jScrollBar6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollBar6, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Drink", jPanel6);
 
         javax.swing.GroupLayout OrderPanelLayout = new javax.swing.GroupLayout(OrderPanel);
         OrderPanel.setLayout(OrderPanelLayout);
         OrderPanelLayout.setHorizontalGroup(
             OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(OrderPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(logo1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(logo2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(logo3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jTabbedPane1)
         );
         OrderPanelLayout.setVerticalGroup(
             OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(OrderPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(logo3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(logo2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(logo1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(380, Short.MAX_VALUE))
+            .addComponent(jTabbedPane1)
         );
 
         jPanel1.add(OrderPanel);
@@ -271,11 +416,11 @@ public class Dashboard extends javax.swing.JFrame {
         OrderStatusPanel.setLayout(OrderStatusPanelLayout);
         OrderStatusPanelLayout.setHorizontalGroup(
             OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 505, Short.MAX_VALUE)
+            .addGap(0, 590, Short.MAX_VALUE)
         );
         OrderStatusPanelLayout.setVerticalGroup(
             OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 531, Short.MAX_VALUE)
+            .addGap(0, 552, Short.MAX_VALUE)
         );
 
         jPanel1.add(OrderStatusPanel);
@@ -286,11 +431,11 @@ public class Dashboard extends javax.swing.JFrame {
         OrderHistoryPanel.setLayout(OrderHistoryPanelLayout);
         OrderHistoryPanelLayout.setHorizontalGroup(
             OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 505, Short.MAX_VALUE)
+            .addGap(0, 590, Short.MAX_VALUE)
         );
         OrderHistoryPanelLayout.setVerticalGroup(
             OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 531, Short.MAX_VALUE)
+            .addGap(0, 552, Short.MAX_VALUE)
         );
 
         jPanel1.add(OrderHistoryPanel);
@@ -301,11 +446,11 @@ public class Dashboard extends javax.swing.JFrame {
         CommentPanel.setLayout(CommentPanelLayout);
         CommentPanelLayout.setHorizontalGroup(
             CommentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 505, Short.MAX_VALUE)
+            .addGap(0, 590, Short.MAX_VALUE)
         );
         CommentPanelLayout.setVerticalGroup(
             CommentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 531, Short.MAX_VALUE)
+            .addGap(0, 552, Short.MAX_VALUE)
         );
 
         jPanel1.add(CommentPanel);
@@ -440,14 +585,31 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel OrderStatusPanel;
     private javax.swing.JLabel OrderStatusTab;
     private javax.swing.JLabel OrderTab;
+    private javax.swing.JLabel img_1;
+    private javax.swing.JLabel img_2;
+    private javax.swing.JLabel img_3;
+    private javax.swing.JLabel img_4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollBar jScrollBar1;
+    private javax.swing.JScrollBar jScrollBar2;
+    private javax.swing.JScrollBar jScrollBar3;
+    private javax.swing.JScrollBar jScrollBar4;
+    private javax.swing.JScrollBar jScrollBar5;
+    private javax.swing.JScrollBar jScrollBar6;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel line;
-    private javax.swing.JLabel logo1;
-    private javax.swing.JLabel logo2;
-    private javax.swing.JLabel logo3;
     private javax.swing.JButton logout;
+    private javax.swing.JPanel malay;
     private javax.swing.JPanel menubar;
     private javax.swing.JPanel title;
     private javax.swing.JLabel title_lbl1;

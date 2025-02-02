@@ -14,6 +14,14 @@ import javax.swing.table.DefaultTableModel;
 
 public class AdDashboard extends javax.swing.JFrame {
 
+    String roleFilePath = "users.txt";
+
+    // Prefix for different roles
+    String customerPrefix = "C";
+    String vendorPrefix = "V";
+    String deliveryRunnerPrefix = "D";
+    String nextCustomerID = IdGenerator.getNextRoleID(customerPrefix, roleFilePath);
+        
     private boolean isPanelVisible = false;
     Login login = new Login();
     
@@ -98,18 +106,19 @@ public class AdDashboard extends javax.swing.JFrame {
             String id = (String) employeeTable.getValueAt(selectedRow, 0);
             String name = (String) employeeTable.getValueAt(selectedRow, 1);
             String address = (String) employeeTable.getValueAt(selectedRow, 2);
-            int phoneno = (int) employeeTable.getValueAt(selectedRow, 3);
+            String phoneno = (String) employeeTable.getValueAt(selectedRow, 3);
             String username = (String) employeeTable.getValueAt(selectedRow, 4);
             String password = (String) employeeTable.getValueAt(selectedRow, 5);
             String role = (String) employeeTable.getValueAt(selectedRow, 6);
+            
+            
             //get id from file
             User user = new User(id, name, address, phoneno, username, password, role);
 
             idtxt.setText(String.valueOf(user.getId()));
-            //idtxt.setEnabled(false);
             nametxt.setText(user.getName());
             addresstxt.setText(user.getAddress());
-            phonenotxt.setText(String.valueOf(user.getphoneNo()));
+            phonenotxt.setText(user.getphoneNo());
             usernametxt.setText(user.getUsername());
             passwordtxt.setText(user.getPassword());
             rolecbx.setSelectedItem(user.getRoles());
@@ -127,7 +136,6 @@ public class AdDashboard extends javax.swing.JFrame {
             BufferedReader br = new BufferedReader(fr);
             String read;
             while ((read = br.readLine()) != null) {
-                if (read.split(";")[7].equals(login.getUsername())) {
                     String id = read.split(";")[0];
                     String name = read.split(";")[1];
                     String address = read.split(";")[2];
@@ -141,7 +149,6 @@ public class AdDashboard extends javax.swing.JFrame {
                     model1.addRow(
                             new Object[]{id, name, address, phoneno, username, password,
                                 role});
-                }
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
@@ -545,6 +552,11 @@ public class AdDashboard extends javax.swing.JFrame {
         jLabel9.setText("Search:");
 
         rolecbx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Customer", "Vendor", "Delivery Runner" }));
+        rolecbx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rolecbxActionPerformed(evt);
+            }
+        });
 
         jLabel7.setText("Password:");
 
@@ -554,6 +566,14 @@ public class AdDashboard extends javax.swing.JFrame {
         clearbtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearbtnActionPerformed(evt);
+            }
+        });
+
+        idtxt.setEditable(false);
+        idtxt.setEnabled(false);
+        idtxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idtxtActionPerformed(evt);
             }
         });
 
@@ -621,7 +641,7 @@ public class AdDashboard extends javax.swing.JFrame {
                                         .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(jp2Layout.createSequentialGroup()
                                                 .addComponent(rolecbx, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 431, Short.MAX_VALUE))
+                                                .addGap(0, 412, Short.MAX_VALUE))
                                             .addComponent(passwordtxt)
                                             .addComponent(usernametxt)))))
                             .addGroup(jp2Layout.createSequentialGroup()
@@ -774,11 +794,11 @@ public class AdDashboard extends javax.swing.JFrame {
             mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainLayout.createSequentialGroup()
                 .addComponent(jp1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(9, Short.MAX_VALUE))
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainLayout.createSequentialGroup()
                     .addGap(3, 3, 3)
-                    .addComponent(jp2, javax.swing.GroupLayout.DEFAULT_SIZE, 1303, Short.MAX_VALUE)
+                    .addComponent(jp2, javax.swing.GroupLayout.DEFAULT_SIZE, 1281, Short.MAX_VALUE)
                     .addContainerGap()))
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainLayout.createSequentialGroup()
@@ -871,6 +891,7 @@ public class AdDashboard extends javax.swing.JFrame {
 
     private void tab2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab2MouseEntered
         editAccount.setBackground(Color.LIGHT_GRAY);
+        idtxt.setText(nextCustomerID);
     }//GEN-LAST:event_tab2MouseEntered
 
     private void tab2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab2MouseExited
@@ -997,7 +1018,7 @@ public class AdDashboard extends javax.swing.JFrame {
                 + usernametxt.getText().trim() + ";"
                 + new String(passwordtxt.getPassword()).trim() + ";"
                 + rolecbx.getSelectedItem().toString() + ";"
-                + login.getUsername() + "\n"
+                + "\n"
             );
             fw.close();
 
@@ -1005,7 +1026,6 @@ public class AdDashboard extends javax.swing.JFrame {
             refreshData();
 
             // Reset all fields
-            idtxt.setEnabled(true);
             idtxt.setText("");
             nametxt.setText("");
             addresstxt.setText("");
@@ -1020,7 +1040,6 @@ public class AdDashboard extends javax.swing.JFrame {
 
     private void clearbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearbtnActionPerformed
         // TODO add your handling code here:
-        idtxt.setEnabled(true);
         idtxt.setText("");
         nametxt.setText("");
         addresstxt.setText("");
@@ -1094,7 +1113,6 @@ public class AdDashboard extends javax.swing.JFrame {
                 record.add(read.split(";")[4]);
                 record.add(read.split(";")[5]);
                 record.add(read.split(";")[6]);
-                record.add(read.split(";")[7]);
                 employeeList.add(record);
             }
             for (int row = 0; row < employeeList.size(); row++) {
@@ -1113,11 +1131,19 @@ public class AdDashboard extends javax.swing.JFrame {
                 fw.write(employeeList.get(i).get(3) + ";");
                 fw.write(employeeList.get(i).get(4) + ";");
                 fw.write(employeeList.get(i).get(5) + ";");
-                fw.write(employeeList.get(i).get(6) + ";");
-                fw.write(employeeList.get(i).get(7) + ";\n");
+                fw.write(employeeList.get(i).get(6) + ";\n");
             }
 
             fw.close();
+            
+            idtxt.setText("");
+            nametxt.setText("");
+            addresstxt.setText("");
+            phonenotxt.setText("");
+            usernametxt.setText("");
+            passwordtxt.setText("");
+            rolecbx.setSelectedIndex(0);
+            
             JOptionPane.showMessageDialog(null, "successfully deleted a record");
             this.refreshData();
         } catch (IOException e) {
@@ -1191,8 +1217,7 @@ public class AdDashboard extends javax.swing.JFrame {
                             + phoneno + ";"
                             + username + ";"
                             + password + ";"
-                            + role + ";"
-                            + login.getUsername() + "\n"
+                            + role + "\n"
                         );
                     } else {
                         // Write the existing record as-is
@@ -1211,7 +1236,35 @@ public class AdDashboard extends javax.swing.JFrame {
     private void phonenotxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phonenotxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_phonenotxtActionPerformed
+
+    private void rolecbxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rolecbxActionPerformed
+        rolecbx.addActionListener(e -> updateIDBasedOnRole());
+
+    }//GEN-LAST:event_rolecbxActionPerformed
+
+    private void idtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idtxtActionPerformed
+
+    }//GEN-LAST:event_idtxtActionPerformed
     
+    private void updateIDBasedOnRole() {
+        String roleFilePath = "users.txt"; // Ensure the correct file path
+        String selectedRole = rolecbx.getSelectedItem().toString(); // Get selected role
+
+        // Determine the correct prefix
+        String prefix = "";
+        if (selectedRole.equalsIgnoreCase("Vendor")) {
+            prefix = "V";
+        } else if (selectedRole.equalsIgnoreCase("Delivery Runner")) {
+            prefix = "D";
+        } else if (selectedRole.equalsIgnoreCase("Customer")) {
+            prefix = "C";
+        }
+
+        // Get the next available ID and set it to idtxt
+        String newId = IdGenerator.getNextRoleID(prefix, roleFilePath);
+        idtxt.setText(newId);
+    }
+
     public void goToLogout(){
         Login loginframe = new Login();
         loginframe.setVisible(true);
@@ -1300,4 +1353,5 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JButton updatebtn;
     private javax.swing.JTextField usernametxt;
     // End of variables declaration//GEN-END:variables
+
 }

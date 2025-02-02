@@ -247,7 +247,7 @@ public class Login extends javax.swing.JFrame {
                             }
                         } else if (filename.equals("users.txt")) {
 
-                            if (credentials.length >= 7) {
+                            if (credentials.length >= 6) {
                                 String usernameFile = credentials[4];
                                 String passwordFile = credentials[5];
                                 String userType = credentials[6];

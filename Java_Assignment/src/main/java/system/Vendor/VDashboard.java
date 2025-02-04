@@ -15,6 +15,8 @@ public class VDashboard extends javax.swing.JFrame {
 //    }
     public VDashboard() {
         initComponents();
+        setResizable(false); // Disable resizing window
+        setLocationRelativeTo(null); // Set window to center
     }
 
     @SuppressWarnings("unchecked")
@@ -22,6 +24,7 @@ public class VDashboard extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollMenu = new javax.swing.JScrollPane();
+        jScrollMenu.getVerticalScrollBar().setUnitIncrement(16);
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -148,7 +151,7 @@ public class VDashboard extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 446, Short.MAX_VALUE)
+            .addGap(0, 449, Short.MAX_VALUE)
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 153, 51));
@@ -161,7 +164,7 @@ public class VDashboard extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 445, Short.MAX_VALUE)
+            .addGap(0, 449, Short.MAX_VALUE)
         );
 
         jPanel5.setBackground(new java.awt.Color(102, 255, 153));
@@ -174,7 +177,7 @@ public class VDashboard extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 445, Short.MAX_VALUE)
+            .addGap(0, 449, Short.MAX_VALUE)
         );
 
         jpMenu.setBackground(new java.awt.Color(255, 255, 255));
@@ -197,6 +200,9 @@ public class VDashboard extends javax.swing.JFrame {
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 foodbeverageTabMouseExited(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                foodbeverageTabMousePressed(evt);
+            }
         });
 
         ordersTab.setBackground(new java.awt.Color(153, 89, 16));
@@ -206,6 +212,11 @@ public class VDashboard extends javax.swing.JFrame {
         ordersTab.setText("Orders");
         ordersTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ordersTab.setOpaque(true);
+        ordersTab.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                ordersTabMousePressed(evt);
+            }
+        });
 
         reviewTab.setBackground(new java.awt.Color(153, 89, 16));
         reviewTab.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
@@ -214,26 +225,9 @@ public class VDashboard extends javax.swing.JFrame {
         reviewTab.setText("Customer Reviews");
         reviewTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         reviewTab.setOpaque(true);
-        reviewTab.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                reviewTabMouseMoved(evt);
-            }
-        });
         reviewTab.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                reviewTabMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                reviewTabMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                reviewTabMouseExited(evt);
-            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 reviewTabMousePressed(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                reviewTabMouseReleased(evt);
             }
         });
 
@@ -246,26 +240,9 @@ public class VDashboard extends javax.swing.JFrame {
         revenueTab.setMaximumSize(new java.awt.Dimension(163, 26));
         revenueTab.setMinimumSize(new java.awt.Dimension(163, 26));
         revenueTab.setOpaque(true);
-        revenueTab.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                revenueTabMouseMoved(evt);
-            }
-        });
         revenueTab.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                revenueTabMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                revenueTabMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                revenueTabMouseExited(evt);
-            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 revenueTabMousePressed(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                revenueTabMouseReleased(evt);
             }
         });
 
@@ -394,7 +371,7 @@ public class VDashboard extends javax.swing.JFrame {
                     .addComponent(jScrollMenu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 32, Short.MAX_VALUE)
+                    .addGap(0, 33, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -413,56 +390,29 @@ public class VDashboard extends javax.swing.JFrame {
         goToLogout();
     }//GEN-LAST:event_logoutBtnActionPerformed
 
-    private void reviewTabMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reviewTabMouseMoved
-        // TODO add your handling code here:
-    }//GEN-LAST:event_reviewTabMouseMoved
-
-    private void reviewTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reviewTabMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_reviewTabMouseClicked
-
-    private void reviewTabMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reviewTabMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_reviewTabMouseEntered
-
-    private void reviewTabMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reviewTabMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_reviewTabMouseExited
-
     private void reviewTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reviewTabMousePressed
         // TODO add your handling code here:
+        jScrollMenu.setVisible(false);
+        jPanel1.setVisible(false);
+        jPanel2.setVisible(true);
+        jPanel5.setVisible(false);
     }//GEN-LAST:event_reviewTabMousePressed
-
-    private void reviewTabMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reviewTabMouseReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_reviewTabMouseReleased
-
-    private void revenueTabMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_revenueTabMouseMoved
-        // TODO add your handling code here:
-    }//GEN-LAST:event_revenueTabMouseMoved
-
-    private void revenueTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_revenueTabMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_revenueTabMouseClicked
-
-    private void revenueTabMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_revenueTabMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_revenueTabMouseEntered
-
-    private void revenueTabMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_revenueTabMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_revenueTabMouseExited
 
     private void revenueTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_revenueTabMousePressed
         // TODO add your handling code here:
+        jScrollMenu.setVisible(false);
+        jPanel1.setVisible(false);
+        jPanel2.setVisible(false);
+        jPanel5.setVisible(true);
     }//GEN-LAST:event_revenueTabMousePressed
-
-    private void revenueTabMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_revenueTabMouseReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_revenueTabMouseReleased
 
     private void foodbeverageTabMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodbeverageTabMouseEntered
         // TODO add your handling code here:
+        
+        
+        
+        
+        
     }//GEN-LAST:event_foodbeverageTabMouseEntered
 
     private void foodbeverageTabMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodbeverageTabMouseExited
@@ -472,6 +422,22 @@ public class VDashboard extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void foodbeverageTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodbeverageTabMousePressed
+        // TODO add your handling code here:
+        jScrollMenu.setVisible(true);
+        jPanel1.setVisible(false);
+        jPanel2.setVisible(false);
+        jPanel5.setVisible(false);
+    }//GEN-LAST:event_foodbeverageTabMousePressed
+
+    private void ordersTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ordersTabMousePressed
+        // TODO add your handling code here:
+        jScrollMenu.setVisible(false);
+        jPanel1.setVisible(true);
+        jPanel2.setVisible(false);
+        jPanel5.setVisible(false);
+    }//GEN-LAST:event_ordersTabMousePressed
 
     private void goToLogout(){
         Login loginframe = new Login();

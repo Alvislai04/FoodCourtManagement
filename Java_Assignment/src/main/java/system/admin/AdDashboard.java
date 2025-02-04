@@ -3,6 +3,9 @@ package system.admin;
 
 import com.system.Login;
 import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -46,6 +49,19 @@ public class AdDashboard extends javax.swing.JFrame {
     public AdDashboard() {
         initComponents();
         
+        jp2.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if (!employeeTable.getBounds().contains(e.getPoint())) {
+                employeeTable.clearSelection(); // Deselect row
+                for(ActionListener al: rolecbx.getActionListeners()){
+                rolecbx.removeActionListener(al);
+                rolecbx.setEnabled(true);
+            }
+            }
+        }
+    });
+        
         TableActionEvent event = new TableActionEvent(){
             @Override
             public void onEdit(int row) {
@@ -53,17 +69,103 @@ public class AdDashboard extends javax.swing.JFrame {
             }
 
             @Override
-            public void onDelete(int row) {
-                if(employeeTable.isEditing()){
-                    employeeTable.getCellEditor().stopCellEditing();
+            public void onDelete(java.awt.event.ActionEvent evt) {
+                int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+                if (confirm == JOptionPane.YES_OPTION) {
+                    if (employeeTable.isEditing()) {
+                        employeeTable.getCellEditor().stopCellEditing();
+                    }
+                    DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
+                    try {
+            //get selected row of data
+            int selectedRow = employeeTable.getSelectedRow();
+            String employeeId = (String) employeeTable.getValueAt(selectedRow, 0);
+            FileReader fr = new FileReader("users.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String read;
+
+            ArrayList<ArrayList<String>> employeeList = new ArrayList<>();
+            while ((read = br.readLine()) != null) {
+                ArrayList<String> record = new ArrayList<>();
+                record.add(read.split(";")[0]);
+                record.add(read.split(";")[1]);
+                record.add(read.split(";")[2]);
+                record.add(read.split(";")[3]);
+                record.add(read.split(";")[4]);
+                record.add(read.split(";")[5]);
+                record.add(read.split(";")[6]);
+                employeeList.add(record);
+            }
+            for (int row = 0; row < employeeList.size(); row++) {
+                if (employeeList.get(row).get(0).equals(employeeId)) {
+                    employeeList.remove(row);
+                    break;
                 }
-                DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
-                model.removeRow(row);
+            }
+
+            // Writing the updated TODO records back to the file
+            FileWriter fw = new FileWriter("users.txt");
+            for (int i = 0; i < employeeList.size(); i++) {
+                fw.write(employeeList.get(i).get(0) + ";");
+                fw.write(employeeList.get(i).get(1) + ";");
+                fw.write(employeeList.get(i).get(2) + ";");
+                fw.write(employeeList.get(i).get(3) + ";");
+                fw.write(employeeList.get(i).get(4) + ";");
+                fw.write(employeeList.get(i).get(5) + ";");
+                fw.write(employeeList.get(i).get(6) + ";\n");
+            }
+
+            fw.close();
+            
+            idtxt.setText("");
+            nametxt.setText("");
+            addresstxt.setText("");
+            phonenotxt.setText("");
+            usernametxt.setText("");
+            passwordtxt.setText("");
+            rolecbx.setSelectedIndex(0);
+            
+            JOptionPane.showMessageDialog(null, "successfully deleted a record");
+            this.refreshData();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Successfully deleted employee");
+        }
+                }
             }
 
             @Override
             public void onView(int row) {
                 System.out.println("View row: " + row);
+            }
+
+            private void refreshData() {
+                try {
+            DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
+            DefaultTableModel model1 = (DefaultTableModel) employeeTable1.getModel();
+            model.setRowCount(0);//reset table
+            model1.setRowCount(0);
+            FileReader fr = new FileReader("users.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String read;
+            while ((read = br.readLine()) != null) {
+                    String id = read.split(";")[0];
+                    String name = read.split(";")[1];
+                    String address = read.split(";")[2];
+                    String phoneno = read.split(";")[3];
+                    String username = read.split(";")[4];
+                    String password = read.split(";")[5];
+                    String role = read.split(";")[6];
+                    model.addRow(
+                            new Object[]{id, name, address, phoneno, username, password,
+                                role});
+                    model1.addRow(
+                            new Object[]{id, name, address, phoneno, username,
+                                role});
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
             }
         };
 
@@ -101,14 +203,23 @@ public class AdDashboard extends javax.swing.JFrame {
             //get id from file
             User user = new User(id, name, address, phoneno, username, password, role);
 
-            idtxt.setText(String.valueOf(user.getId()));
+            idtxt.setText(user.getId());
             nametxt.setText(user.getName());
             addresstxt.setText(user.getAddress());
             phonenotxt.setText(user.getphoneNo());
             usernametxt.setText(user.getUsername());
             passwordtxt.setText(user.getPassword());
             rolecbx.setSelectedItem(user.getRoles());
-
+            
+            rolecbx.setEnabled(false);
+        } else {
+            rolecbx.addActionListener(e -> updateIDBasedOnRole());
+            nametxt.setText("");
+            addresstxt.setText("");
+            phonenotxt.setText("");
+            usernametxt.setText("");
+            passwordtxt.setText("");
+            rolecbx.setSelectedIndex(0);
         }
     }
     
@@ -167,7 +278,6 @@ public class AdDashboard extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         employeeTable1 = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
-        jp3NotiBtn2 = new system.admin.NotificationButton();
         jp2 = new javax.swing.JPanel();
         title_label3 = new javax.swing.JLabel();
         nametxt = new javax.swing.JTextField();
@@ -194,7 +304,6 @@ public class AdDashboard extends javax.swing.JFrame {
         addbtn = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jp3NotiBtn1 = new system.admin.NotificationButton();
         jp3 = new javax.swing.JPanel();
         title_label4 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
@@ -208,13 +317,11 @@ public class AdDashboard extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
-        jp3NotiBtn = new system.admin.NotificationButton();
         title_label5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.gray);
         setMinimumSize(new java.awt.Dimension(1300, 586));
-        setPreferredSize(new java.awt.Dimension(1300, 587));
         setSize(new java.awt.Dimension(1300, 586));
 
         Navigation.setBackground(java.awt.Color.gray);
@@ -455,9 +562,6 @@ public class AdDashboard extends javax.swing.JFrame {
             }
         });
 
-        jp3NotiBtn2.setBackground(new java.awt.Color(255, 255, 255));
-        jp3NotiBtn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/notification.png"))); // NOI18N
-
         javax.swing.GroupLayout jp1Layout = new javax.swing.GroupLayout(jp1);
         jp1.setLayout(jp1Layout);
         jp1Layout.setHorizontalGroup(
@@ -465,15 +569,11 @@ public class AdDashboard extends javax.swing.JFrame {
             .addGroup(jp1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jp1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1269, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jp1Layout.createSequentialGroup()
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(title_label2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jp3NotiBtn2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(title_label2)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jp1Layout.setVerticalGroup(
@@ -482,8 +582,7 @@ public class AdDashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(title_label2)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jp3NotiBtn2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -611,9 +710,6 @@ public class AdDashboard extends javax.swing.JFrame {
             }
         });
 
-        jp3NotiBtn1.setBackground(new java.awt.Color(255, 255, 255));
-        jp3NotiBtn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/notification.png"))); // NOI18N
-
         javax.swing.GroupLayout jp2Layout = new javax.swing.GroupLayout(jp2);
         jp2.setLayout(jp2Layout);
         jp2Layout.setHorizontalGroup(
@@ -644,40 +740,35 @@ public class AdDashboard extends javax.swing.JFrame {
                                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(title_label3)))
+                        .addGap(111, 111, 111)
                         .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jp2Layout.createSequentialGroup()
-                                .addGap(111, 111, 111)
+                                .addComponent(jLabel5)
+                                .addGap(22, 22, 22)
+                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(addresstxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(nametxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(idtxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(phonenotxt, javax.swing.GroupLayout.Alignment.LEADING)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2Layout.createSequentialGroup()
+                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(deletebtn)
+                                    .addComponent(addbtn, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(34, 34, 34))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2Layout.createSequentialGroup()
+                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel8)
+                                        .addComponent(jLabel7))
+                                    .addComponent(jLabel6))
+                                .addGap(25, 25, 25)
                                 .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jp2Layout.createSequentialGroup()
-                                        .addComponent(jLabel5)
-                                        .addGap(22, 22, 22)
-                                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(addresstxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(nametxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(idtxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(phonenotxt, javax.swing.GroupLayout.Alignment.LEADING)))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2Layout.createSequentialGroup()
-                                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(deletebtn)
-                                            .addComponent(addbtn, javax.swing.GroupLayout.Alignment.TRAILING))
-                                        .addGap(34, 34, 34))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2Layout.createSequentialGroup()
-                                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jLabel8)
-                                                .addComponent(jLabel7))
-                                            .addComponent(jLabel6))
-                                        .addGap(25, 25, 25)
-                                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jp2Layout.createSequentialGroup()
-                                                .addComponent(rolecbx, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 428, Short.MAX_VALUE))
-                                            .addComponent(passwordtxt)
-                                            .addComponent(usernametxt)))))
-                            .addGroup(jp2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jp3NotiBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(9, Short.MAX_VALUE))
+                                        .addComponent(rolecbx, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 420, Short.MAX_VALUE))
+                                    .addComponent(passwordtxt)
+                                    .addComponent(usernametxt))))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jp2Layout.setVerticalGroup(
             jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -685,8 +776,7 @@ public class AdDashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(title_label3)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jp3NotiBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -731,7 +821,7 @@ public class AdDashboard extends javax.swing.JFrame {
                             .addComponent(deletebtn)
                             .addComponent(jButton1))
                         .addGap(0, 101, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -800,9 +890,6 @@ public class AdDashboard extends javax.swing.JFrame {
             }
         });
 
-        jp3NotiBtn.setBackground(new java.awt.Color(255, 255, 255));
-        jp3NotiBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/notification.png"))); // NOI18N
-
         title_label5.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
         title_label5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         title_label5.setText("Top-up System");
@@ -834,11 +921,7 @@ public class AdDashboard extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(title_label5)))
                 .addGap(18, 18, 18)
-                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jp3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jp3NotiBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 908, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 908, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp3Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -849,11 +932,9 @@ public class AdDashboard extends javax.swing.JFrame {
             jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jp3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(title_label5)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jp3NotiBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(title_label5)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jp3Layout.createSequentialGroup()
                         .addGap(111, 111, 111)
@@ -1111,9 +1192,11 @@ public class AdDashboard extends javax.swing.JFrame {
 
             JOptionPane.showMessageDialog(null, "Successfully added the data!");
             refreshData();
+            for(ActionListener al: rolecbx.getActionListeners()){
+                rolecbx.removeActionListener(al);
+            }
 
             // Reset all fields
-            idtxt.setText("");
             nametxt.setText("");
             addresstxt.setText("");
             phonenotxt.setText("");
@@ -1127,7 +1210,7 @@ public class AdDashboard extends javax.swing.JFrame {
 
     private void clearbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearbtnActionPerformed
         // TODO add your handling code here:
-        idtxt.setText("");
+        rolecbx.addActionListener(e -> updateIDBasedOnRole());
         nametxt.setText("");
         addresstxt.setText("");
         phonenotxt.setText("");
@@ -1251,6 +1334,7 @@ public class AdDashboard extends javax.swing.JFrame {
             int selectedRow = employeeTable.getSelectedRow();
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(null, "No record selected for editing!");
+                rolecbx.addActionListener(e -> updateIDBasedOnRole());
                 return;
             }
 
@@ -1325,7 +1409,6 @@ public class AdDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_phonenotxtActionPerformed
 
     private void rolecbxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rolecbxActionPerformed
-        rolecbx.addActionListener(e -> updateIDBasedOnRole());
 
     }//GEN-LAST:event_rolecbxActionPerformed
 
@@ -1436,9 +1519,6 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jp1;
     private javax.swing.JPanel jp2;
     private javax.swing.JPanel jp3;
-    private system.admin.NotificationButton jp3NotiBtn;
-    private system.admin.NotificationButton jp3NotiBtn1;
-    private system.admin.NotificationButton jp3NotiBtn2;
     private javax.swing.JPanel logOut;
     private javax.swing.JPanel main;
     private javax.swing.JTextField nametxt;

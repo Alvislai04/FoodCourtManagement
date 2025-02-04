@@ -20,7 +20,7 @@ public class PanelAction extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void initEvent(TableActionEvent event, int row) {
+    public void initEvent(TableActionEvent event, int row, java.awt.event.ActionEvent evt) {
         cmdEdit.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -30,7 +30,7 @@ public class PanelAction extends javax.swing.JPanel {
         cmdDelete.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                event.onDelete(row);
+                event.onDelete(evt);
             }
         });
         cmdView.addActionListener(new ActionListener(){

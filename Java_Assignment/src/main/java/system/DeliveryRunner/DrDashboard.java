@@ -436,7 +436,7 @@ public class DrDashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(custreviewsTab, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(supportTab, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                .addComponent(supportTab, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
                 .addGap(9, 9, 9)
                 .addComponent(logoutBtn)
                 .addContainerGap())
@@ -543,7 +543,7 @@ public class DrDashboard extends javax.swing.JFrame {
         );
 
         welcomePanel.add(notificationsPanel);
-        notificationsPanel.setBounds(0, 0, 690, 460);
+        notificationsPanel.setBounds(0, 0, 690, 464);
 
         custreviewsPanel.setBackground(new java.awt.Color(255, 51, 51));
 

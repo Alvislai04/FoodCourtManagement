@@ -53,17 +53,98 @@ public class AdDashboard extends javax.swing.JFrame {
             }
 
             @Override
-            public void onDelete(int row) {
+            public void onDelete(java.awt.event.ActionEvent evt) {
                 if(employeeTable.isEditing()){
                     employeeTable.getCellEditor().stopCellEditing();
                 }
-                DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
-                model.removeRow(row);
+                try {
+            //get selected row of data
+            int selectedRow = employeeTable.getSelectedRow();
+            String employeeId = (String) employeeTable.getValueAt(selectedRow, 0);
+            FileReader fr = new FileReader("users.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String read;
+
+            ArrayList<ArrayList<String>> employeeList = new ArrayList<>();
+            while ((read = br.readLine()) != null) {
+                ArrayList<String> record = new ArrayList<>();
+                record.add(read.split(";")[0]);
+                record.add(read.split(";")[1]);
+                record.add(read.split(";")[2]);
+                record.add(read.split(";")[3]);
+                record.add(read.split(";")[4]);
+                record.add(read.split(";")[5]);
+                record.add(read.split(";")[6]);
+                employeeList.add(record);
+            }
+            for (int row = 0; row < employeeList.size(); row++) {
+                if (employeeList.get(row).get(0).equals(employeeId)) {
+                    employeeList.remove(row);
+                    break;
+                }
+            }
+
+            // Writing the updated TODO records back to the file
+            FileWriter fw = new FileWriter("users.txt");
+            for (int i = 0; i < employeeList.size(); i++) {
+                fw.write(employeeList.get(i).get(0) + ";");
+                fw.write(employeeList.get(i).get(1) + ";");
+                fw.write(employeeList.get(i).get(2) + ";");
+                fw.write(employeeList.get(i).get(3) + ";");
+                fw.write(employeeList.get(i).get(4) + ";");
+                fw.write(employeeList.get(i).get(5) + ";");
+                fw.write(employeeList.get(i).get(6) + ";\n");
+            }
+
+            fw.close();
+            
+            idtxt.setText("");
+            nametxt.setText("");
+            addresstxt.setText("");
+            phonenotxt.setText("");
+            usernametxt.setText("");
+            passwordtxt.setText("");
+            rolecbx.setSelectedIndex(0);
+            
+            JOptionPane.showMessageDialog(null, "successfully deleted a record");
+            this.refreshData();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Successfully deleted employee");
+        }
             }
 
             @Override
             public void onView(int row) {
                 System.out.println("View row: " + row);
+            }
+
+            private void refreshData() {
+                try {
+            DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
+            DefaultTableModel model1 = (DefaultTableModel) employeeTable1.getModel();
+            model.setRowCount(0);//reset table
+            model1.setRowCount(0);
+            FileReader fr = new FileReader("users.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String read;
+            while ((read = br.readLine()) != null) {
+                    String id = read.split(";")[0];
+                    String name = read.split(";")[1];
+                    String address = read.split(";")[2];
+                    String phoneno = read.split(";")[3];
+                    String username = read.split(";")[4];
+                    String password = read.split(";")[5];
+                    String role = read.split(";")[6];
+                    model.addRow(
+                            new Object[]{id, name, address, phoneno, username, password,
+                                role});
+                    model1.addRow(
+                            new Object[]{id, name, address, phoneno, username, password,
+                                role});
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
             }
         };
         
@@ -531,6 +612,7 @@ public class AdDashboard extends javax.swing.JFrame {
             employeeTable.getColumnModel().getColumn(5).setResizable(false);
             employeeTable.getColumnModel().getColumn(6).setResizable(false);
             employeeTable.getColumnModel().getColumn(7).setResizable(false);
+            employeeTable.getColumnModel().getColumn(7).setPreferredWidth(100);
         }
 
         jLabel5.setText("Phone No.:");
@@ -760,6 +842,7 @@ public class AdDashboard extends javax.swing.JFrame {
             topupTable.getColumnModel().getColumn(3).setPreferredWidth(1);
             topupTable.getColumnModel().getColumn(4).setPreferredWidth(1);
             topupTable.getColumnModel().getColumn(5).setPreferredWidth(1);
+            topupTable.getColumnModel().getColumn(6).setPreferredWidth(60);
         }
 
         javax.swing.GroupLayout jp3Layout = new javax.swing.GroupLayout(jp3);

@@ -21,3 +21,12 @@ Payment Status: Unpaid
 Total: 15.00
 Proof of Delivery: C:\Users\Jenna\OneDrive - Asia Pacific University\Documents\myfirstJava\FoodCourtManagement\Java_Assignment\::{E88865EA-0E1C-4E20-9AA6-EDCD0212C87C}\roblox
 ------------------------------------------------------
+Delivery ID: DR004
+Food Items: Burger, Fries, Soda
+Pick-up Address: Mall Food Court
+Delivery Address: 55 Apartment JKL
+Phone Number: 017-5566778
+Payment Status: Paid
+Total: 22.50
+Proof of Delivery: C:\Users\Jenna\Pictures\Roblox\RobloxScreenShot20241106_220556939.png
+------------------------------------------------------

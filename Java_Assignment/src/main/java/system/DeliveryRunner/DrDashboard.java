@@ -38,7 +38,7 @@ public class DrDashboard extends javax.swing.JFrame {
         taskhistoryTab.setBackground(DefaultColor);
         notificationsTab.setBackground(DefaultColor);
         custreviewsTab.setBackground(DefaultColor);
-        supportTab.setBackground(DefaultColor);
+        revenueDbTab.setBackground(DefaultColor);
         
         populateviewtasksTable();
         addTableRowClickListener();
@@ -216,7 +216,7 @@ public class DrDashboard extends javax.swing.JFrame {
         taskhistoryTab = new javax.swing.JLabel();
         notificationsTab = new javax.swing.JLabel();
         custreviewsTab = new javax.swing.JLabel();
-        supportTab = new javax.swing.JLabel();
+        revenueDbTab = new javax.swing.JLabel();
         drName = new javax.swing.JLabel();
         logoutBtn = new javax.swing.JButton();
         welcomePanel = new javax.swing.JPanel();
@@ -229,7 +229,7 @@ public class DrDashboard extends javax.swing.JFrame {
         DeclineBtn = new javax.swing.JButton();
         AcceptBtn = new javax.swing.JButton();
         custreviewsPanel = new javax.swing.JPanel();
-        supportPanel = new javax.swing.JPanel();
+        revenueDbPanel = new javax.swing.JPanel();
         taskhistoryPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taskhistoryTable = new javax.swing.JTable();
@@ -248,7 +248,6 @@ public class DrDashboard extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1000, 620));
 
         tastiesPanel.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -369,25 +368,25 @@ public class DrDashboard extends javax.swing.JFrame {
             }
         });
 
-        supportTab.setBackground(new java.awt.Color(153, 89, 16));
-        supportTab.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
-        supportTab.setForeground(new java.awt.Color(255, 255, 255));
-        supportTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        supportTab.setText("Support");
-        supportTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        supportTab.setOpaque(true);
-        supportTab.addMouseListener(new java.awt.event.MouseAdapter() {
+        revenueDbTab.setBackground(new java.awt.Color(153, 89, 16));
+        revenueDbTab.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
+        revenueDbTab.setForeground(new java.awt.Color(255, 255, 255));
+        revenueDbTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        revenueDbTab.setText("Revenue Dashboard");
+        revenueDbTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        revenueDbTab.setOpaque(true);
+        revenueDbTab.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                supportTabMouseClicked(evt);
+                revenueDbTabMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                supportTabMouseEntered(evt);
+                revenueDbTabMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                supportTabMouseExited(evt);
+                revenueDbTabMouseExited(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                supportTabMousePressed(evt);
+                revenueDbTabMousePressed(evt);
             }
         });
 
@@ -413,7 +412,7 @@ public class DrDashboard extends javax.swing.JFrame {
                         .addGroup(menubarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(drName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(viewtasksTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(supportTab, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(revenueDbTab, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(custreviewsTab, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(taskhistoryTab, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
                             .addComponent(notificationsTab, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -436,7 +435,7 @@ public class DrDashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(custreviewsTab, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(supportTab, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                .addComponent(revenueDbTab, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
                 .addGap(9, 9, 9)
                 .addComponent(logoutBtn)
                 .addContainerGap())
@@ -461,7 +460,7 @@ public class DrDashboard extends javax.swing.JFrame {
         welcomePanel.add(welcometxt);
         welcometxt.setBounds(29, 0, 230, 460);
 
-        notificationsPanel.setBackground(new java.awt.Color(102, 255, 102));
+        notificationsPanel.setBackground(new java.awt.Color(153, 89, 16));
 
         taskhistoryLabel2.setBackground(new java.awt.Color(255, 255, 255));
         taskhistoryLabel2.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
@@ -518,8 +517,8 @@ public class DrDashboard extends javax.swing.JFrame {
             .addGroup(notificationsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(notificationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 678, Short.MAX_VALUE)
-                    .addComponent(taskhistoryLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(taskhistoryLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 698, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, notificationsPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -543,7 +542,7 @@ public class DrDashboard extends javax.swing.JFrame {
         );
 
         welcomePanel.add(notificationsPanel);
-        notificationsPanel.setBounds(0, 0, 690, 464);
+        notificationsPanel.setBounds(0, 0, 710, 460);
 
         custreviewsPanel.setBackground(new java.awt.Color(255, 51, 51));
 
@@ -561,21 +560,21 @@ public class DrDashboard extends javax.swing.JFrame {
         welcomePanel.add(custreviewsPanel);
         custreviewsPanel.setBounds(0, 0, 610, 460);
 
-        supportPanel.setBackground(new java.awt.Color(255, 153, 0));
+        revenueDbPanel.setBackground(new java.awt.Color(255, 153, 0));
 
-        javax.swing.GroupLayout supportPanelLayout = new javax.swing.GroupLayout(supportPanel);
-        supportPanel.setLayout(supportPanelLayout);
-        supportPanelLayout.setHorizontalGroup(
-            supportPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout revenueDbPanelLayout = new javax.swing.GroupLayout(revenueDbPanel);
+        revenueDbPanel.setLayout(revenueDbPanelLayout);
+        revenueDbPanelLayout.setHorizontalGroup(
+            revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 610, Short.MAX_VALUE)
         );
-        supportPanelLayout.setVerticalGroup(
-            supportPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        revenueDbPanelLayout.setVerticalGroup(
+            revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 460, Short.MAX_VALUE)
         );
 
-        welcomePanel.add(supportPanel);
-        supportPanel.setBounds(0, 0, 610, 460);
+        welcomePanel.add(revenueDbPanel);
+        revenueDbPanel.setBounds(0, 0, 610, 460);
 
         taskhistoryPanel.setBackground(new java.awt.Color(153, 89, 16));
         taskhistoryPanel.setMinimumSize(new java.awt.Dimension(700, 580));
@@ -746,7 +745,7 @@ public class DrDashboard extends javax.swing.JFrame {
             }
         });
         viewtasksTable.setGridColor(new java.awt.Color(0, 0, 0));
-        viewtasksTable.setPreferredSize(new java.awt.Dimension(490, 500));
+        viewtasksTable.setPreferredSize(new java.awt.Dimension(490, 560));
         viewtasksTable.setSelectionBackground(new java.awt.Color(153, 89, 16));
         viewtasksTable.setShowVerticalLines(true);
         jScrollPane1.setViewportView(viewtasksTable);
@@ -905,13 +904,13 @@ public class DrDashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_viewtasksTabMouseExited
 
-    private void supportTabMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_supportTabMouseExited
+    private void revenueDbTabMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_revenueDbTabMouseExited
         // TODO add your handling code here:
-    }//GEN-LAST:event_supportTabMouseExited
+    }//GEN-LAST:event_revenueDbTabMouseExited
 
-    private void supportTabMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_supportTabMouseEntered
+    private void revenueDbTabMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_revenueDbTabMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_supportTabMouseEntered
+    }//GEN-LAST:event_revenueDbTabMouseEntered
 
     private void viewtasksTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewtasksTabMousePressed
         // TODO add your handling code here:
@@ -920,13 +919,13 @@ public class DrDashboard extends javax.swing.JFrame {
         taskhistoryTab.setBackground(DefaultColor);
         notificationsTab.setBackground(DefaultColor);
         custreviewsTab.setBackground(DefaultColor);
-        supportTab.setBackground(DefaultColor);
+        revenueDbTab.setBackground(DefaultColor);
         
         viewtasksPanel.setVisible(true);
         taskhistoryPanel.setVisible(false);
         notificationsPanel.setVisible(false);
         custreviewsPanel.setVisible(false);
-        supportPanel.setVisible(false);
+        revenueDbPanel.setVisible(false);
         
         welcometxt.setVisible(false);
         usernametxt.setVisible(false);
@@ -940,13 +939,13 @@ public class DrDashboard extends javax.swing.JFrame {
          viewtasksTab.setBackground(DefaultColor);
         notificationsTab.setBackground(DefaultColor);
         custreviewsTab.setBackground(DefaultColor);
-        supportTab.setBackground(DefaultColor);
+        revenueDbTab.setBackground(DefaultColor);
         
            viewtasksPanel.setVisible(false);
         taskhistoryPanel.setVisible(true);
         notificationsPanel.setVisible(false);
         custreviewsPanel.setVisible(false);
-        supportPanel.setVisible(false);
+        revenueDbPanel.setVisible(false);
         
         welcometxt.setVisible(false);
         usernametxt.setVisible(false);
@@ -958,13 +957,13 @@ public class DrDashboard extends javax.swing.JFrame {
          viewtasksTab.setBackground(DefaultColor);
         taskhistoryTab.setBackground(DefaultColor);
         custreviewsTab.setBackground(DefaultColor);
-        supportTab.setBackground(DefaultColor);
+        revenueDbTab.setBackground(DefaultColor);
         
         viewtasksPanel.setVisible(false);
         taskhistoryPanel.setVisible(false);
         notificationsPanel.setVisible(true);
         custreviewsPanel.setVisible(false);
-        supportPanel.setVisible(false);
+        revenueDbPanel.setVisible(false);
         
         welcometxt.setVisible(false);
         usernametxt.setVisible(false);
@@ -976,21 +975,21 @@ public class DrDashboard extends javax.swing.JFrame {
         viewtasksTab.setBackground(DefaultColor);
         taskhistoryTab.setBackground(DefaultColor);
         notificationsTab.setBackground(DefaultColor);
-        supportTab.setBackground(DefaultColor);
+        revenueDbTab.setBackground(DefaultColor);
         
         viewtasksPanel.setVisible(false);
         taskhistoryPanel.setVisible(false);
         notificationsPanel.setVisible(false);
         custreviewsPanel.setVisible(true);
-        supportPanel.setVisible(false);
+        revenueDbPanel.setVisible(false);
         
         welcometxt.setVisible(false);
         usernametxt.setVisible(false);
     }//GEN-LAST:event_custreviewsTabMousePressed
 
-    private void supportTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_supportTabMousePressed
+    private void revenueDbTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_revenueDbTabMousePressed
         // TODO add your handling code here:
-        supportTab.setBackground(ClickedColor);
+        revenueDbTab.setBackground(ClickedColor);
          viewtasksTab.setBackground(DefaultColor);
         taskhistoryTab.setBackground(DefaultColor);
         notificationsTab.setBackground(DefaultColor);
@@ -1000,12 +999,12 @@ public class DrDashboard extends javax.swing.JFrame {
         taskhistoryPanel.setVisible(false);
         notificationsPanel.setVisible(false);
         custreviewsPanel.setVisible(false);
-        supportPanel.setVisible(true);
+        revenueDbPanel.setVisible(true);
         
         welcometxt.setVisible(false);
         usernametxt.setVisible(false);
         
-    }//GEN-LAST:event_supportTabMousePressed
+    }//GEN-LAST:event_revenueDbTabMousePressed
 
     private void viewtasksTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewtasksTabMouseClicked
         // TODO add your handling code here:
@@ -1027,10 +1026,10 @@ public class DrDashboard extends javax.swing.JFrame {
          
     }//GEN-LAST:event_custreviewsTabMouseClicked
 
-    private void supportTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_supportTabMouseClicked
+    private void revenueDbTabMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_revenueDbTabMouseClicked
         // TODO add your handling code here:
          
-    }//GEN-LAST:event_supportTabMouseClicked
+    }//GEN-LAST:event_revenueDbTabMouseClicked
 
     private void DeliveredBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeliveredBtnActionPerformed
         // TODO add your handling code here:
@@ -1187,7 +1186,7 @@ public class DrDashboard extends javax.swing.JFrame {
         String total = notificationsTable.getValueAt(selectedRow, 6).toString();
 
         // Move to view tasks
-        viewTasksModel.addRow(new Object[]{deliveryID, foodItems, pickupAddress, deliveryAddress, phoneNumber, paymentStatus, total});
+        viewTasksModel.addRow(new Object[]{deliveryID, foodItems, pickupAddress, deliveryAddress, phoneNumber, paymentStatus, total, "Pending"});
 
         // Remove from notifications
         notificationsModel.removeRow(selectedRow);
@@ -1274,10 +1273,10 @@ public class DrDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel notificationsTab;
     private javax.swing.JTable notificationsTable;
     private javax.swing.JTextArea receiptArea;
+    private javax.swing.JPanel revenueDbPanel;
+    private javax.swing.JLabel revenueDbTab;
     private javax.swing.JTextField searchField;
     private javax.swing.JLabel searchLabel;
-    private javax.swing.JPanel supportPanel;
-    private javax.swing.JLabel supportTab;
     private javax.swing.JLabel taskhistoryLabel;
     private javax.swing.JLabel taskhistoryLabel1;
     private javax.swing.JLabel taskhistoryLabel2;

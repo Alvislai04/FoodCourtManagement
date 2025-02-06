@@ -27,7 +27,7 @@ public class DrDashboard extends javax.swing.JFrame {
         initComponents();
         usernametxt.setText(Login.getUsername());
         
-        this.setSize(1000,620);
+        this.setSize(1022,540); //(width,height)
         this.setResizable(false);
         
         DefaultColor = new Color(153,89,16);
@@ -230,6 +230,7 @@ public class DrDashboard extends javax.swing.JFrame {
         AcceptBtn = new javax.swing.JButton();
         custreviewsPanel = new javax.swing.JPanel();
         revenueDbPanel = new javax.swing.JPanel();
+        revenueDbLabel = new javax.swing.JLabel();
         taskhistoryPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taskhistoryTable = new javax.swing.JTable();
@@ -461,6 +462,7 @@ public class DrDashboard extends javax.swing.JFrame {
         welcometxt.setBounds(29, 0, 230, 460);
 
         notificationsPanel.setBackground(new java.awt.Color(153, 89, 16));
+        notificationsPanel.setMaximumSize(new java.awt.Dimension(1022, 530));
 
         taskhistoryLabel2.setBackground(new java.awt.Color(255, 255, 255));
         taskhistoryLabel2.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
@@ -550,7 +552,7 @@ public class DrDashboard extends javax.swing.JFrame {
         custreviewsPanel.setLayout(custreviewsPanelLayout);
         custreviewsPanelLayout.setHorizontalGroup(
             custreviewsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 610, Short.MAX_VALUE)
+            .addGap(0, 710, Short.MAX_VALUE)
         );
         custreviewsPanelLayout.setVerticalGroup(
             custreviewsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -558,23 +560,35 @@ public class DrDashboard extends javax.swing.JFrame {
         );
 
         welcomePanel.add(custreviewsPanel);
-        custreviewsPanel.setBounds(0, 0, 610, 460);
+        custreviewsPanel.setBounds(0, 0, 710, 460);
 
         revenueDbPanel.setBackground(new java.awt.Color(255, 153, 0));
+
+        revenueDbLabel.setBackground(new java.awt.Color(255, 255, 255));
+        revenueDbLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
+        revenueDbLabel.setForeground(new java.awt.Color(255, 255, 255));
+        revenueDbLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        revenueDbLabel.setText("REVENUE DASHBOARD");
 
         javax.swing.GroupLayout revenueDbPanelLayout = new javax.swing.GroupLayout(revenueDbPanel);
         revenueDbPanel.setLayout(revenueDbPanelLayout);
         revenueDbPanelLayout.setHorizontalGroup(
             revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 610, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, revenueDbPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(revenueDbLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 873, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         revenueDbPanelLayout.setVerticalGroup(
             revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 460, Short.MAX_VALUE)
+            .addGroup(revenueDbPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(revenueDbLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(396, Short.MAX_VALUE))
         );
 
         welcomePanel.add(revenueDbPanel);
-        revenueDbPanel.setBounds(0, 0, 610, 460);
+        revenueDbPanel.setBounds(0, 0, 710, 460);
 
         taskhistoryPanel.setBackground(new java.awt.Color(153, 89, 16));
         taskhistoryPanel.setMinimumSize(new java.awt.Dimension(700, 580));
@@ -665,15 +679,15 @@ public class DrDashboard extends javax.swing.JFrame {
             .addGroup(taskhistoryPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(taskhistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(taskhistoryLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 603, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(taskhistoryLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 873, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(taskhistoryPanelLayout.createSequentialGroup()
                         .addComponent(searchLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(SearchBtn)))
-                .addGap(0, 85, Short.MAX_VALUE))
+                        .addComponent(SearchBtn))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 690, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         taskhistoryPanelLayout.setVerticalGroup(
             taskhistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -681,17 +695,17 @@ public class DrDashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(taskhistoryLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
                 .addGroup(taskhistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchLabel)
                     .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(SearchBtn))
-                .addContainerGap(250, Short.MAX_VALUE))
+                .addContainerGap(180, Short.MAX_VALUE))
         );
 
         welcomePanel.add(taskhistoryPanel);
-        taskhistoryPanel.setBounds(0, 0, 610, 460);
+        taskhistoryPanel.setBounds(0, 0, 710, 460);
 
         viewtasksPanel.setBackground(new java.awt.Color(153, 89, 16));
         viewtasksPanel.setMinimumSize(new java.awt.Dimension(700, 580));
@@ -843,7 +857,7 @@ public class DrDashboard extends javax.swing.JFrame {
         );
 
         welcomePanel.add(viewtasksPanel);
-        viewtasksPanel.setBounds(0, 0, 610, 460);
+        viewtasksPanel.setBounds(0, 0, 710, 460);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -852,7 +866,7 @@ public class DrDashboard extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(menubarPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(welcomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE))
+                .addComponent(welcomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 714, Short.MAX_VALUE))
             .addComponent(tastiesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -862,7 +876,8 @@ public class DrDashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(menubarPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(welcomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(welcomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -1273,6 +1288,7 @@ public class DrDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel notificationsTab;
     private javax.swing.JTable notificationsTable;
     private javax.swing.JTextArea receiptArea;
+    private javax.swing.JLabel revenueDbLabel;
     private javax.swing.JPanel revenueDbPanel;
     private javax.swing.JLabel revenueDbTab;
     private javax.swing.JTextField searchField;

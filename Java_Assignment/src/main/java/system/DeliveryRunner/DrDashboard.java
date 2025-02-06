@@ -27,7 +27,7 @@ public class DrDashboard extends javax.swing.JFrame {
         initComponents();
         usernametxt.setText(Login.getUsername());
         
-        this.setSize(980,580);
+        this.setSize(1000,620);
         this.setResizable(false);
         
         DefaultColor = new Color(153,89,16);
@@ -42,11 +42,74 @@ public class DrDashboard extends javax.swing.JFrame {
         
         populateviewtasksTable();
         addTableRowClickListener();
+        
+        populateNotificationsTable();
+        
         populatetaskhistoryTable();
+        viewtasksTable.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting()) {
+            updateButtonState();
+            }
+        });
         
+        CollectedBtn.setEnabled(false);
+        DeliveredBtn.setEnabled(false);
         
+        notificationsTable.getSelectionModel().addListSelectionListener(event -> {
+         if (!event.getValueIsAdjusting()) {
+        updateNotificationButtonState();
+            }
+        });
                         
         }
+    
+    private void populateNotificationsTable() {
+    // Example of new tasks waiting for acceptance
+    Object[][] notificationData = {
+        {"DR003", "Chicken Rice, Iced Lemon Tea", "22 Jalan ABC", "90 Jalan XYZ", "018-2233445", "Unpaid", "18.00"},
+        {"DR004", "Burger, Fries, Soda", "Mall Food Court", "55 Apartment JKL", "017-5566778", "Paid", "22.50"}
+    };
+
+    // Column headers
+    String[] columnNames = {"Delivery ID", "Food Items", "Pick-up Address", "Delivery Address", "Phone Number", "Payment Status", "Total"};
+
+    // Set the table model
+    notificationsTable.setModel(new DefaultTableModel(notificationData, columnNames));
+}
+    
+    private void updateNotificationButtonState() {
+    int selectedRow = notificationsTable.getSelectedRow();
+    
+    if (selectedRow != -1) {
+        AcceptBtn.setEnabled(true);
+        DeclineBtn.setEnabled(true);
+    } else {
+        AcceptBtn.setEnabled(false);
+        DeclineBtn.setEnabled(false);
+    }
+}
+    
+    
+    
+    private void updateButtonState() {
+    int selectedRow = viewtasksTable.getSelectedRow();
+
+    if (selectedRow != -1) {
+        String status = viewtasksTable.getValueAt(selectedRow, 7).toString(); // Assuming status is in column 5
+
+        if (status.equals("Pending")) {
+            CollectedBtn.setEnabled(true);
+            DeliveredBtn.setEnabled(false);
+        } else if (status.equals("Collected")) {
+            CollectedBtn.setEnabled(false);
+            DeliveredBtn.setEnabled(true);
+        }
+    } else {
+        // No row selected, disable both buttons
+        CollectedBtn.setEnabled(false);
+        DeliveredBtn.setEnabled(false);
+    }
+}
     private ImageIcon scaleImageIcon(String imagePath, int width, int height) {
         ImageIcon icon = new ImageIcon(imagePath);
         Image image = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
@@ -75,15 +138,15 @@ public class DrDashboard extends javax.swing.JFrame {
             {"DR001", """
                       Nasi Lemak
                       Nasi Goreng
-                      Teh Ais""", "123 Street A", "456 Street B", "012-3456789", "Paid", "25.50"},
+                      Teh Ais""", "123 Street A", "456 Street B", "012-3456789", "Paid", "25.50", "Pending"},
             {"DR002", """
                       Nasi Kerabu
                       Mee Goreng
-                      Kopi Ais""","789 Street C", "101 Street D", "011-9876543", "Unpaid", "15.00"}
+                      Kopi Ais""","789 Street C", "101 Street D", "011-9876543", "Unpaid", "15.00", "Pending"}
         };
 
         // Column headers
-        String[] columnNames = {"Delivery ID", "Food Items","Pick-up Address", "Delivery Address", "Phone Number", "Payment Status", "Total"};
+        String[] columnNames = {"Delivery ID", "Food Items","Pick-up Address", "Delivery Address", "Phone Number", "Payment Status", "Total", "Order Status"};
 
         // Set the table model with data and column names
         viewtasksTable.setModel(new javax.swing.table.DefaultTableModel(taskData, columnNames));
@@ -160,6 +223,11 @@ public class DrDashboard extends javax.swing.JFrame {
         usernametxt = new javax.swing.JLabel();
         welcometxt = new javax.swing.JLabel();
         notificationsPanel = new javax.swing.JPanel();
+        taskhistoryLabel2 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        notificationsTable = new javax.swing.JTable();
+        DeclineBtn = new javax.swing.JButton();
+        AcceptBtn = new javax.swing.JButton();
         custreviewsPanel = new javax.swing.JPanel();
         supportPanel = new javax.swing.JPanel();
         taskhistoryPanel = new javax.swing.JPanel();
@@ -176,9 +244,11 @@ public class DrDashboard extends javax.swing.JFrame {
         DeliveredBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         taskhistoryLabel1 = new javax.swing.JLabel();
+        CollectedBtn = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(980, 580));
+        setPreferredSize(new java.awt.Dimension(1000, 620));
 
         tastiesPanel.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -366,7 +436,7 @@ public class DrDashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(custreviewsTab, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(supportTab, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                .addComponent(supportTab, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
                 .addGap(9, 9, 9)
                 .addComponent(logoutBtn)
                 .addContainerGap())
@@ -393,19 +463,87 @@ public class DrDashboard extends javax.swing.JFrame {
 
         notificationsPanel.setBackground(new java.awt.Color(102, 255, 102));
 
+        taskhistoryLabel2.setBackground(new java.awt.Color(255, 255, 255));
+        taskhistoryLabel2.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
+        taskhistoryLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        taskhistoryLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        taskhistoryLabel2.setText("NOTIFICATIONS");
+
+        notificationsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Delivery ID", "Food Items", "Pick-up Add.", "Delivery Add.", "Phone Number", "Payment Status", "Total"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(notificationsTable);
+
+        DeclineBtn.setText("DECLINE");
+        DeclineBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeclineBtnActionPerformed(evt);
+            }
+        });
+
+        AcceptBtn.setText("ACCEPT");
+        AcceptBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AcceptBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout notificationsPanelLayout = new javax.swing.GroupLayout(notificationsPanel);
         notificationsPanel.setLayout(notificationsPanelLayout);
         notificationsPanelLayout.setHorizontalGroup(
             notificationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 690, Short.MAX_VALUE)
+            .addGroup(notificationsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(notificationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 678, Short.MAX_VALUE)
+                    .addComponent(taskhistoryLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, notificationsPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(AcceptBtn)
+                .addGap(41, 41, 41)
+                .addComponent(DeclineBtn)
+                .addGap(14, 14, 14))
         );
         notificationsPanelLayout.setVerticalGroup(
             notificationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 460, Short.MAX_VALUE)
+            .addGroup(notificationsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(taskhistoryLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(notificationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(DeclineBtn)
+                    .addComponent(AcceptBtn))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         welcomePanel.add(notificationsPanel);
-        notificationsPanel.setBounds(0, 0, 690, 460);
+        notificationsPanel.setBounds(0, 0, 690, 464);
 
         custreviewsPanel.setBackground(new java.awt.Color(255, 51, 51));
 
@@ -564,43 +702,43 @@ public class DrDashboard extends javax.swing.JFrame {
         viewtasksTable.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         viewtasksTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Delivery No.", "Pick-up Add.", "Delivery Add.", "Cust. Phone", "Payment Status", "Total"
+                "Delivery No.", "Pick-up Add.", "Delivery Add.", "Cust. Phone", "Payment Status", "Total", "Order Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -608,7 +746,7 @@ public class DrDashboard extends javax.swing.JFrame {
             }
         });
         viewtasksTable.setGridColor(new java.awt.Color(0, 0, 0));
-        viewtasksTable.setPreferredSize(new java.awt.Dimension(490, 460));
+        viewtasksTable.setPreferredSize(new java.awt.Dimension(490, 500));
         viewtasksTable.setSelectionBackground(new java.awt.Color(153, 89, 16));
         viewtasksTable.setShowVerticalLines(true);
         jScrollPane1.setViewportView(viewtasksTable);
@@ -617,6 +755,11 @@ public class DrDashboard extends javax.swing.JFrame {
         receiptArea.setRows(5);
 
         DeliveredBtn.setText("DELIVERED");
+        DeliveredBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                DeliveredBtnMousePressed(evt);
+            }
+        });
         DeliveredBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 DeliveredBtnActionPerformed(evt);
@@ -624,13 +767,23 @@ public class DrDashboard extends javax.swing.JFrame {
         });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 8)); // NOI18N
-        jLabel1.setText("*ONLY CLICK WHEN ORDER HAS BEEN DELIVERED");
+        jLabel1.setText("*PLEASE INSERT IMAGE FOR PROOF OF DELIVERY");
 
         taskhistoryLabel1.setBackground(new java.awt.Color(255, 255, 255));
         taskhistoryLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
         taskhistoryLabel1.setForeground(new java.awt.Color(255, 255, 255));
         taskhistoryLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         taskhistoryLabel1.setText("VIEW TASKS");
+
+        CollectedBtn.setText("COLLECTED");
+        CollectedBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CollectedBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 3, 8)); // NOI18N
+        jLabel2.setText("*PLEASE UPDATE WHEN ORDER HAS BEEN COLLECTED");
 
         javax.swing.GroupLayout viewtasksPanelLayout = new javax.swing.GroupLayout(viewtasksPanel);
         viewtasksPanel.setLayout(viewtasksPanelLayout);
@@ -639,18 +792,33 @@ public class DrDashboard extends javax.swing.JFrame {
             .addGroup(viewtasksPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
+                        .addGroup(viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(taskhistoryLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1))
+                        .addContainerGap())
                     .addGroup(viewtasksPanelLayout.createSequentialGroup()
                         .addComponent(receiptArea, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(viewtasksPanelLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel1))
-                            .addGroup(viewtasksPanelLayout.createSequentialGroup()
-                                .addGap(71, 71, 71)
-                                .addComponent(DeliveredBtn))))
-                    .addComponent(taskhistoryLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 87, Short.MAX_VALUE))
+                                .addGap(53, 53, 53)
+                                .addGroup(viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(viewtasksPanelLayout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jLabel1)
+                                        .addGap(56, 56, 56))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
+                                        .addComponent(CollectedBtn)
+                                        .addGap(103, 103, 103))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
+                                        .addComponent(DeliveredBtn)
+                                        .addGap(101, 101, 101))))))))
         );
         viewtasksPanelLayout.setVerticalGroup(
             viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -658,16 +826,21 @@ public class DrDashboard extends javax.swing.JFrame {
                 .addComponent(taskhistoryLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
+                .addGroup(viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(viewtasksPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(receiptArea, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(viewtasksPanelLayout.createSequentialGroup()
+                        .addGap(75, 75, 75)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(CollectedBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(DeliveredBtn)
-                        .addGap(123, 123, 123))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
-                        .addComponent(receiptArea, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36))))
+                        .addGap(45, 45, 45)))
+                .addGap(36, 36, 36))
         );
 
         welcomePanel.add(viewtasksPanel);
@@ -680,7 +853,7 @@ public class DrDashboard extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(menubarPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(welcomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE))
+                .addComponent(welcomePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE))
             .addComponent(tastiesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -980,6 +1153,65 @@ public class DrDashboard extends javax.swing.JFrame {
         
     }//GEN-LAST:event_SearchBtnActionPerformed
 
+    private void CollectedBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CollectedBtnActionPerformed
+        // TODO add your handling code here:
+         int selectedRow = viewtasksTable.getSelectedRow();
+
+    if (selectedRow != -1) {
+        viewtasksTable.setValueAt("Collected", selectedRow, 7); // Update status to "Collected"
+        updateButtonState(); // Refresh button states
+    }
+  
+
+    }//GEN-LAST:event_CollectedBtnActionPerformed
+
+    private void DeliveredBtnMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DeliveredBtnMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DeliveredBtnMousePressed
+
+    private void AcceptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AcceptBtnActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = notificationsTable.getSelectedRow();
+
+    if (selectedRow != -1) {
+        DefaultTableModel notificationsModel = (DefaultTableModel) notificationsTable.getModel();
+        DefaultTableModel viewTasksModel = (DefaultTableModel) viewtasksTable.getModel();
+
+        // Get task details
+        String deliveryID = notificationsTable.getValueAt(selectedRow, 0).toString();
+        String foodItems = notificationsTable.getValueAt(selectedRow, 1).toString();
+        String pickupAddress = notificationsTable.getValueAt(selectedRow, 2).toString();
+        String deliveryAddress = notificationsTable.getValueAt(selectedRow, 3).toString();
+        String phoneNumber = notificationsTable.getValueAt(selectedRow, 4).toString();
+        String paymentStatus = notificationsTable.getValueAt(selectedRow, 5).toString();
+        String total = notificationsTable.getValueAt(selectedRow, 6).toString();
+
+        // Move to view tasks
+        viewTasksModel.addRow(new Object[]{deliveryID, foodItems, pickupAddress, deliveryAddress, phoneNumber, paymentStatus, total});
+
+        // Remove from notifications
+        notificationsModel.removeRow(selectedRow);
+    } else {
+        JOptionPane.showMessageDialog(null, "Please select a task to accept.");
+    }
+
+    }//GEN-LAST:event_AcceptBtnActionPerformed
+
+    private void DeclineBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeclineBtnActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = notificationsTable.getSelectedRow();
+
+    if (selectedRow != -1) {
+        DefaultTableModel notificationsModel = (DefaultTableModel) notificationsTable.getModel();
+
+        // Remove the declined task
+        notificationsModel.removeRow(selectedRow);
+    } else {
+        JOptionPane.showMessageDialog(null, "Please select a task to decline.");
+    }
+
+    }//GEN-LAST:event_DeclineBtnActionPerformed
+
     private void goToLogout(){
         Login loginframe = new Login();
         loginframe.setVisible(true);
@@ -1022,19 +1254,25 @@ public class DrDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AcceptBtn;
+    private javax.swing.JButton CollectedBtn;
+    private javax.swing.JButton DeclineBtn;
     private javax.swing.JButton DeliveredBtn;
     private javax.swing.JButton SearchBtn;
     private javax.swing.JPanel custreviewsPanel;
     private javax.swing.JLabel custreviewsTab;
     private javax.swing.JLabel drName;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private java.awt.List list1;
     private javax.swing.JButton logoutBtn;
     private javax.swing.JPanel menubarPanel;
     private javax.swing.JPanel notificationsPanel;
     private javax.swing.JLabel notificationsTab;
+    private javax.swing.JTable notificationsTable;
     private javax.swing.JTextArea receiptArea;
     private javax.swing.JTextField searchField;
     private javax.swing.JLabel searchLabel;
@@ -1042,6 +1280,7 @@ public class DrDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel supportTab;
     private javax.swing.JLabel taskhistoryLabel;
     private javax.swing.JLabel taskhistoryLabel1;
+    private javax.swing.JLabel taskhistoryLabel2;
     private javax.swing.JPanel taskhistoryPanel;
     private javax.swing.JLabel taskhistoryTab;
     private javax.swing.JTable taskhistoryTable;

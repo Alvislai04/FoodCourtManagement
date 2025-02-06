@@ -1,15 +1,16 @@
 package system.admin;
 
 public class User {
-    private String id;
-    private String name;
-    private String address;
-    private String phonenumber;
-    private String username;
-    private String password;
-    private String roles;
+    protected String id;
+    protected String name;
+    protected String address;
+    protected String phonenumber;
+    protected String username;
+    protected String password;
+    protected String roles;
+    protected double balance;
     
-    public User(String id, String name, String address, String phoneno, String username, String password, String roles) {
+    protected User(String id, String name, String address, String phoneno, String username, String password, String roles, double balance) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -17,6 +18,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.roles = roles;
+        this.balance = balance;
     }
     
     public String getId() {
@@ -73,5 +75,13 @@ public class User {
     
     public void setRoles(String roles) {
         this.roles = roles;
+    }
+    
+    public double getBalance() {
+        return balance;
+    }
+    
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 }

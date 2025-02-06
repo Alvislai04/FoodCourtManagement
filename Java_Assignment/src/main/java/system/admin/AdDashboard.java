@@ -4,13 +4,18 @@ package system.admin;
 import com.system.Login;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
@@ -24,8 +29,9 @@ public class AdDashboard extends javax.swing.JFrame {
     String vendorPrefix = "V";
     String deliveryRunnerPrefix = "D";
     String nextCustomerID = IdGenerator.getNextRoleID(customerPrefix, roleFilePath);
-        
+
     private boolean isPanelVisible = false;
+    private boolean isLoaded = false;
     Login login = new Login();
     
     public JPanel getJp1(){
@@ -48,19 +54,20 @@ public class AdDashboard extends javax.swing.JFrame {
 
     public AdDashboard() {
         initComponents();
-        
+
+        showIdInCbx(null);
         jp2.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            if (!employeeTable.getBounds().contains(e.getPoint())) {
-                employeeTable.clearSelection(); // Deselect row
-                for(ActionListener al: rolecbx.getActionListeners()){
-                rolecbx.removeActionListener(al);
-                rolecbx.setEnabled(true);
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (!employeeTable.getBounds().contains(e.getPoint())) {
+                    employeeTable.clearSelection(); // Deselect row
+                        for (ActionListener al : rolecbx.getActionListeners()) {
+                            rolecbx.addActionListener(al);
+                        }
+                        rolecbx.setEnabled(true); // Disable after removing listeners
+                }
             }
-            }
-        }
-    });
+        });
         
         TableActionEvent event = new TableActionEvent(){
             @Override
@@ -199,9 +206,9 @@ public class AdDashboard extends javax.swing.JFrame {
             String password = (String) employeeTable.getValueAt(selectedRow, 5);
             String role = (String) employeeTable.getValueAt(selectedRow, 6);
             
-            
+            double balance = getBalanceFromFile(id);
             //get id from file
-            User user = new User(id, name, address, phoneno, username, password, role);
+            User user = new User(id, name, address, phoneno, username, password, role, balance);
 
             idtxt.setText(user.getId());
             nametxt.setText(user.getName());
@@ -221,6 +228,21 @@ public class AdDashboard extends javax.swing.JFrame {
             passwordtxt.setText("");
             rolecbx.setSelectedIndex(0);
         }
+    }
+    
+    private double getBalanceFromFile(String userId) {
+        try (BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] userDetails = line.split(";");
+                if (userDetails.length >= 8 && userDetails[0].equals(userId)) {
+                    return Double.parseDouble(userDetails[7]); // Assuming balance is in index 7
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Error fetching balance: " + e.getMessage());
+        }
+        return 0.0; // Default balance if not found
     }
     
     public void refreshData() {
@@ -250,6 +272,54 @@ public class AdDashboard extends javax.swing.JFrame {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
+    }
+    
+    private void updateIDBasedOnRole() {
+        String roleFilePath = "users.txt"; // Ensure the correct file path
+        String selectedRole = rolecbx.getSelectedItem().toString(); // Get selected role
+
+        // Determine the correct prefix
+        String prefix = "";
+        if (selectedRole.equalsIgnoreCase("Vendor")) {
+            prefix = "V";
+        } else if (selectedRole.equalsIgnoreCase("Delivery Runner")) {
+            prefix = "D";
+        } else if (selectedRole.equalsIgnoreCase("Customer")) {
+            prefix = "C";
+        }
+
+        // Get the next available ID and set it to idtxt
+        String newId = IdGenerator.getNextRoleID(prefix, roleFilePath);
+        idtxt.setText(newId);
+    }
+
+    private void showIdInCbx(java.awt.event.ItemEvent evt) {
+        if (isLoaded) {
+        return; // Skip loading if already done
+    }
+        cbxSelectId.removeAll();
+
+        try (BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] userDetails = line.split(";");
+                if (userDetails.length > 0) {
+                    String userType = userDetails[6]; // User type is in the 7th column (index 6)
+                    if ("Customer".equals(userType)) {
+                        cbxSelectId.addItem(userDetails[0]); // Add ID to ComboBox if the user is a Customer
+                    }
+                }
+            }
+            isLoaded = true; // Mark as loaded
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error loading user IDs: " + e.getMessage());
+        }
+    }
+    
+    public void goToLogout(){
+        Login loginframe = new Login();
+        loginframe.setVisible(true);
+        dispose();
     }
     
     /**
@@ -309,15 +379,15 @@ public class AdDashboard extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         topupTable = new javax.swing.JTable();
-        jComboBox1 = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        cbxPaymentMethod = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        topUpTxt = new javax.swing.JTextField();
+        topupBtn = new javax.swing.JButton();
+        GenerateReceiptBtn = new javax.swing.JButton();
         title_label5 = new javax.swing.JLabel();
+        cbxSelectId = new java.awt.Choice();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.gray);
@@ -866,27 +936,31 @@ public class AdDashboard extends javax.swing.JFrame {
             topupTable.getColumnModel().getColumn(3).setPreferredWidth(1);
         }
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jLabel1.setText("Select a customer id: ");
 
-        jLabel1.setText("Select a customer: ");
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "TnGo E-Wallet", "Credit/Debit Card", "Bank Transfer" }));
+        cbxPaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "TnGo E-Wallet", "Credit/Debit Card", "Bank Transfer" }));
 
         jLabel10.setText("Payment Method: ");
 
         jLabel11.setText("Top-Up Amount (RM) : ");
 
-        jButton6.setText("Top-Up");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        topUpTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                topUpTxtActionPerformed(evt);
             }
         });
 
-        jButton7.setText("Generate Receipt");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        topupBtn.setText("Top-Up");
+        topupBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                topupBtnActionPerformed(evt);
+            }
+        });
+
+        GenerateReceiptBtn.setText("Generate Receipt");
+        GenerateReceiptBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GenerateReceiptBtnActionPerformed(evt);
             }
         });
 
@@ -903,18 +977,17 @@ public class AdDashboard extends javax.swing.JFrame {
                     .addGroup(jp3Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton7)
+                            .addComponent(GenerateReceiptBtn)
                             .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel11)
                                 .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)))
                         .addGap(107, 107, 107)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton6, javax.swing.GroupLayout.Alignment.TRAILING)))
+                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cbxPaymentMethod, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(topUpTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                            .addComponent(topupBtn, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cbxSelectId, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jp3Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -922,7 +995,7 @@ public class AdDashboard extends javax.swing.JFrame {
                         .addComponent(title_label5)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 908, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp3Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(title_label4)
@@ -937,30 +1010,36 @@ public class AdDashboard extends javax.swing.JFrame {
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jp3Layout.createSequentialGroup()
-                        .addGap(111, 111, 111)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
+                        .addGap(17, 17, 17)
+                        .addComponent(title_label4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
+                    .addGroup(jp3Layout.createSequentialGroup()
+                        .addGap(110, 110, 110)
+                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(cbxSelectId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbxPaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel10))
                         .addGap(18, 18, 18)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel11)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(topUpTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(54, 54, 54)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton6)
-                            .addComponent(jButton7))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jp3Layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(title_label4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)))
+                            .addComponent(topupBtn)
+                            .addComponent(GenerateReceiptBtn))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
+
+        cbxSelectId.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                showIdInCbx(evt);
+            }
+        });
 
         javax.swing.GroupLayout mainLayout = new javax.swing.GroupLayout(main);
         main.setLayout(mainLayout);
@@ -1186,6 +1265,7 @@ public class AdDashboard extends javax.swing.JFrame {
                 + usernametxt.getText().trim() + ";"
                 + new String(passwordtxt.getPassword()).trim() + ";"
                 + rolecbx.getSelectedItem().toString() + ";"
+                + "0" + ";" //Balance
                 + "\n"
             );
             fw.close();
@@ -1416,38 +1496,80 @@ public class AdDashboard extends javax.swing.JFrame {
 
     }//GEN-LAST:event_idtxtActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+    private void topupBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_topupBtnActionPerformed
+        try {
+            String id = cbxSelectId.getSelectedItem().toString();
+            String paymentMethod = cbxPaymentMethod.getSelectedItem().toString();
+            String amount = topUpTxt.getText();
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
-    
-    private void updateIDBasedOnRole() {
-        String roleFilePath = "users.txt"; // Ensure the correct file path
-        String selectedRole = rolecbx.getSelectedItem().toString(); // Get selected role
+            if (id.trim().isEmpty() ||
+                paymentMethod.trim().isEmpty() ||
+                amount.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter an amount to top-up");
+                return;
+            }
 
-        // Determine the correct prefix
-        String prefix = "";
-        if (selectedRole.equalsIgnoreCase("Vendor")) {
-            prefix = "V";
-        } else if (selectedRole.equalsIgnoreCase("Delivery Runner")) {
-            prefix = "D";
-        } else if (selectedRole.equalsIgnoreCase("Customer")) {
-            prefix = "C";
+            double topupAmount;
+        try {
+            topupAmount = Double.parseDouble(amount);
+            if (topupAmount <= 0) {
+                JOptionPane.showMessageDialog(null, "Topup amount must be greater than zero!");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Topup amount must be numeric!!");
+            return;
+        }
+        
+        File inputFile = new File("users.txt");
+        StringBuilder fileContent = new StringBuilder(); // To hold the entire file content
+
+        BufferedReader br = new BufferedReader(new FileReader(inputFile));
+        String line;
+        boolean userFound = false;
+
+        // Read the file and modify the content
+        while ((line = br.readLine()) != null) {
+            String[] userDetails = line.split(";");
+            if (userDetails.length >= 8 && userDetails[0].equals(id)) {
+                userFound = true;
+
+                double currentBalance = Double.parseDouble(userDetails[7]); // Balance is at index 7
+                double newBalance = currentBalance + topupAmount;
+                userDetails[7] = String.valueOf(newBalance); // Update balance
+                line = String.join(";", userDetails) +";"; // Rebuild the line with updated balance
+            }
+            fileContent.append(line).append("\n"); // Append the modified line to the content
         }
 
-        // Get the next available ID and set it to idtxt
-        String newId = IdGenerator.getNextRoleID(prefix, roleFilePath);
-        idtxt.setText(newId);
-    }
+        br.close();
 
-    public void goToLogout(){
-        Login loginframe = new Login();
-        loginframe.setVisible(true);
-        dispose();
-    }
+        if (!userFound) {
+            JOptionPane.showMessageDialog(null, "User ID not found!");
+            return;
+        }
+
+        BufferedWriter bw = new BufferedWriter(new FileWriter(inputFile));
+        bw.write(fileContent.toString()); // Write the modified content to the original file
+        bw.close();
+
+        cbxSelectId.select(0);
+        cbxPaymentMethod.setSelectedIndex(0);
+        topUpTxt.setText("");
+        JOptionPane.showMessageDialog(null, "Top-up successful!");
+        this.refreshData(); // Refresh UI if needed
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error updating record: " + e.getMessage());
+        }
+    }//GEN-LAST:event_topupBtnActionPerformed
+
+    private void GenerateReceiptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateReceiptBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_GenerateReceiptBtnActionPerformed
+
+    private void topUpTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_topUpTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_topUpTxtActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -1482,9 +1604,12 @@ public class AdDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton GenerateReceiptBtn;
     private javax.swing.JPanel Navigation;
     private javax.swing.JButton addbtn;
     private javax.swing.JTextField addresstxt;
+    private javax.swing.JComboBox<String> cbxPaymentMethod;
+    private java.awt.Choice cbxSelectId;
     private javax.swing.JButton clearbtn;
     private javax.swing.JButton deletebtn;
     private javax.swing.JPanel editAccount;
@@ -1497,10 +1622,6 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1515,7 +1636,6 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel jp1;
     private javax.swing.JPanel jp2;
     private javax.swing.JPanel jp3;
@@ -1536,6 +1656,8 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel title_label4;
     private javax.swing.JLabel title_label5;
     private javax.swing.JPanel topUp;
+    private javax.swing.JTextField topUpTxt;
+    private javax.swing.JButton topupBtn;
     private javax.swing.JTable topupTable;
     private javax.swing.JButton updatebtn;
     private javax.swing.JTextField usernametxt;

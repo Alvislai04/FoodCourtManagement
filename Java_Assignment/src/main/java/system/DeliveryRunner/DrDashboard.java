@@ -9,6 +9,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -157,7 +160,7 @@ public class DrDashboard extends javax.swing.JFrame {
     
     private void populatetaskhistoryTable() {
     // Column headers for the task history table
-    String[] columnNames = {"Delivery ID", "Food Items", "Pick-up Address", "Delivery Address", "Phone Number", "Payment Status", "Total", "Proof of Delivery"};
+    String[] columnNames = {"Date", "Delivery ID", "Food Items", "Pick-up Address", "Delivery Address", "Phone Number", "Payment Status", "Total", "Proof of Delivery"};
 
     // Set the table model with just column names (no data initially)
     taskhistoryTable.setModel(new javax.swing.table.DefaultTableModel(new Object[0][0], columnNames));
@@ -202,6 +205,54 @@ public class DrDashboard extends javax.swing.JFrame {
                    + "Total: RM " + total;
     receiptArea.setText(receipt);
 }
+    
+    private void calculateTotalRevenue(String filterType) {
+    DefaultTableModel model = (DefaultTableModel) taskhistoryTable.getModel();
+    double totalRevenue = 0.0;
+    
+    // Get today's date
+    LocalDate today = LocalDate.now();
+    
+    // Loop through task history table
+    for (int i = 0; i < model.getRowCount(); i++) {
+        // Get order date from column
+        String dateString = model.getValueAt(i, 1).toString();
+        
+        try {
+            // Convert String to LocalDate
+            LocalDate orderDate = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            
+            // Filter based on selected option
+            if (filterType.equals("Day") && orderDate.equals(today)) {
+                totalRevenue += getOrderRevenue(model, i);
+            } 
+            else if (filterType.equals("Week") && orderDate.isAfter(today.minusDays(7))) {
+                totalRevenue += getOrderRevenue(model, i);
+            } 
+            else if (filterType.equals("Month") && orderDate.getMonth() == today.getMonth()) {
+                totalRevenue += getOrderRevenue(model, i);
+            }
+        } catch (DateTimeParseException e) {
+            System.out.println("Error parsing date: " + dateString);
+        }
+    }
+
+    // Format and display revenue
+    String formattedRevenue = String.format("RM %.2f", totalRevenue);
+    totalrevenue.setText(formattedRevenue);
+}
+
+// Helper method to get 10% of order total
+private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
+    try {
+        double orderTotal = Double.parseDouble(model.getValueAt(rowIndex, 6).toString());
+        return orderTotal * 0.1;
+    } catch (NumberFormatException e) {
+        System.out.println("Error converting price.");
+        return 0.0;
+    }
+}
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -220,6 +271,7 @@ public class DrDashboard extends javax.swing.JFrame {
         drName = new javax.swing.JLabel();
         logoutBtn = new javax.swing.JButton();
         welcomePanel = new javax.swing.JPanel();
+        homePanel = new javax.swing.JPanel();
         usernametxt = new javax.swing.JLabel();
         welcometxt = new javax.swing.JLabel();
         notificationsPanel = new javax.swing.JPanel();
@@ -229,8 +281,6 @@ public class DrDashboard extends javax.swing.JFrame {
         DeclineBtn = new javax.swing.JButton();
         AcceptBtn = new javax.swing.JButton();
         custreviewsPanel = new javax.swing.JPanel();
-        revenueDbPanel = new javax.swing.JPanel();
-        revenueDbLabel = new javax.swing.JLabel();
         taskhistoryPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taskhistoryTable = new javax.swing.JTable();
@@ -238,6 +288,14 @@ public class DrDashboard extends javax.swing.JFrame {
         searchField = new javax.swing.JTextField();
         searchLabel = new javax.swing.JLabel();
         SearchBtn = new javax.swing.JButton();
+        revenueDbPanel = new javax.swing.JPanel();
+        taskhistoryLabel3 = new javax.swing.JLabel();
+        totalRevenuePanel = new javax.swing.JPanel();
+        revenueLabel = new javax.swing.JLabel();
+        totalrevenue = new javax.swing.JLabel();
+        ordersDeliveredPanel = new javax.swing.JPanel();
+        ordersDeliveredLabel = new javax.swing.JLabel();
+        filterComboBox = new javax.swing.JComboBox<>();
         viewtasksPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         viewtasksTable = new javax.swing.JTable();
@@ -445,21 +503,27 @@ public class DrDashboard extends javax.swing.JFrame {
         welcomePanel.setBackground(new java.awt.Color(153, 89, 16));
         welcomePanel.setLayout(null);
 
+        homePanel.setBackground(new java.awt.Color(153, 89, 16));
+        homePanel.setLayout(null);
+
         usernametxt.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
         usernametxt.setForeground(new java.awt.Color(255, 255, 255));
         usernametxt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         usernametxt.setText("username");
         usernametxt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        welcomePanel.add(usernametxt);
-        usernametxt.setBounds(269, 0, 190, 460);
+        homePanel.add(usernametxt);
+        usernametxt.setBounds(380, 0, 190, 460);
 
         welcometxt.setFont(new java.awt.Font("Segoe UI Black", 1, 36)); // NOI18N
         welcometxt.setForeground(new java.awt.Color(255, 255, 255));
         welcometxt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         welcometxt.setText("WELCOME,");
         welcometxt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        welcomePanel.add(welcometxt);
-        welcometxt.setBounds(29, 0, 230, 460);
+        homePanel.add(welcometxt);
+        welcometxt.setBounds(120, 0, 230, 460);
+
+        welcomePanel.add(homePanel);
+        homePanel.setBounds(0, 0, 710, 460);
 
         notificationsPanel.setBackground(new java.awt.Color(153, 89, 16));
         notificationsPanel.setMaximumSize(new java.awt.Dimension(1022, 530));
@@ -562,34 +626,6 @@ public class DrDashboard extends javax.swing.JFrame {
         welcomePanel.add(custreviewsPanel);
         custreviewsPanel.setBounds(0, 0, 710, 460);
 
-        revenueDbPanel.setBackground(new java.awt.Color(255, 153, 0));
-
-        revenueDbLabel.setBackground(new java.awt.Color(255, 255, 255));
-        revenueDbLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
-        revenueDbLabel.setForeground(new java.awt.Color(255, 255, 255));
-        revenueDbLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        revenueDbLabel.setText("REVENUE DASHBOARD");
-
-        javax.swing.GroupLayout revenueDbPanelLayout = new javax.swing.GroupLayout(revenueDbPanel);
-        revenueDbPanel.setLayout(revenueDbPanelLayout);
-        revenueDbPanelLayout.setHorizontalGroup(
-            revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, revenueDbPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(revenueDbLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 873, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        revenueDbPanelLayout.setVerticalGroup(
-            revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(revenueDbPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(revenueDbLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(396, Short.MAX_VALUE))
-        );
-
-        welcomePanel.add(revenueDbPanel);
-        revenueDbPanel.setBounds(0, 0, 710, 460);
-
         taskhistoryPanel.setBackground(new java.awt.Color(153, 89, 16));
         taskhistoryPanel.setMinimumSize(new java.awt.Dimension(700, 580));
         taskhistoryPanel.setPreferredSize(new java.awt.Dimension(980, 580));
@@ -679,15 +715,15 @@ public class DrDashboard extends javax.swing.JFrame {
             .addGroup(taskhistoryPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(taskhistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(taskhistoryLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 873, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(taskhistoryPanelLayout.createSequentialGroup()
                         .addComponent(searchLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(SearchBtn))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 690, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 690, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(taskhistoryLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 1, Short.MAX_VALUE))
         );
         taskhistoryPanelLayout.setVerticalGroup(
             taskhistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -706,6 +742,98 @@ public class DrDashboard extends javax.swing.JFrame {
 
         welcomePanel.add(taskhistoryPanel);
         taskhistoryPanel.setBounds(0, 0, 710, 460);
+
+        revenueDbPanel.setBackground(new java.awt.Color(153, 89, 16));
+
+        taskhistoryLabel3.setBackground(new java.awt.Color(255, 255, 255));
+        taskhistoryLabel3.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
+        taskhistoryLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        taskhistoryLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        taskhistoryLabel3.setText("REVENUE DASHBOARD");
+
+        revenueLabel.setBackground(new java.awt.Color(0, 0, 0));
+        revenueLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        revenueLabel.setForeground(new java.awt.Color(255, 255, 255));
+        revenueLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        revenueLabel.setText("TOTAL REVENUE");
+        revenueLabel.setOpaque(true);
+
+        totalrevenue.setText("jLabel3");
+
+        javax.swing.GroupLayout totalRevenuePanelLayout = new javax.swing.GroupLayout(totalRevenuePanel);
+        totalRevenuePanel.setLayout(totalRevenuePanelLayout);
+        totalRevenuePanelLayout.setHorizontalGroup(
+            totalRevenuePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(revenueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(totalRevenuePanelLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(totalrevenue, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
+        totalRevenuePanelLayout.setVerticalGroup(
+            totalRevenuePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(totalRevenuePanelLayout.createSequentialGroup()
+                .addComponent(revenueLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(totalrevenue, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 22, Short.MAX_VALUE))
+        );
+
+        ordersDeliveredLabel.setBackground(new java.awt.Color(0, 0, 0));
+        ordersDeliveredLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        ordersDeliveredLabel.setForeground(new java.awt.Color(255, 255, 255));
+        ordersDeliveredLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        ordersDeliveredLabel.setText("ORDERS DELIVERED ");
+        ordersDeliveredLabel.setOpaque(true);
+
+        javax.swing.GroupLayout ordersDeliveredPanelLayout = new javax.swing.GroupLayout(ordersDeliveredPanel);
+        ordersDeliveredPanel.setLayout(ordersDeliveredPanelLayout);
+        ordersDeliveredPanelLayout.setHorizontalGroup(
+            ordersDeliveredPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(ordersDeliveredLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+        );
+        ordersDeliveredPanelLayout.setVerticalGroup(
+            ordersDeliveredPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ordersDeliveredPanelLayout.createSequentialGroup()
+                .addComponent(ordersDeliveredLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 94, Short.MAX_VALUE))
+        );
+
+        filterComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Day", "Week", "Month", " " }));
+        filterComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterComboBoxActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout revenueDbPanelLayout = new javax.swing.GroupLayout(revenueDbPanel);
+        revenueDbPanel.setLayout(revenueDbPanelLayout);
+        revenueDbPanelLayout.setHorizontalGroup(
+            revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(taskhistoryLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, revenueDbPanelLayout.createSequentialGroup()
+                .addGap(45, 45, 45)
+                .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44)
+                .addComponent(ordersDeliveredPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addComponent(totalRevenuePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44))
+        );
+        revenueDbPanelLayout.setVerticalGroup(
+            revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(revenueDbPanelLayout.createSequentialGroup()
+                .addComponent(taskhistoryLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addGroup(revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(totalRevenuePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ordersDeliveredPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 244, Short.MAX_VALUE))
+        );
+
+        welcomePanel.add(revenueDbPanel);
+        revenueDbPanel.setBounds(0, 0, 720, 460);
 
         viewtasksPanel.setBackground(new java.awt.Color(153, 89, 16));
         viewtasksPanel.setMinimumSize(new java.awt.Dimension(700, 580));
@@ -941,6 +1069,7 @@ public class DrDashboard extends javax.swing.JFrame {
         notificationsPanel.setVisible(false);
         custreviewsPanel.setVisible(false);
         revenueDbPanel.setVisible(false);
+        homePanel.setVisible(false);
         
         welcometxt.setVisible(false);
         usernametxt.setVisible(false);
@@ -956,6 +1085,7 @@ public class DrDashboard extends javax.swing.JFrame {
         custreviewsTab.setBackground(DefaultColor);
         revenueDbTab.setBackground(DefaultColor);
         
+        homePanel.setVisible(false);
            viewtasksPanel.setVisible(false);
         taskhistoryPanel.setVisible(true);
         notificationsPanel.setVisible(false);
@@ -974,6 +1104,7 @@ public class DrDashboard extends javax.swing.JFrame {
         custreviewsTab.setBackground(DefaultColor);
         revenueDbTab.setBackground(DefaultColor);
         
+        homePanel.setVisible(false);
         viewtasksPanel.setVisible(false);
         taskhistoryPanel.setVisible(false);
         notificationsPanel.setVisible(true);
@@ -992,6 +1123,7 @@ public class DrDashboard extends javax.swing.JFrame {
         notificationsTab.setBackground(DefaultColor);
         revenueDbTab.setBackground(DefaultColor);
         
+        homePanel.setVisible(false);
         viewtasksPanel.setVisible(false);
         taskhistoryPanel.setVisible(false);
         notificationsPanel.setVisible(false);
@@ -1010,6 +1142,7 @@ public class DrDashboard extends javax.swing.JFrame {
         notificationsTab.setBackground(DefaultColor);
         custreviewsTab.setBackground(DefaultColor);
         
+        homePanel.setVisible(false);
         viewtasksPanel.setVisible(false);
         taskhistoryPanel.setVisible(false);
         notificationsPanel.setVisible(false);
@@ -1060,6 +1193,11 @@ public class DrDashboard extends javax.swing.JFrame {
         String phoneNumber = viewtasksTable.getValueAt(selectedRow, 4).toString();
         String paymentStatus = viewtasksTable.getValueAt(selectedRow, 5).toString();
         String total = viewtasksTable.getValueAt(selectedRow, 6).toString();
+        
+        // Get today's date
+        LocalDate today = LocalDate.now();
+        String formattedDate = today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
 
         // Prompt the user to select proof of delivery image
         JFileChooser fileChooser = new JFileChooser();
@@ -1080,7 +1218,7 @@ public class DrDashboard extends javax.swing.JFrame {
             // Move the order to the task history table, adding the ImageIcon instead of the file path
             DefaultTableModel taskHistoryModel = (DefaultTableModel) taskhistoryTable.getModel();
             taskHistoryModel.addRow(new Object[]{
-                    deliveryID, foodItems, pickupAddress, deliveryAddress, phoneNumber, paymentStatus, total, proofOfDeliveryImage
+                    formattedDate, deliveryID, foodItems, pickupAddress, deliveryAddress, phoneNumber, paymentStatus, total, proofOfDeliveryImage
             });
 
             // Remove the order from the view tasks table
@@ -1226,6 +1364,12 @@ public class DrDashboard extends javax.swing.JFrame {
 
     }//GEN-LAST:event_DeclineBtnActionPerformed
 
+    private void filterComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterComboBoxActionPerformed
+        // TODO add your handling code here:
+        String selectedFilter = filterComboBox.getSelectedItem().toString();
+        calculateTotalRevenue(selectedFilter);
+    }//GEN-LAST:event_filterComboBoxActionPerformed
+
     private void goToLogout(){
         Login loginframe = new Login();
         loginframe.setVisible(true);
@@ -1276,6 +1420,8 @@ public class DrDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel custreviewsPanel;
     private javax.swing.JLabel custreviewsTab;
     private javax.swing.JLabel drName;
+    private javax.swing.JComboBox<String> filterComboBox;
+    private javax.swing.JPanel homePanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -1287,21 +1433,30 @@ public class DrDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel notificationsPanel;
     private javax.swing.JLabel notificationsTab;
     private javax.swing.JTable notificationsTable;
+    private javax.swing.JLabel ordersDeliveredLabel;
+    private javax.swing.JPanel ordersDeliveredPanel;
     private javax.swing.JTextArea receiptArea;
-    private javax.swing.JLabel revenueDbLabel;
     private javax.swing.JPanel revenueDbPanel;
     private javax.swing.JLabel revenueDbTab;
+    private javax.swing.JLabel revenueLabel;
+    private javax.swing.JLabel revenueLabel2;
+    private javax.swing.JLabel revenueLabel3;
+    private javax.swing.JPanel revenuePanel2;
+    private javax.swing.JPanel revenuePanel3;
     private javax.swing.JTextField searchField;
     private javax.swing.JLabel searchLabel;
     private javax.swing.JLabel taskhistoryLabel;
     private javax.swing.JLabel taskhistoryLabel1;
     private javax.swing.JLabel taskhistoryLabel2;
+    private javax.swing.JLabel taskhistoryLabel3;
     private javax.swing.JPanel taskhistoryPanel;
     private javax.swing.JLabel taskhistoryTab;
     private javax.swing.JTable taskhistoryTable;
     private javax.swing.JPanel tastiesPanel;
     private javax.swing.JLabel title_lbl1;
     private javax.swing.JLabel title_lbl2;
+    private javax.swing.JPanel totalRevenuePanel;
+    private javax.swing.JLabel totalrevenue;
     private javax.swing.JLabel usernametxt;
     private javax.swing.JPanel viewtasksPanel;
     private javax.swing.JLabel viewtasksTab;

@@ -121,7 +121,7 @@ public class DrDashboard extends javax.swing.JFrame {
 
     // Add this method to set a custom renderer for the proof of delivery column
     private void setTableImageRenderer() {
-        taskhistoryTable.getColumnModel().getColumn(7).setCellRenderer(new DefaultTableCellRenderer() {
+        taskhistoryTable.getColumnModel().getColumn(8).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 if (value instanceof ImageIcon) {
@@ -166,47 +166,10 @@ public class DrDashboard extends javax.swing.JFrame {
     taskhistoryTable.setModel(new javax.swing.table.DefaultTableModel(new Object[0][0], columnNames));
     taskhistoryTable.setRowHeight(50);
     setTableImageRenderer();
-}
-     // Add a listener for row clicks in the table
-    private void addTableRowClickListener() {
-        viewtasksTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int selectedRow = viewtasksTable.getSelectedRow();
-                if (selectedRow != -1) {
-                    //show button when row is selected
-                    DeliveredBtn.setVisible(true);
-                    
-                    // Get the task details from the selected row
-                    String deliveryID = viewtasksTable.getValueAt(selectedRow, 0).toString();
-                    String foodItems = viewtasksTable.getValueAt (selectedRow, 1). toString();
-                    String pickupAddress = viewtasksTable.getValueAt(selectedRow, 2).toString();
-                    String deliveryAddress = viewtasksTable.getValueAt(selectedRow, 3).toString();
-                    String phoneNumber = viewtasksTable.getValueAt(selectedRow, 4).toString();
-                    String paymentStatus = viewtasksTable.getValueAt(selectedRow, 5).toString();
-                    String total = viewtasksTable.getValueAt(selectedRow, 6).toString();
-
-                    // Pass these details to the receipt generation method
-                    displayReceipt(deliveryID, foodItems, pickupAddress, deliveryAddress, phoneNumber, paymentStatus, total);
-                } else {
-                    DeliveredBtn.setVisible(false);
-                }
-            }
-        });
+    
     }
     
-    private void displayReceipt(String deliveryID, String foodItems, String pickupAddress, String deliveryAddress, 
-                                   String phoneNumber, String paymentStatus, String total) {
-    String receipt = "Delivery ID: " + deliveryID + "\n"
-                   + "Food Items: " + foodItems + "\n"
-                   + "Pick-up Address: " + pickupAddress + "\n"
-                   + "Delivery Address: " + deliveryAddress + "\n"
-                   + "Phone Number: " + phoneNumber + "\n"
-                   + "Payment Status: " + paymentStatus + "\n"
-                   + "Total: RM " + total;
-    receiptArea.setText(receipt);
-}
-    
-    private void calculateTotalRevenue(String filterType) {
+   private void calculateTotalRevenue(String filterType) {
     DefaultTableModel model = (DefaultTableModel) taskhistoryTable.getModel();
     double totalRevenue = 0.0;
     
@@ -215,8 +178,8 @@ public class DrDashboard extends javax.swing.JFrame {
     
     // Loop through task history table
     for (int i = 0; i < model.getRowCount(); i++) {
-        // Get order date from column
-        String dateString = model.getValueAt(i, 1).toString();
+        // Get order date
+        String dateString = model.getValueAt(i, 0).toString();
         
         try {
             // Convert String to LocalDate
@@ -245,7 +208,7 @@ public class DrDashboard extends javax.swing.JFrame {
 // Helper method to get 10% of order total
 private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
     try {
-        double orderTotal = Double.parseDouble(model.getValueAt(rowIndex, 6).toString());
+        double orderTotal = Double.parseDouble(model.getValueAt(rowIndex, 7).toString());
         return orderTotal * 0.1;
     } catch (NumberFormatException e) {
         System.out.println("Error converting price.");
@@ -253,6 +216,47 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
     }
 }
 
+
+     // Add a listener for row clicks in the table
+    private void addTableRowClickListener() {
+        viewtasksTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int selectedRow = viewtasksTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    //show button when row is selected
+                    DeliveredBtn.setVisible(true);
+                    
+                    // Get the task details from the selected row
+                    String deliveryID = viewtasksTable.getValueAt(selectedRow, 0).toString();
+                    String foodItems = viewtasksTable.getValueAt (selectedRow, 1). toString();
+                    String pickupAddress = viewtasksTable.getValueAt(selectedRow, 2).toString();
+                    String deliveryAddress = viewtasksTable.getValueAt(selectedRow, 3).toString();
+                    String phoneNumber = viewtasksTable.getValueAt(selectedRow, 4).toString();
+                    String paymentStatus = viewtasksTable.getValueAt(selectedRow, 5).toString();
+                    String total = viewtasksTable.getValueAt(selectedRow, 6).toString();
+
+                    // Pass these details to the receipt generation method
+                    displayReceipt(deliveryID, foodItems, pickupAddress, deliveryAddress, phoneNumber, paymentStatus, total);
+                } else {
+                    DeliveredBtn.setVisible(false);
+                }
+            }
+        });
+    }
+    
+    
+    private void displayReceipt(String deliveryID, String foodItems, String pickupAddress, String deliveryAddress, 
+                                   String phoneNumber, String paymentStatus, String total) {
+    String receipt = "Delivery ID: " + deliveryID + "\n"
+                   + "Food Items: " + foodItems + "\n"
+                   + "Pick-up Address: " + pickupAddress + "\n"
+                   + "Delivery Address: " + deliveryAddress + "\n"
+                   + "Phone Number: " + phoneNumber + "\n"
+                   + "Payment Status: " + paymentStatus + "\n"
+                   + "Total: RM " + total;
+    receiptArea.setText(receipt);
+}
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -1255,8 +1259,7 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
             JOptionPane.showMessageDialog(null, "Error saving task history.");
         }
 
-    
-        
+
     }//GEN-LAST:event_DeliveredBtnActionPerformed
 
     private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
@@ -1367,7 +1370,8 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
     private void filterComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterComboBoxActionPerformed
         // TODO add your handling code here:
         String selectedFilter = filterComboBox.getSelectedItem().toString();
-        calculateTotalRevenue(selectedFilter);
+    calculateTotalRevenue(selectedFilter);
+        
     }//GEN-LAST:event_filterComboBoxActionPerformed
 
     private void goToLogout(){

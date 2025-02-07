@@ -4,8 +4,6 @@ package system.admin;
 import com.system.Login;
 import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
@@ -15,7 +13,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
@@ -70,11 +70,6 @@ public class AdDashboard extends javax.swing.JFrame {
         });
         
         TableActionEvent event = new TableActionEvent(){
-            @Override
-            public void onEdit(int row) {
-                System.out.println("Edit row: " + row);
-            }
-
             @Override
             public void onDelete(java.awt.event.ActionEvent evt) {
                 int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
@@ -193,6 +188,7 @@ public class AdDashboard extends javax.swing.JFrame {
             }
         });
         this.refreshData();
+        this.refreshTopupData();
     }
 
     private void populateFormFromTableSelection() {
@@ -230,13 +226,60 @@ public class AdDashboard extends javax.swing.JFrame {
         }
     }
     
+    private void refreshTopupData() {
+        try {
+            DefaultTableModel model = (DefaultTableModel) topupTable.getModel();
+            model.setRowCount(0); // Reset table
+
+            // Read users.txt into a map (id -> name)
+            Map<String, String> userMap = new HashMap<>();
+            try (BufferedReader userReader = new BufferedReader(new FileReader("users.txt"))) {
+                String userLine;
+                while ((userLine = userReader.readLine()) != null) {
+                    String[] userDetails = userLine.split(";");
+                    if (userDetails.length > 1) {
+                        userMap.put(userDetails[0], userDetails[1]); // ID -> Name
+                    }
+                }
+            }
+
+            // Read userTopup.txt and store rows in a list
+            List<Object[]> topupData = new ArrayList<>();
+            try (BufferedReader topupReader = new BufferedReader(new FileReader("userTopup.txt"))) {
+                String read;
+                while ((read = topupReader.readLine()) != null) {
+                    String[] topupDetails = read.split(";");
+                    if (topupDetails.length == 4) {
+                        String id = topupDetails[0];
+                        String paymentMethod = topupDetails[1];
+                        String amount = topupDetails[2];
+                        String totalBalance = topupDetails[3];
+
+                        // Retrieve name from users.txt based on id
+                        String name = userMap.getOrDefault(id, "Unknown");
+
+                        // Store the row data
+                        topupData.add(new Object[]{id, name, paymentMethod, amount, totalBalance});
+                    }
+                }
+            }
+
+            // Add rows to the table in reverse order
+            for (int i = topupData.size() - 1; i >= 0; i--) {
+                model.addRow(topupData.get(i));
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+    
     private double getBalanceFromFile(String userId) {
-        try (BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("userTopup.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] userDetails = line.split(";");
-                if (userDetails.length >= 8 && userDetails[0].equals(userId)) {
-                    return Double.parseDouble(userDetails[7]); // Assuming balance is in index 7
+                if (userDetails.length >= 2 && userDetails[0].equals(userId)) {
+                    return Double.parseDouble(userDetails[2]); // Assuming balance is in index 2
                 }
             }
         } catch (IOException | NumberFormatException e) {
@@ -591,7 +634,7 @@ public class AdDashboard extends javax.swing.JFrame {
                 .addComponent(topUp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(logOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(283, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         title_label2.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
@@ -602,11 +645,11 @@ public class AdDashboard extends javax.swing.JFrame {
 
             },
             new String [] {
-                "id", "name", "address", "phone no", "username", "role"
+                "ID", "Name", "Address", "Phone No.", "Username", "Role", "Balance"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -622,6 +665,7 @@ public class AdDashboard extends javax.swing.JFrame {
             employeeTable1.getColumnModel().getColumn(3).setResizable(false);
             employeeTable1.getColumnModel().getColumn(4).setResizable(false);
             employeeTable1.getColumnModel().getColumn(5).setResizable(false);
+            employeeTable1.getColumnModel().getColumn(6).setResizable(false);
         }
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image-40x35.jpg"))); // NOI18N
@@ -644,7 +688,7 @@ public class AdDashboard extends javax.swing.JFrame {
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(title_label2)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jp1Layout.setVerticalGroup(
             jp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -655,7 +699,7 @@ public class AdDashboard extends javax.swing.JFrame {
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jp2.setPreferredSize(new java.awt.Dimension(1300, 563));
@@ -835,10 +879,9 @@ public class AdDashboard extends javax.swing.JFrame {
                                 .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jp2Layout.createSequentialGroup()
                                         .addComponent(rolecbx, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 420, Short.MAX_VALUE))
+                                        .addGap(0, 437, Short.MAX_VALUE))
                                     .addComponent(passwordtxt)
-                                    .addComponent(usernametxt))))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(usernametxt)))))))
         );
         jp2Layout.setVerticalGroup(
             jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -890,7 +933,7 @@ public class AdDashboard extends javax.swing.JFrame {
                             .addComponent(clearbtn)
                             .addComponent(deletebtn)
                             .addComponent(jButton1))
-                        .addGap(0, 101, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -909,17 +952,17 @@ public class AdDashboard extends javax.swing.JFrame {
 
         topupTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Name", "Payment Method", "Amount"
+                "ID", "Name", "Payment Method", "Amount", "Total Balance"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -973,33 +1016,33 @@ public class AdDashboard extends javax.swing.JFrame {
         jp3Layout.setHorizontalGroup(
             jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jp3Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jp3Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(GenerateReceiptBtn)
-                            .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel11)
-                                .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)))
-                        .addGap(107, 107, 107)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cbxPaymentMethod, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(topUpTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
-                            .addComponent(topupBtn, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(cbxSelectId, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(title_label4)
+                        .addGap(272, 1034, Short.MAX_VALUE))
                     .addGroup(jp3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(title_label5)))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 908, Short.MAX_VALUE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp3Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(title_label4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jp3Layout.createSequentialGroup()
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(title_label5))
+                            .addGroup(jp3Layout.createSequentialGroup()
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 890, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(GenerateReceiptBtn)
+                                    .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel11)
+                                        .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cbxPaymentMethod, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(topUpTxt)
+                                    .addComponent(topupBtn, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(cbxSelectId, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(16, 16, 16))))
         );
         jp3Layout.setVerticalGroup(
             jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1008,14 +1051,15 @@ public class AdDashboard extends javax.swing.JFrame {
                 .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(title_label5)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(title_label4)
                 .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jp3Layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(title_label4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
-                    .addGroup(jp3Layout.createSequentialGroup()
-                        .addGap(110, 110, 110)
+                        .addGap(5, 5, 5)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
                             .addComponent(cbxSelectId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1031,8 +1075,7 @@ public class AdDashboard extends javax.swing.JFrame {
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(topupBtn)
                             .addComponent(GenerateReceiptBtn))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         cbxSelectId.addItemListener(new java.awt.event.ItemListener() {
@@ -1046,12 +1089,12 @@ public class AdDashboard extends javax.swing.JFrame {
         mainLayout.setHorizontalGroup(
             mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainLayout.createSequentialGroup()
-                .addComponent(jp1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jp1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainLayout.createSequentialGroup()
-                    .addGap(3, 3, 3)
-                    .addComponent(jp2, javax.swing.GroupLayout.DEFAULT_SIZE, 1278, Short.MAX_VALUE)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainLayout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jp2, javax.swing.GroupLayout.PREFERRED_SIZE, 1303, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap()))
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jp3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1062,8 +1105,8 @@ public class AdDashboard extends javax.swing.JFrame {
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jp2, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
-                    .addContainerGap()))
+                    .addComponent(jp2, javax.swing.GroupLayout.PREFERRED_SIZE, 583, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jp3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1073,18 +1116,16 @@ public class AdDashboard extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Navigation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addComponent(Navigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Navigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addComponent(Navigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -1498,69 +1539,82 @@ public class AdDashboard extends javax.swing.JFrame {
 
     private void topupBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_topupBtnActionPerformed
         try {
-            String id = cbxSelectId.getSelectedItem().toString();
-            String paymentMethod = cbxPaymentMethod.getSelectedItem().toString();
-            String amount = topUpTxt.getText();
+        // Get input values
+        String id = cbxSelectId.getSelectedItem().toString();
+        String paymentMethod = cbxPaymentMethod.getSelectedItem().toString();
+        String amountStr = topUpTxt.getText().trim();
 
-            if (id.trim().isEmpty() ||
-                paymentMethod.trim().isEmpty() ||
-                amount.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter an amount to top-up");
-                return;
-            }
+        // Validate inputs
+        if (id.isEmpty() || paymentMethod.isEmpty() || amountStr.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter the top up amount!");
+            return;
+        }
 
-            double topupAmount;
+        // Validate amount
+        double topupAmount;
         try {
-            topupAmount = Double.parseDouble(amount);
+            topupAmount = Double.parseDouble(amountStr);
             if (topupAmount <= 0) {
-                JOptionPane.showMessageDialog(null, "Topup amount must be greater than zero!");
+                JOptionPane.showMessageDialog(null, "Amount must be greater than zero!");
                 return;
             }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Topup amount must be numeric!!");
+            JOptionPane.showMessageDialog(null, "Invalid amount format!");
             return;
         }
-        
-        File inputFile = new File("users.txt");
-        StringBuilder fileContent = new StringBuilder(); // To hold the entire file content
 
-        BufferedReader br = new BufferedReader(new FileReader(inputFile));
-        String line;
+        // Update user balance in users.txt
+        File usersFile = new File("users.txt");
+        List<String> userLines = new ArrayList<>();
         boolean userFound = false;
+        double newBalance = 0;
 
-        // Read the file and modify the content
-        while ((line = br.readLine()) != null) {
-            String[] userDetails = line.split(";");
-            if (userDetails.length >= 8 && userDetails[0].equals(id)) {
-                userFound = true;
-
-                double currentBalance = Double.parseDouble(userDetails[7]); // Balance is at index 7
-                double newBalance = currentBalance + topupAmount;
-                userDetails[7] = String.valueOf(newBalance); // Update balance
-                line = String.join(";", userDetails) +";"; // Rebuild the line with updated balance
+        try (BufferedReader br = new BufferedReader(new FileReader(usersFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(";");
+                if (parts.length >= 8 && parts[0].equals(id)) {
+                    userFound = true;
+                    // Update balance
+                    double currentBalance = Double.parseDouble(parts[7]);
+                    newBalance = currentBalance + topupAmount;
+                    parts[7] = String.format("%.2f", newBalance);
+                    line = String.join(";", parts);
+                }
+                userLines.add(line);
             }
-            fileContent.append(line).append("\n"); // Append the modified line to the content
         }
-
-        br.close();
 
         if (!userFound) {
-            JOptionPane.showMessageDialog(null, "User ID not found!");
+            JOptionPane.showMessageDialog(null, "User not found!");
             return;
         }
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(inputFile));
-        bw.write(fileContent.toString()); // Write the modified content to the original file
-        bw.close();
+        // Write updated users back to file
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(usersFile))) {
+            for (String line : userLines) {
+                bw.write(line);
+                bw.newLine();
+            }
+        }
+        
+        //Record transaction in userTopup.txt
+        try (BufferedWriter topupWriter = new BufferedWriter(new FileWriter("userTopup.txt", true))) {
+            String transaction = String.format("%s;%s;%.2f;%.2f",
+            id, paymentMethod, topupAmount, newBalance);
+            topupWriter.write(transaction);
+            topupWriter.newLine();
+        }
 
         cbxSelectId.select(0);
         cbxPaymentMethod.setSelectedIndex(0);
         topUpTxt.setText("");
         JOptionPane.showMessageDialog(null, "Top-up successful!");
-        this.refreshData(); // Refresh UI if needed
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error updating record: " + e.getMessage());
-        }
+        this.refreshTopupData();
+        this.refreshData();
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+    }
     }//GEN-LAST:event_topupBtnActionPerformed
 
     private void GenerateReceiptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateReceiptBtnActionPerformed

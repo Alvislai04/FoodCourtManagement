@@ -33,20 +33,20 @@ public class AdDashboard extends javax.swing.JFrame {
     private boolean isPanelVisible = false;
     private boolean isLoaded = false;
     Login login = new Login();
-    
-    public JPanel getJp1(){
+
+    public JPanel getJp1() {
         jp2.setVisible(false);
         jp3.setVisible(false);
         return jp1;
     }
-    
-    public JPanel getJp2(){
+
+    public JPanel getJp2() {
         jp1.setVisible(false);
         jp3.setVisible(false);
         return jp2;
     }
-    
-    public JPanel getJp3(){
+
+    public JPanel getJp3() {
         jp1.setVisible(false);
         jp2.setVisible(false);
         return jp3;
@@ -61,15 +61,15 @@ public class AdDashboard extends javax.swing.JFrame {
             public void mousePressed(MouseEvent e) {
                 if (!employeeTable.getBounds().contains(e.getPoint())) {
                     employeeTable.clearSelection(); // Deselect row
-                        for (ActionListener al : rolecbx.getActionListeners()) {
-                            rolecbx.addActionListener(al);
-                        }
-                        rolecbx.setEnabled(true); // Disable after removing listeners
+                    for (ActionListener al : rolecbx.getActionListeners()) {
+                        rolecbx.addActionListener(al);
+                    }
+                    rolecbx.setEnabled(true); // Disable after removing listeners
                 }
             }
         });
-        
-        TableActionEvent event = new TableActionEvent(){
+
+        TableActionEvent event = new TableActionEvent() {
             @Override
             public void onDelete(java.awt.event.ActionEvent evt) {
                 int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
@@ -80,59 +80,59 @@ public class AdDashboard extends javax.swing.JFrame {
                     }
                     DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
                     try {
-            //get selected row of data
-            int selectedRow = employeeTable.getSelectedRow();
-            String employeeId = (String) employeeTable.getValueAt(selectedRow, 0);
-            FileReader fr = new FileReader("users.txt");
-            BufferedReader br = new BufferedReader(fr);
-            String read;
+                        //get selected row of data
+                        int selectedRow = employeeTable.getSelectedRow();
+                        String employeeId = (String) employeeTable.getValueAt(selectedRow, 0);
+                        FileReader fr = new FileReader("users.txt");
+                        BufferedReader br = new BufferedReader(fr);
+                        String read;
 
-            ArrayList<ArrayList<String>> employeeList = new ArrayList<>();
-            while ((read = br.readLine()) != null) {
-                ArrayList<String> record = new ArrayList<>();
-                record.add(read.split(";")[0]);
-                record.add(read.split(";")[1]);
-                record.add(read.split(";")[2]);
-                record.add(read.split(";")[3]);
-                record.add(read.split(";")[4]);
-                record.add(read.split(";")[5]);
-                record.add(read.split(";")[6]);
-                employeeList.add(record);
-            }
-            for (int row = 0; row < employeeList.size(); row++) {
-                if (employeeList.get(row).get(0).equals(employeeId)) {
-                    employeeList.remove(row);
-                    break;
-                }
-            }
+                        ArrayList<ArrayList<String>> employeeList = new ArrayList<>();
+                        while ((read = br.readLine()) != null) {
+                            ArrayList<String> record = new ArrayList<>();
+                            record.add(read.split(";")[0]);
+                            record.add(read.split(";")[1]);
+                            record.add(read.split(";")[2]);
+                            record.add(read.split(";")[3]);
+                            record.add(read.split(";")[4]);
+                            record.add(read.split(";")[5]);
+                            record.add(read.split(";")[6]);
+                            employeeList.add(record);
+                        }
+                        for (int row = 0; row < employeeList.size(); row++) {
+                            if (employeeList.get(row).get(0).equals(employeeId)) {
+                                employeeList.remove(row);
+                                break;
+                            }
+                        }
 
-            // Writing the updated TODO records back to the file
-            FileWriter fw = new FileWriter("users.txt");
-            for (int i = 0; i < employeeList.size(); i++) {
-                fw.write(employeeList.get(i).get(0) + ";");
-                fw.write(employeeList.get(i).get(1) + ";");
-                fw.write(employeeList.get(i).get(2) + ";");
-                fw.write(employeeList.get(i).get(3) + ";");
-                fw.write(employeeList.get(i).get(4) + ";");
-                fw.write(employeeList.get(i).get(5) + ";");
-                fw.write(employeeList.get(i).get(6) + ";\n");
-            }
+                        // Writing the updated TODO records back to the file
+                        FileWriter fw = new FileWriter("users.txt");
+                        for (int i = 0; i < employeeList.size(); i++) {
+                            fw.write(employeeList.get(i).get(0) + ";");
+                            fw.write(employeeList.get(i).get(1) + ";");
+                            fw.write(employeeList.get(i).get(2) + ";");
+                            fw.write(employeeList.get(i).get(3) + ";");
+                            fw.write(employeeList.get(i).get(4) + ";");
+                            fw.write(employeeList.get(i).get(5) + ";");
+                            fw.write(employeeList.get(i).get(6) + ";\n");
+                        }
 
-            fw.close();
-            
-            idtxt.setText("");
-            nametxt.setText("");
-            addresstxt.setText("");
-            phonenotxt.setText("");
-            usernametxt.setText("");
-            passwordtxt.setText("");
-            rolecbx.setSelectedIndex(0);
-            
-            JOptionPane.showMessageDialog(null, "successfully deleted a record");
-            this.refreshData();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Successfully deleted employee");
-        }
+                        fw.close();
+
+                        idtxt.setText("");
+                        nametxt.setText("");
+                        addresstxt.setText("");
+                        phonenotxt.setText("");
+                        usernametxt.setText("");
+                        passwordtxt.setText("");
+                        rolecbx.setSelectedIndex(0);
+
+                        JOptionPane.showMessageDialog(null, "successfully deleted a record");
+                        this.refreshData();
+                    } catch (IOException e) {
+                        JOptionPane.showMessageDialog(null, "Successfully deleted employee");
+                    }
                 }
             }
 
@@ -143,31 +143,31 @@ public class AdDashboard extends javax.swing.JFrame {
 
             private void refreshData() {
                 try {
-            DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
-            DefaultTableModel model1 = (DefaultTableModel) employeeTable1.getModel();
-            model.setRowCount(0);//reset table
-            model1.setRowCount(0);
-            FileReader fr = new FileReader("users.txt");
-            BufferedReader br = new BufferedReader(fr);
-            String read;
-            while ((read = br.readLine()) != null) {
-                    String id = read.split(";")[0];
-                    String name = read.split(";")[1];
-                    String address = read.split(";")[2];
-                    String phoneno = read.split(";")[3];
-                    String username = read.split(";")[4];
-                    String password = read.split(";")[5];
-                    String role = read.split(";")[6];
-                    model.addRow(
-                            new Object[]{id, name, address, phoneno, username, password,
-                                role});
-                    model1.addRow(
-                            new Object[]{id, name, address, phoneno, username,
-                                role});
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        }
+                    DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
+                    DefaultTableModel model1 = (DefaultTableModel) employeeTable1.getModel();
+                    model.setRowCount(0);//reset table
+                    model1.setRowCount(0);
+                    FileReader fr = new FileReader("users.txt");
+                    BufferedReader br = new BufferedReader(fr);
+                    String read;
+                    while ((read = br.readLine()) != null) {
+                        String id = read.split(";")[0];
+                        String name = read.split(";")[1];
+                        String address = read.split(";")[2];
+                        String phoneno = read.split(";")[3];
+                        String username = read.split(";")[4];
+                        String password = read.split(";")[5];
+                        String role = read.split(";")[6];
+                        model.addRow(
+                                new Object[]{id, name, address, phoneno, username, password,
+                                    role});
+                        model1.addRow(
+                                new Object[]{id, name, address, phoneno, username,
+                                    role});
+                    }
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                }
             }
         };
 
@@ -201,7 +201,7 @@ public class AdDashboard extends javax.swing.JFrame {
             String username = (String) employeeTable.getValueAt(selectedRow, 4);
             String password = (String) employeeTable.getValueAt(selectedRow, 5);
             String role = (String) employeeTable.getValueAt(selectedRow, 6);
-            
+
             double balance = getBalanceFromFile(id);
             //get id from file
             User user = new User(id, name, address, phoneno, username, password, role, balance);
@@ -213,7 +213,7 @@ public class AdDashboard extends javax.swing.JFrame {
             usernametxt.setText(user.getUsername());
             passwordtxt.setText(user.getPassword());
             rolecbx.setSelectedItem(user.getRoles());
-            
+
             rolecbx.setEnabled(false);
         } else {
             rolecbx.addActionListener(e -> updateIDBasedOnRole());
@@ -225,7 +225,7 @@ public class AdDashboard extends javax.swing.JFrame {
             rolecbx.setSelectedIndex(0);
         }
     }
-    
+
     private void refreshTopupData() {
         try {
             DefaultTableModel model = (DefaultTableModel) topupTable.getModel();
@@ -272,7 +272,7 @@ public class AdDashboard extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
-    
+
     private double getBalanceFromFile(String userId) {
         try (BufferedReader br = new BufferedReader(new FileReader("userTopup.txt"))) {
             String line;
@@ -287,7 +287,7 @@ public class AdDashboard extends javax.swing.JFrame {
         }
         return 0.0; // Default balance if not found
     }
-    
+
     public void refreshData() {
         try {
             DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
@@ -298,28 +298,28 @@ public class AdDashboard extends javax.swing.JFrame {
             BufferedReader br = new BufferedReader(fr);
             String read;
             while ((read = br.readLine()) != null) {
-                    String id = read.split(";")[0];
-                    String name = read.split(";")[1];
-                    String address = read.split(";")[2];
-                    String phoneno = read.split(";")[3];
-                    String username = read.split(";")[4];
-                    String password = read.split(";")[5];
-                    String role = read.split(";")[6];
-                    model.addRow(
-                            new Object[]{id, name, address, phoneno, username, password,
-                                role});
-                    model1.addRow(
-                            new Object[]{id, name, address, phoneno, username,
-                                role});
+                String id = read.split(";")[0];
+                String name = read.split(";")[1];
+                String address = read.split(";")[2];
+                String phoneno = read.split(";")[3];
+                String username = read.split(";")[4];
+                String password = read.split(";")[5];
+                String role = read.split(";")[6];
+                model.addRow(
+                        new Object[]{id, name, address, phoneno, username, password,
+                            role});
+                model1.addRow(
+                        new Object[]{id, name, address, phoneno, username,
+                            role});
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
-    
+
     private void updateIDBasedOnRole() {
-        String roleFilePath = "users.txt"; // Ensure the correct file path
-        String selectedRole = rolecbx.getSelectedItem().toString(); // Get selected role
+        String roleFilePath = "users.txt";
+        String selectedRole = rolecbx.getSelectedItem().toString();
 
         // Determine the correct prefix
         String prefix = "";
@@ -331,15 +331,14 @@ public class AdDashboard extends javax.swing.JFrame {
             prefix = "C";
         }
 
-        // Get the next available ID and set it to idtxt
         String newId = IdGenerator.getNextRoleID(prefix, roleFilePath);
         idtxt.setText(newId);
     }
 
     private void showIdInCbx(java.awt.event.ItemEvent evt) {
         if (isLoaded) {
-        return; // Skip loading if already done
-    }
+            return;
+        }
         cbxSelectId.removeAll();
 
         try (BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
@@ -347,24 +346,24 @@ public class AdDashboard extends javax.swing.JFrame {
             while ((line = br.readLine()) != null) {
                 String[] userDetails = line.split(";");
                 if (userDetails.length > 0) {
-                    String userType = userDetails[6]; // User type is in the 7th column (index 6)
+                    String userType = userDetails[6];
                     if ("Customer".equals(userType)) {
-                        cbxSelectId.addItem(userDetails[0]); // Add ID to ComboBox if the user is a Customer
+                        cbxSelectId.addItem(userDetails[0]);
                     }
                 }
             }
-            isLoaded = true; // Mark as loaded
+            isLoaded = true;
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error loading user IDs: " + e.getMessage());
         }
     }
-    
-    public void goToLogout(){
+
+    public void goToLogout() {
         Login loginframe = new Login();
         loginframe.setVisible(true);
         dispose();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -392,14 +391,14 @@ public class AdDashboard extends javax.swing.JFrame {
         employeeTable1 = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
         jp2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        employeeTable = new javax.swing.JTable();
         title_label3 = new javax.swing.JLabel();
         nametxt = new javax.swing.JTextField();
         updatebtn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         deletebtn = new javax.swing.JButton();
         addresstxt = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        employeeTable = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         phonenotxt = new javax.swing.JTextField();
         searchtxt = new javax.swing.JTextField();
@@ -418,7 +417,6 @@ public class AdDashboard extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jp3 = new javax.swing.JPanel();
-        title_label4 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         topupTable = new javax.swing.JTable();
@@ -434,7 +432,9 @@ public class AdDashboard extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.gray);
+        setMaximumSize(new java.awt.Dimension(1600, 600));
         setMinimumSize(new java.awt.Dimension(1300, 586));
+        setPreferredSize(new java.awt.Dimension(1300, 586));
         setSize(new java.awt.Dimension(1300, 586));
 
         Navigation.setBackground(java.awt.Color.gray);
@@ -657,11 +657,11 @@ public class AdDashboard extends javax.swing.JFrame {
             }
         });
         employeeTable1.setRowHeight(30);
+        employeeTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(employeeTable1);
         if (employeeTable1.getColumnModel().getColumnCount() > 0) {
             employeeTable1.getColumnModel().getColumn(0).setResizable(false);
             employeeTable1.getColumnModel().getColumn(1).setResizable(false);
-            employeeTable1.getColumnModel().getColumn(2).setResizable(false);
             employeeTable1.getColumnModel().getColumn(3).setResizable(false);
             employeeTable1.getColumnModel().getColumn(4).setResizable(false);
             employeeTable1.getColumnModel().getColumn(5).setResizable(false);
@@ -683,12 +683,14 @@ public class AdDashboard extends javax.swing.JFrame {
             .addGroup(jp1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jp1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
+                        .addContainerGap())
                     .addGroup(jp1Layout.createSequentialGroup()
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(title_label2)))
-                .addContainerGap())
+                        .addComponent(title_label2)
+                        .addGap(870, 889, Short.MAX_VALUE))))
         );
         jp1Layout.setVerticalGroup(
             jp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -698,30 +700,11 @@ public class AdDashboard extends javax.swing.JFrame {
                     .addComponent(title_label2)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jp2.setPreferredSize(new java.awt.Dimension(1300, 563));
-
-        title_label3.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
-        title_label3.setText("Manage account details");
-
-        updatebtn.setText("Update");
-        updatebtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updatebtnActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setText("address:");
-
-        deletebtn.setText("Delete");
-        deletebtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deletebtnActionPerformed(evt);
-            }
-        });
 
         employeeTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -751,8 +734,26 @@ public class AdDashboard extends javax.swing.JFrame {
             employeeTable.getColumnModel().getColumn(5).setResizable(false);
             employeeTable.getColumnModel().getColumn(6).setResizable(false);
             employeeTable.getColumnModel().getColumn(7).setResizable(false);
-            employeeTable.getColumnModel().getColumn(7).setPreferredWidth(100);
         }
+
+        title_label3.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
+        title_label3.setText("Manage account details");
+
+        updatebtn.setText("Update");
+        updatebtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updatebtnActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("address:");
+
+        deletebtn.setText("Delete");
+        deletebtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deletebtnActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Phone No.:");
 
@@ -835,10 +836,6 @@ public class AdDashboard extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 666, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel4))
                             .addComponent(updatebtn)
                             .addGroup(jp2Layout.createSequentialGroup()
                                 .addComponent(jButton1)
@@ -854,34 +851,41 @@ public class AdDashboard extends javax.swing.JFrame {
                                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(title_label3)))
-                        .addGap(111, 111, 111)
                         .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jp2Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(22, 22, 22)
-                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(addresstxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(nametxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(idtxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(phonenotxt, javax.swing.GroupLayout.Alignment.LEADING)))
+                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2Layout.createSequentialGroup()
+                                        .addGap(118, 118, 118)
+                                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel7)
+                                            .addComponent(jLabel8)
+                                            .addComponent(jLabel6))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(usernametxt, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                                            .addComponent(rolecbx, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(passwordtxt)))
+                                    .addGroup(jp2Layout.createSequentialGroup()
+                                        .addGap(115, 115, 115)
+                                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel5)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel2))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(addresstxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                                            .addComponent(nametxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(idtxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(phonenotxt))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2Layout.createSequentialGroup()
+                                .addGap(111, 111, 111)
                                 .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(deletebtn)
                                     .addComponent(addbtn, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(34, 34, 34))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2Layout.createSequentialGroup()
-                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel8)
-                                        .addComponent(jLabel7))
-                                    .addComponent(jLabel6))
-                                .addGap(25, 25, 25)
-                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jp2Layout.createSequentialGroup()
-                                        .addComponent(rolecbx, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 437, Short.MAX_VALUE))
-                                    .addComponent(passwordtxt)
-                                    .addComponent(usernametxt)))))))
+                                .addGap(34, 34, 34)))))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
         jp2Layout.setVerticalGroup(
             jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -932,15 +936,10 @@ public class AdDashboard extends javax.swing.JFrame {
                         .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(clearbtn)
                             .addComponent(deletebtn)
-                            .addComponent(jButton1))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jButton1)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
-
-        title_label4.setFont(new java.awt.Font("Sitka Text", 1, 36)); // NOI18N
-        title_label4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        title_label4.setText("Top-up History");
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image-40x35.jpg"))); // NOI18N
         jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -1019,47 +1018,32 @@ public class AdDashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jp3Layout.createSequentialGroup()
-                        .addComponent(title_label4)
-                        .addGap(272, 1034, Short.MAX_VALUE))
-                    .addGroup(jp3Layout.createSequentialGroup()
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jp3Layout.createSequentialGroup()
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(title_label5))
-                            .addGroup(jp3Layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 890, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(GenerateReceiptBtn)
-                                    .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel11)
-                                        .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(cbxPaymentMethod, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(topUpTxt)
-                                    .addComponent(topupBtn, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(cbxSelectId, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(16, 16, 16))))
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(title_label5))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 840, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24)
+                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(GenerateReceiptBtn)
+                    .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel11)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cbxPaymentMethod, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(topUpTxt)
+                    .addComponent(topupBtn, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cbxSelectId, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(60, 60, 60))
         );
         jp3Layout.setVerticalGroup(
             jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jp3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(title_label5)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(title_label4)
-                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jp3Layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp3Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(226, 226, 226)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
                             .addComponent(cbxSelectId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1075,7 +1059,14 @@ public class AdDashboard extends javax.swing.JFrame {
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(topupBtn)
                             .addComponent(GenerateReceiptBtn))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jp3Layout.createSequentialGroup()
+                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(title_label5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         cbxSelectId.addItemListener(new java.awt.event.ItemListener() {
@@ -1092,10 +1083,7 @@ public class AdDashboard extends javax.swing.JFrame {
                 .addComponent(jp1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainLayout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jp2, javax.swing.GroupLayout.PREFERRED_SIZE, 1303, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
+                .addComponent(jp2, javax.swing.GroupLayout.DEFAULT_SIZE, 1287, Short.MAX_VALUE))
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jp3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1103,12 +1091,9 @@ public class AdDashboard extends javax.swing.JFrame {
             mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jp1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jp2, javax.swing.GroupLayout.PREFERRED_SIZE, 583, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(jp2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE))
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jp3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jp3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1116,15 +1101,13 @@ public class AdDashboard extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(Navigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Navigation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(Navigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -1278,12 +1261,12 @@ public class AdDashboard extends javax.swing.JFrame {
             FileWriter fw = new FileWriter(filename, true);
 
             // Check if any required field is empty
-            if ((idtxt == null || idtxt.getText().trim().isEmpty()) ||
-                (nametxt == null || nametxt.getText().trim().isEmpty()) ||
-                (addresstxt == null || addresstxt.getText().trim().isEmpty()) ||
-                (phonenotxt == null || phonenotxt.getText().trim().isEmpty()) ||
-                (usernametxt == null || usernametxt.getText().trim().isEmpty()) ||
-                (passwordtxt == null || new String(passwordtxt.getPassword()).trim().isEmpty())) {
+            if ((idtxt == null || idtxt.getText().trim().isEmpty())
+                    || (nametxt == null || nametxt.getText().trim().isEmpty())
+                    || (addresstxt == null || addresstxt.getText().trim().isEmpty())
+                    || (phonenotxt == null || phonenotxt.getText().trim().isEmpty())
+                    || (usernametxt == null || usernametxt.getText().trim().isEmpty())
+                    || (passwordtxt == null || new String(passwordtxt.getPassword()).trim().isEmpty())) {
                 JOptionPane.showMessageDialog(null, "Please fill in all the fields!");
                 return;
             }
@@ -1299,21 +1282,21 @@ public class AdDashboard extends javax.swing.JFrame {
 
             // Write data to the file
             fw.write(
-                idtxt.getText().trim() + ";"
-                + nametxt.getText().trim() + ";"
-                + addresstxt.getText().trim() + ";"
-                + phoneNumber + ";"
-                + usernametxt.getText().trim() + ";"
-                + new String(passwordtxt.getPassword()).trim() + ";"
-                + rolecbx.getSelectedItem().toString() + ";"
-                + "0" + ";" //Balance
-                + "\n"
+                    idtxt.getText().trim() + ";"
+                    + nametxt.getText().trim() + ";"
+                    + addresstxt.getText().trim() + ";"
+                    + phoneNumber + ";"
+                    + usernametxt.getText().trim() + ";"
+                    + new String(passwordtxt.getPassword()).trim() + ";"
+                    + rolecbx.getSelectedItem().toString() + ";"
+                    + "0" + ";" //Balance
+                    + "\n"
             );
             fw.close();
 
             JOptionPane.showMessageDialog(null, "Successfully added the data!");
             refreshData();
-            for(ActionListener al: rolecbx.getActionListeners()){
+            for (ActionListener al : rolecbx.getActionListeners()) {
                 rolecbx.removeActionListener(al);
             }
 
@@ -1368,12 +1351,12 @@ public class AdDashboard extends javax.swing.JFrame {
 
                 // Check if any field matches the search text
                 if (id.toLowerCase().contains(searchText.toLowerCase())
-                    || name.toLowerCase().contains(searchText.toLowerCase())
-                    || address.toLowerCase().contains(searchText.toLowerCase())
-                    || phoneno.toLowerCase().contains(searchText.toLowerCase())
-                    || username.toLowerCase().contains(searchText.toLowerCase())
-                    || password.toLowerCase().contains(searchText.toLowerCase())
-                    || role.toLowerCase().contains(searchText.toLowerCase())) {
+                        || name.toLowerCase().contains(searchText.toLowerCase())
+                        || address.toLowerCase().contains(searchText.toLowerCase())
+                        || phoneno.toLowerCase().contains(searchText.toLowerCase())
+                        || username.toLowerCase().contains(searchText.toLowerCase())
+                        || password.toLowerCase().contains(searchText.toLowerCase())
+                        || role.toLowerCase().contains(searchText.toLowerCase())) {
                     // Add the matching record to the table
                     model.addRow(new Object[]{id, name, address, phoneno, username, password, role});
                 }
@@ -1426,7 +1409,7 @@ public class AdDashboard extends javax.swing.JFrame {
             }
 
             fw.close();
-            
+
             idtxt.setText("");
             nametxt.setText("");
             addresstxt.setText("");
@@ -1434,7 +1417,7 @@ public class AdDashboard extends javax.swing.JFrame {
             usernametxt.setText("");
             passwordtxt.setText("");
             rolecbx.setSelectedIndex(0);
-            
+
             JOptionPane.showMessageDialog(null, "successfully deleted a record");
             this.refreshData();
         } catch (IOException e) {
@@ -1459,12 +1442,12 @@ public class AdDashboard extends javax.swing.JFrame {
                 return;
             }
 
-            if (newId.trim().isEmpty() ||
-                name.trim().isEmpty() ||
-                address.trim().isEmpty() ||
-                phoneno.trim().isEmpty() ||
-                username.trim().isEmpty() ||
-                password.trim().isEmpty()) {
+            if (newId.trim().isEmpty()
+                    || name.trim().isEmpty()
+                    || address.trim().isEmpty()
+                    || phoneno.trim().isEmpty()
+                    || username.trim().isEmpty()
+                    || password.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Please fill in all the fields.");
                 return;
             }
@@ -1503,13 +1486,13 @@ public class AdDashboard extends javax.swing.JFrame {
                     if (data[0].equals(originalId)) { // Match using the original ID
                         // Write the updated record
                         fw.write(
-                            newId + ";"
-                            + name + ";"
-                            + address + ";"
-                            + phoneno + ";"
-                            + username + ";"
-                            + password + ";"
-                            + role + "\n"
+                                newId + ";"
+                                + name + ";"
+                                + address + ";"
+                                + phoneno + ";"
+                                + username + ";"
+                                + password + ";"
+                                + role + "\n"
                         );
                     } else {
                         // Write the existing record as-is
@@ -1539,82 +1522,82 @@ public class AdDashboard extends javax.swing.JFrame {
 
     private void topupBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_topupBtnActionPerformed
         try {
-        // Get input values
-        String id = cbxSelectId.getSelectedItem().toString();
-        String paymentMethod = cbxPaymentMethod.getSelectedItem().toString();
-        String amountStr = topUpTxt.getText().trim();
+            // Get input values
+            String id = cbxSelectId.getSelectedItem().toString();
+            String paymentMethod = cbxPaymentMethod.getSelectedItem().toString();
+            String amountStr = topUpTxt.getText().trim();
 
-        // Validate inputs
-        if (id.isEmpty() || paymentMethod.isEmpty() || amountStr.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter the top up amount!");
-            return;
-        }
-
-        // Validate amount
-        double topupAmount;
-        try {
-            topupAmount = Double.parseDouble(amountStr);
-            if (topupAmount <= 0) {
-                JOptionPane.showMessageDialog(null, "Amount must be greater than zero!");
+            // Validate inputs
+            if (id.isEmpty() || paymentMethod.isEmpty() || amountStr.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter the top up amount!");
                 return;
             }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Invalid amount format!");
-            return;
-        }
 
-        // Update user balance in users.txt
-        File usersFile = new File("users.txt");
-        List<String> userLines = new ArrayList<>();
-        boolean userFound = false;
-        double newBalance = 0;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(usersFile))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(";");
-                if (parts.length >= 8 && parts[0].equals(id)) {
-                    userFound = true;
-                    // Update balance
-                    double currentBalance = Double.parseDouble(parts[7]);
-                    newBalance = currentBalance + topupAmount;
-                    parts[7] = String.format("%.2f", newBalance);
-                    line = String.join(";", parts);
+            // Validate amount
+            double topupAmount;
+            try {
+                topupAmount = Double.parseDouble(amountStr);
+                if (topupAmount <= 0) {
+                    JOptionPane.showMessageDialog(null, "Amount must be greater than zero!");
+                    return;
                 }
-                userLines.add(line);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Invalid amount format!");
+                return;
             }
-        }
 
-        if (!userFound) {
-            JOptionPane.showMessageDialog(null, "User not found!");
-            return;
-        }
+            // Update user balance in users.txt
+            File usersFile = new File("users.txt");
+            List<String> userLines = new ArrayList<>();
+            boolean userFound = false;
+            double newBalance = 0;
 
-        // Write updated users back to file
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(usersFile))) {
-            for (String line : userLines) {
-                bw.write(line);
-                bw.newLine();
+            try (BufferedReader br = new BufferedReader(new FileReader(usersFile))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split(";");
+                    if (parts.length >= 8 && parts[0].equals(id)) {
+                        userFound = true;
+                        // Update balance
+                        double currentBalance = Double.parseDouble(parts[7]);
+                        newBalance = currentBalance + topupAmount;
+                        parts[7] = String.format("%.2f", newBalance);
+                        line = String.join(";", parts);
+                    }
+                    userLines.add(line);
+                }
             }
-        }
-        
-        //Record transaction in userTopup.txt
-        try (BufferedWriter topupWriter = new BufferedWriter(new FileWriter("userTopup.txt", true))) {
-            String transaction = String.format("%s;%s;%.2f;%.2f",
-            id, paymentMethod, topupAmount, newBalance);
-            topupWriter.write(transaction);
-            topupWriter.newLine();
-        }
 
-        cbxSelectId.select(0);
-        cbxPaymentMethod.setSelectedIndex(0);
-        topUpTxt.setText("");
-        JOptionPane.showMessageDialog(null, "Top-up successful!");
-        this.refreshTopupData();
-        this.refreshData();
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-    }
+            if (!userFound) {
+                JOptionPane.showMessageDialog(null, "User not found!");
+                return;
+            }
+
+            // Write updated users back to file
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(usersFile))) {
+                for (String line : userLines) {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            //Record transaction in userTopup.txt
+            try (BufferedWriter topupWriter = new BufferedWriter(new FileWriter("userTopup.txt", true))) {
+                String transaction = String.format("%s;%s;%.2f;%.2f",
+                        id, paymentMethod, topupAmount, newBalance);
+                topupWriter.write(transaction);
+                topupWriter.newLine();
+            }
+
+            cbxSelectId.select(0);
+            cbxPaymentMethod.setSelectedIndex(0);
+            topUpTxt.setText("");
+            JOptionPane.showMessageDialog(null, "Top-up successful!");
+            this.refreshTopupData();
+            this.refreshData();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
     }//GEN-LAST:event_topupBtnActionPerformed
 
     private void GenerateReceiptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateReceiptBtnActionPerformed
@@ -1707,7 +1690,6 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel title_label;
     private javax.swing.JLabel title_label2;
     private javax.swing.JLabel title_label3;
-    private javax.swing.JLabel title_label4;
     private javax.swing.JLabel title_label5;
     private javax.swing.JPanel topUp;
     private javax.swing.JTextField topUpTxt;

@@ -28,11 +28,13 @@ public class DrDashboard extends javax.swing.JFrame {
     
     private OrdersDelivered ordersDelivered;
     
+    private Chart chart;
+    
     public DrDashboard() {
         initComponents();
         usernametxt.setText(Login.getUsername());
         
-        this.setSize(1022,540); //(width,height)
+        this.setSize(1022,560); //(width,height)
         this.setResizable(false);
         
         DefaultColor = new Color(153,89,16);
@@ -74,7 +76,10 @@ public class DrDashboard extends javax.swing.JFrame {
          SwingUtilities.invokeLater(() -> {
         ordersDelivered = new OrdersDelivered(taskhistoryTable);
         });
-
+         
+        chart = new Chart(taskhistoryTable, chartPanel);
+        chart.updateChartFromTable("Today"); // Default chart filter
+         
                         
         }
     
@@ -223,6 +228,8 @@ public class DrDashboard extends javax.swing.JFrame {
 }
     
     
+
+    
     
 
     @SuppressWarnings("unchecked")
@@ -268,6 +275,7 @@ public class DrDashboard extends javax.swing.JFrame {
         ordersDeliveredLabel = new javax.swing.JLabel();
         totalorders = new javax.swing.JLabel();
         filterComboBox = new javax.swing.JComboBox<>();
+        chartPanel = new javax.swing.JPanel();
         viewtasksPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         viewtasksTable = new javax.swing.JTable();
@@ -716,12 +724,16 @@ public class DrDashboard extends javax.swing.JFrame {
         taskhistoryPanel.setBounds(0, 0, 710, 460);
 
         revenueDbPanel.setBackground(new java.awt.Color(153, 89, 16));
+        revenueDbPanel.setMinimumSize(new java.awt.Dimension(720, 480));
+        revenueDbPanel.setPreferredSize(new java.awt.Dimension(720, 480));
 
         revenueDbLabel.setBackground(new java.awt.Color(255, 255, 255));
         revenueDbLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
         revenueDbLabel.setForeground(new java.awt.Color(255, 255, 255));
         revenueDbLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         revenueDbLabel.setText("REVENUE DASHBOARD");
+
+        totalRevenuePanel.setBackground(new java.awt.Color(255, 255, 255));
 
         revenueLabel.setBackground(new java.awt.Color(0, 0, 0));
         revenueLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
@@ -752,6 +764,8 @@ public class DrDashboard extends javax.swing.JFrame {
                 .addComponent(totalrevenue, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 22, Short.MAX_VALUE))
         );
+
+        ordersDeliveredPanel.setBackground(new java.awt.Color(255, 255, 255));
 
         ordersDeliveredLabel.setBackground(new java.awt.Color(0, 0, 0));
         ordersDeliveredLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
@@ -790,6 +804,19 @@ public class DrDashboard extends javax.swing.JFrame {
             }
         });
 
+        chartPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout chartPanelLayout = new javax.swing.GroupLayout(chartPanel);
+        chartPanel.setLayout(chartPanelLayout);
+        chartPanelLayout.setHorizontalGroup(
+            chartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        chartPanelLayout.setVerticalGroup(
+            chartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 232, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout revenueDbPanelLayout = new javax.swing.GroupLayout(revenueDbPanel);
         revenueDbPanel.setLayout(revenueDbPanelLayout);
         revenueDbPanelLayout.setHorizontalGroup(
@@ -797,11 +824,14 @@ public class DrDashboard extends javax.swing.JFrame {
             .addComponent(revenueDbLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, revenueDbPanelLayout.createSequentialGroup()
                 .addGap(45, 45, 45)
-                .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addComponent(ordersDeliveredPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                .addComponent(totalRevenuePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(chartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(revenueDbPanelLayout.createSequentialGroup()
+                        .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(44, 44, 44)
+                        .addComponent(ordersDeliveredPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                        .addComponent(totalRevenuePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(44, 44, 44))
         );
         revenueDbPanelLayout.setVerticalGroup(
@@ -813,16 +843,18 @@ public class DrDashboard extends javax.swing.JFrame {
                     .addComponent(totalRevenuePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ordersDeliveredPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 244, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(chartPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         welcomePanel.add(revenueDbPanel);
         revenueDbPanel.setBounds(0, 0, 720, 460);
 
         viewtasksPanel.setBackground(new java.awt.Color(153, 89, 16));
-        viewtasksPanel.setMinimumSize(new java.awt.Dimension(720, 460));
+        viewtasksPanel.setMinimumSize(new java.awt.Dimension(720, 480));
         viewtasksPanel.setName(""); // NOI18N
-        viewtasksPanel.setPreferredSize(new java.awt.Dimension(720, 460));
+        viewtasksPanel.setPreferredSize(new java.awt.Dimension(720, 480));
 
         viewtasksTable.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         viewtasksTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -964,7 +996,7 @@ public class DrDashboard extends javax.swing.JFrame {
         );
 
         welcomePanel.add(viewtasksPanel);
-        viewtasksPanel.setBounds(0, 0, 720, 460);
+        viewtasksPanel.setBounds(0, 0, 720, 480);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1354,6 +1386,11 @@ public class DrDashboard extends javax.swing.JFrame {
          //  Get total orders delivered using OrdersDelivered class
         int totalOrders = ordersDelivered.countOrders(selectedOption);
         totalorders.setText("Total Orders: " + totalOrders);
+        
+        
+        chart.updateChartFromTable(selectedOption);
+        
+        
     }//GEN-LAST:event_filterComboBoxActionPerformed
 
     private void goToLogout(){
@@ -1403,6 +1440,7 @@ public class DrDashboard extends javax.swing.JFrame {
     private javax.swing.JButton DeclineBtn;
     private javax.swing.JButton DeliveredBtn;
     private javax.swing.JButton SearchBtn;
+    private javax.swing.JPanel chartPanel;
     private javax.swing.JPanel custreviewsPanel;
     private javax.swing.JLabel custreviewsTab;
     private javax.swing.JLabel drName;

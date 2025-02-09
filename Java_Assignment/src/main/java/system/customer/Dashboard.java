@@ -27,31 +27,7 @@ public class Dashboard extends javax.swing.JFrame {
         this.setResizable(false);// Prevent the frame from being resizable
         
         OrderTab.setBackground(Color.black);//set OrderTab to black and order Opened after login
-        
-        ImageIcon img1 = new ImageIcon(getClass().getResource("/NLA.goreng.jpg"));
-        Image scaledImage1 = img1.getImage().getScaledInstance(155, 100, Image.SCALE_SMOOTH);//Width: 100px, Height: 130px
-        ImageIcon scaledIcon1 = new ImageIcon(scaledImage1);
-        img_1.setText("");//remove the text
-        img_1.setIcon(scaledIcon1);//get the image
-        
-        ImageIcon img2 = new ImageIcon(getClass().getResource("/NLA.rendang.jpg"));
-        Image scaledImage2 = img2.getImage().getScaledInstance(155, 100, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon2 = new ImageIcon(scaledImage2);
-        img_2.setText("");
-        img_2.setIcon(scaledIcon2);
-        
-        ImageIcon img3 = new ImageIcon(getClass().getResource("/C.satay.jpg"));
-        Image scaledImage3 = img3.getImage().getScaledInstance(155, 100, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon3 = new ImageIcon(scaledImage3);
-        img_3.setText("");
-        img_3.setIcon(scaledIcon3);
-        
-        ImageIcon img4 = new ImageIcon(getClass().getResource("/B.satay.jpg"));
-        Image scaledImage4 = img4.getImage().getScaledInstance(155, 100, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon4 = new ImageIcon(scaledImage4);
-        img_4.setText("");
-        img_4.setIcon(scaledIcon4);
-    }
+        }
 
     /**
      * This method is called from within the constructor to initialize the form.

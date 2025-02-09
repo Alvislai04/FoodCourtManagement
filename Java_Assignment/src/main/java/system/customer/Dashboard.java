@@ -12,6 +12,8 @@ import java.awt.Color;
  * @author nickkhawchunmin
  */
 public class Dashboard extends javax.swing.JFrame {
+    
+    
 
     /**
      * Creates new form Dashboard
@@ -27,6 +29,7 @@ public class Dashboard extends javax.swing.JFrame {
         OrderTab.setBackground(Color.black);//set OrderTab to black and order Opened after login
         }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -50,6 +53,7 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         OrderPanel = new javax.swing.JPanel();
         OrderStatusPanel = new javax.swing.JPanel();
+        LeaveReviewBtn = new javax.swing.JButton();
         OrderHistoryPanel = new javax.swing.JPanel();
         CommentPanel = new javax.swing.JPanel();
 
@@ -216,15 +220,28 @@ public class Dashboard extends javax.swing.JFrame {
 
         OrderStatusPanel.setBackground(new java.awt.Color(0, 51, 255));
 
+        LeaveReviewBtn.setText("LEAVE REVIEW");
+        LeaveReviewBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LeaveReviewBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout OrderStatusPanelLayout = new javax.swing.GroupLayout(OrderStatusPanel);
         OrderStatusPanel.setLayout(OrderStatusPanelLayout);
         OrderStatusPanelLayout.setHorizontalGroup(
             OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 590, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderStatusPanelLayout.createSequentialGroup()
+                .addContainerGap(372, Short.MAX_VALUE)
+                .addComponent(LeaveReviewBtn)
+                .addGap(110, 110, 110))
         );
         OrderStatusPanelLayout.setVerticalGroup(
             OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 552, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderStatusPanelLayout.createSequentialGroup()
+                .addContainerGap(272, Short.MAX_VALUE)
+                .addComponent(LeaveReviewBtn)
+                .addGap(257, 257, 257))
         );
 
         jPanel1.add(OrderStatusPanel);
@@ -339,6 +356,15 @@ public class Dashboard extends javax.swing.JFrame {
         OrderTab.setBackground(new Color(153,89,16));
     }//GEN-LAST:event_CommentTabMousePressed
 
+    private void LeaveReviewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaveReviewBtnActionPerformed
+        String runnerId = null; //need to change this if without this will have error, shouldnt be like this
+        // TODO add your handling code here:
+        
+         ReviewForm reviewForm = new ReviewForm(runnerId); 
+         reviewForm.setVisible(true); //added by Jenna
+        
+    }//GEN-LAST:event_LeaveReviewBtnActionPerformed
+
     private void goToLogout(){
         Login loginframe = new Login();
         loginframe.setVisible(true);
@@ -383,6 +409,7 @@ public class Dashboard extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel CommentPanel;
     private javax.swing.JLabel CommentTab;
+    private javax.swing.JButton LeaveReviewBtn;
     private javax.swing.JPanel OrderHistoryPanel;
     private javax.swing.JLabel OrderHistoryTab;
     private javax.swing.JPanel OrderPanel;

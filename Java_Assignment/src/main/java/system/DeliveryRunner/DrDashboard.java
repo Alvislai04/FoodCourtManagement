@@ -5,8 +5,10 @@ import com.system.Login;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -79,6 +81,8 @@ public class DrDashboard extends javax.swing.JFrame {
          
         chart = new Chart(taskhistoryTable, chartPanel);
         chart.updateChartFromTable("Today"); // Default chart filter
+        
+        loadCustomerReviews();
          
                         
         }
@@ -227,6 +231,52 @@ public class DrDashboard extends javax.swing.JFrame {
     receiptArea.setText(receipt);
 }
     
+    private void loadCustomerReviews() {
+        
+        
+     String runnerID = Login.getUsername(); // Assuming username matches runner ID
+    File file = new File("reviews.txt");
+
+    if (!file.exists()) {
+        CustReviewsDisplay.setText("No reviews available.");
+        return;
+    }
+
+    try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        StringBuilder reviewsText = new StringBuilder();
+        String line;
+        
+        while ((line = br.readLine()) != null) {
+            String[] data = line.split(";", -1); // Format: RunnerID;Rating;Comment
+            
+            if (data.length >= 3) {
+                String id = data[0];   // ID of the delivery runner
+                String rating = data[1]; // Star rating
+                String comment = data[2]; // Review text
+                
+                // Check if the review belongs to the logged-in runner
+                if (runnerID.equals(id)) {
+                    reviewsText.append("⭐ Rating: ").append(rating).append("/5\n")
+                               .append("📝 Comment: ").append(comment).append("\n\n");
+                }
+            }
+        }
+
+        // Display the reviews or show a default message
+        if (reviewsText.length() > 0) {
+            CustReviewsDisplay.setText(reviewsText.toString());
+        } else {
+            CustReviewsDisplay.setText("No reviews available for you."); //not showing reviews
+        }
+
+    } catch (IOException e) {
+        CustReviewsDisplay.setText("Error loading reviews.");
+        JOptionPane.showMessageDialog(this, "Error loading reviews.", "Error", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+}
+
+    
     
 
     
@@ -259,6 +309,9 @@ public class DrDashboard extends javax.swing.JFrame {
         DeclineBtn = new javax.swing.JButton();
         AcceptBtn = new javax.swing.JButton();
         custreviewsPanel = new javax.swing.JPanel();
+        CustReviewsLabel = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        CustReviewsDisplay = new javax.swing.JTextArea();
         taskhistoryPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taskhistoryTable = new javax.swing.JTable();
@@ -590,17 +643,38 @@ public class DrDashboard extends javax.swing.JFrame {
         welcomePanel.add(notificationsPanel);
         notificationsPanel.setBounds(0, 0, 710, 460);
 
-        custreviewsPanel.setBackground(new java.awt.Color(255, 51, 51));
+        custreviewsPanel.setBackground(new java.awt.Color(153, 89, 16));
+
+        CustReviewsLabel.setBackground(new java.awt.Color(255, 255, 255));
+        CustReviewsLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
+        CustReviewsLabel.setForeground(new java.awt.Color(255, 255, 255));
+        CustReviewsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        CustReviewsLabel.setText("CUSTOMER REVIEWS");
+
+        CustReviewsDisplay.setColumns(20);
+        CustReviewsDisplay.setRows(5);
+        jScrollPane4.setViewportView(CustReviewsDisplay);
 
         javax.swing.GroupLayout custreviewsPanelLayout = new javax.swing.GroupLayout(custreviewsPanel);
         custreviewsPanel.setLayout(custreviewsPanelLayout);
         custreviewsPanelLayout.setHorizontalGroup(
             custreviewsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 710, Short.MAX_VALUE)
+            .addGroup(custreviewsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(CustReviewsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, custreviewsPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25))
         );
         custreviewsPanelLayout.setVerticalGroup(
             custreviewsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 460, Short.MAX_VALUE)
+            .addGroup(custreviewsPanelLayout.createSequentialGroup()
+                .addComponent(CustReviewsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 41, Short.MAX_VALUE))
         );
 
         welcomePanel.add(custreviewsPanel);
@@ -1437,6 +1511,8 @@ public class DrDashboard extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AcceptBtn;
     private javax.swing.JButton CollectedBtn;
+    private javax.swing.JTextArea CustReviewsDisplay;
+    private javax.swing.JLabel CustReviewsLabel;
     private javax.swing.JButton DeclineBtn;
     private javax.swing.JButton DeliveredBtn;
     private javax.swing.JButton SearchBtn;
@@ -1451,6 +1527,7 @@ public class DrDashboard extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private java.awt.List list1;
     private javax.swing.JButton logoutBtn;
     private javax.swing.JPanel menubarPanel;

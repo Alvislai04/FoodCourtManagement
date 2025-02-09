@@ -59,8 +59,8 @@ public class AdDashboard extends javax.swing.JFrame {
         jp2.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (!employeeTable.getBounds().contains(e.getPoint())) {
-                    employeeTable.clearSelection(); // Deselect row
+                if (!userDetailTable.getBounds().contains(e.getPoint())) {
+                    userDetailTable.clearSelection(); // Deselect row
                     for (ActionListener al : rolecbx.getActionListeners()) {
                         rolecbx.addActionListener(al);
                     }
@@ -75,14 +75,14 @@ public class AdDashboard extends javax.swing.JFrame {
                 int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this row?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
 
                 if (confirm == JOptionPane.YES_OPTION) {
-                    if (employeeTable.isEditing()) {
-                        employeeTable.getCellEditor().stopCellEditing();
+                    if (userDetailTable.isEditing()) {
+                        userDetailTable.getCellEditor().stopCellEditing();
                     }
-                    DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
+                    DefaultTableModel model = (DefaultTableModel) userDetailTable.getModel();
                     try {
                         //get selected row of data
-                        int selectedRow = employeeTable.getSelectedRow();
-                        String employeeId = (String) employeeTable.getValueAt(selectedRow, 0);
+                        int selectedRow = userDetailTable.getSelectedRow();
+                        String employeeId = (String) userDetailTable.getValueAt(selectedRow, 0);
                         FileReader fr = new FileReader("users.txt");
                         BufferedReader br = new BufferedReader(fr);
                         String read;
@@ -143,8 +143,8 @@ public class AdDashboard extends javax.swing.JFrame {
 
             private void refreshData() {
                 try {
-                    DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
-                    DefaultTableModel model1 = (DefaultTableModel) employeeTable1.getModel();
+                    DefaultTableModel model = (DefaultTableModel) userDetailTable.getModel();
+                    DefaultTableModel model1 = (DefaultTableModel) userTable.getModel();
                     model.setRowCount(0);//reset table
                     model1.setRowCount(0);
                     FileReader fr = new FileReader("users.txt");
@@ -171,15 +171,15 @@ public class AdDashboard extends javax.swing.JFrame {
             }
         };
 
-        employeeTable.getColumnModel().getColumn(7).setCellRenderer(new TableActionCellRender());
-        employeeTable.getColumnModel().getColumn(7).setCellEditor(new TableActionCellEditor(event));
+        userDetailTable.getColumnModel().getColumn(7).setCellRenderer(new TableActionCellRender());
+        userDetailTable.getColumnModel().getColumn(7).setCellEditor(new TableActionCellEditor(event));
         Navigation.setVisible(false);
         jp1.setVisible(true);
         jp2.setVisible(false);
         jp3.setVisible(false);
 
         /*Just Added*/
-        employeeTable.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        userDetailTable.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             @Override
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 if (!evt.getValueIsAdjusting()) { // Ensure the event only fires once when the selection is final
@@ -192,15 +192,15 @@ public class AdDashboard extends javax.swing.JFrame {
     }
 
     private void populateFormFromTableSelection() {
-        int selectedRow = employeeTable.getSelectedRow();
+        int selectedRow = userDetailTable.getSelectedRow();
         if (selectedRow != -1) { // Ensure a row is selected
-            String id = (String) employeeTable.getValueAt(selectedRow, 0);
-            String name = (String) employeeTable.getValueAt(selectedRow, 1);
-            String address = (String) employeeTable.getValueAt(selectedRow, 2);
-            String phoneno = (String) employeeTable.getValueAt(selectedRow, 3);
-            String username = (String) employeeTable.getValueAt(selectedRow, 4);
-            String password = (String) employeeTable.getValueAt(selectedRow, 5);
-            String role = (String) employeeTable.getValueAt(selectedRow, 6);
+            String id = (String) userDetailTable.getValueAt(selectedRow, 0);
+            String name = (String) userDetailTable.getValueAt(selectedRow, 1);
+            String address = (String) userDetailTable.getValueAt(selectedRow, 2);
+            String phoneno = (String) userDetailTable.getValueAt(selectedRow, 3);
+            String username = (String) userDetailTable.getValueAt(selectedRow, 4);
+            String password = (String) userDetailTable.getValueAt(selectedRow, 5);
+            String role = (String) userDetailTable.getValueAt(selectedRow, 6);
 
             double balance = getBalanceFromFile(id);
             //get id from file
@@ -290,10 +290,10 @@ public class AdDashboard extends javax.swing.JFrame {
 
     public void refreshData() {
         try {
-            DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
-            DefaultTableModel model1 = (DefaultTableModel) employeeTable1.getModel();
+            DefaultTableModel model = (DefaultTableModel) userDetailTable.getModel();
+            DefaultTableModel userModel = (DefaultTableModel) userTable.getModel();
             model.setRowCount(0);//reset table
-            model1.setRowCount(0);
+            userModel.setRowCount(0);
             FileReader fr = new FileReader("users.txt");
             BufferedReader br = new BufferedReader(fr);
             String read;
@@ -305,12 +305,18 @@ public class AdDashboard extends javax.swing.JFrame {
                 String username = read.split(";")[4];
                 String password = read.split(";")[5];
                 String role = read.split(";")[6];
+                String balance = read.split(";")[7];
+                
+                if (!role.equalsIgnoreCase("Customer")) {
+                    balance = "-";
+                }
+                
                 model.addRow(
                         new Object[]{id, name, address, phoneno, username, password,
                             role});
-                model1.addRow(
+                userModel.addRow(
                         new Object[]{id, name, address, phoneno, username,
-                            role});
+                            role, balance});
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
@@ -358,6 +364,48 @@ public class AdDashboard extends javax.swing.JFrame {
         }
     }
 
+    private void filterTableByRole(String role) {
+        DefaultTableModel model = (DefaultTableModel) userTable.getModel();
+        model.setRowCount(0); // Clear the table before adding filtered data
+
+        if ("Please select a role.".equals(role)) {
+            // If "Please select a role." is selected, reset the table to show all data
+            refreshData();
+            return;
+        }
+
+        try {
+            FileReader fr = new FileReader("users.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+
+            // Read through the file line by line
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(";");
+                String id = data[0].trim();
+                String name = data[1].trim();
+                String address = data[2].trim();
+                String phoneno = data[3].trim();
+                String username = data[4].trim();
+                String userRole = data[6].trim();
+                String balance = data[7].trim();
+
+                if (!role.equalsIgnoreCase("Customer")) {
+                    balance = "-";
+                }
+
+                // Check if the role matches the selected role
+                if (userRole.equalsIgnoreCase(role)) {
+                    // Add the matching record to the table
+                    model.addRow(new Object[]{id, name, address, phoneno, username, userRole, balance});
+                }
+            }
+            br.close(); // Close the file reader
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error reading file: " + e.getMessage());
+        }
+    }
+
     public void goToLogout() {
         Login loginframe = new Login();
         loginframe.setVisible(true);
@@ -388,16 +436,20 @@ public class AdDashboard extends javax.swing.JFrame {
         jp1 = new javax.swing.JPanel();
         title_label2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        employeeTable1 = new javax.swing.JTable();
+        userTable = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        searchField = new javax.swing.JTextField();
+        sortRoleCbx = new javax.swing.JComboBox<>();
+        jLabel13 = new javax.swing.JLabel();
+        clearSearchBtn = new javax.swing.JButton();
         jp2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        employeeTable = new javax.swing.JTable();
+        userDetailTable = new javax.swing.JTable();
         title_label3 = new javax.swing.JLabel();
         nametxt = new javax.swing.JTextField();
         updatebtn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        deletebtn = new javax.swing.JButton();
         addresstxt = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         phonenotxt = new javax.swing.JTextField();
@@ -429,6 +481,7 @@ public class AdDashboard extends javax.swing.JFrame {
         GenerateReceiptBtn = new javax.swing.JButton();
         title_label5 = new javax.swing.JLabel();
         cbxSelectId = new java.awt.Choice();
+        clearTableBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.gray);
@@ -640,7 +693,7 @@ public class AdDashboard extends javax.swing.JFrame {
         title_label2.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
         title_label2.setText("Admin dashboard");
 
-        employeeTable1.setModel(new javax.swing.table.DefaultTableModel(
+        userTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -656,16 +709,16 @@ public class AdDashboard extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        employeeTable1.setRowHeight(30);
-        employeeTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(employeeTable1);
-        if (employeeTable1.getColumnModel().getColumnCount() > 0) {
-            employeeTable1.getColumnModel().getColumn(0).setResizable(false);
-            employeeTable1.getColumnModel().getColumn(1).setResizable(false);
-            employeeTable1.getColumnModel().getColumn(3).setResizable(false);
-            employeeTable1.getColumnModel().getColumn(4).setResizable(false);
-            employeeTable1.getColumnModel().getColumn(5).setResizable(false);
-            employeeTable1.getColumnModel().getColumn(6).setResizable(false);
+        userTable.setRowHeight(30);
+        userTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(userTable);
+        if (userTable.getColumnModel().getColumnCount() > 0) {
+            userTable.getColumnModel().getColumn(0).setResizable(false);
+            userTable.getColumnModel().getColumn(1).setResizable(false);
+            userTable.getColumnModel().getColumn(3).setResizable(false);
+            userTable.getColumnModel().getColumn(4).setResizable(false);
+            userTable.getColumnModel().getColumn(5).setResizable(false);
+            userTable.getColumnModel().getColumn(6).setResizable(false);
         }
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image-40x35.jpg"))); // NOI18N
@@ -676,21 +729,67 @@ public class AdDashboard extends javax.swing.JFrame {
             }
         });
 
+        jLabel12.setText("Search:");
+
+        searchField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchFieldActionPerformed(evt);
+            }
+        });
+        searchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchFieldKeyReleased(evt);
+            }
+        });
+
+        sortRoleCbx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please select a role.", "Customer", "Vendor", "Delivery Runner" }));
+        sortRoleCbx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sortRoleCbxActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText("Role:");
+
+        clearSearchBtn.setText("Clear search");
+        clearSearchBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                clearSearchBtnMouseReleased(evt);
+            }
+        });
+        clearSearchBtn.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                clearSearchBtnKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jp1Layout = new javax.swing.GroupLayout(jp1);
         jp1.setLayout(jp1Layout);
         jp1Layout.setHorizontalGroup(
             jp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jp1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jp1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
-                        .addContainerGap())
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(79, 79, 79)
+                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(sortRoleCbx, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(62, 62, 62)
+                        .addComponent(clearSearchBtn))
                     .addGroup(jp1Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(title_label2)
-                        .addGap(870, 889, Short.MAX_VALUE))))
+                        .addComponent(title_label2)))
+                .addContainerGap())
+            .addGroup(jp1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1288, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jp1Layout.setVerticalGroup(
             jp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -699,14 +798,21 @@ public class AdDashboard extends javax.swing.JFrame {
                 .addGroup(jp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(title_label2)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addGroup(jp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sortRoleCbx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13)
+                    .addComponent(clearSearchBtn))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 468, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         jp2.setPreferredSize(new java.awt.Dimension(1300, 563));
 
-        employeeTable.setModel(new javax.swing.table.DefaultTableModel(
+        userDetailTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -722,18 +828,18 @@ public class AdDashboard extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        employeeTable.setMinimumSize(new java.awt.Dimension(120, 700));
-        employeeTable.setRowHeight(40);
-        jScrollPane1.setViewportView(employeeTable);
-        if (employeeTable.getColumnModel().getColumnCount() > 0) {
-            employeeTable.getColumnModel().getColumn(0).setResizable(false);
-            employeeTable.getColumnModel().getColumn(1).setResizable(false);
-            employeeTable.getColumnModel().getColumn(2).setResizable(false);
-            employeeTable.getColumnModel().getColumn(3).setResizable(false);
-            employeeTable.getColumnModel().getColumn(4).setResizable(false);
-            employeeTable.getColumnModel().getColumn(5).setResizable(false);
-            employeeTable.getColumnModel().getColumn(6).setResizable(false);
-            employeeTable.getColumnModel().getColumn(7).setResizable(false);
+        userDetailTable.setMinimumSize(new java.awt.Dimension(120, 700));
+        userDetailTable.setRowHeight(40);
+        jScrollPane1.setViewportView(userDetailTable);
+        if (userDetailTable.getColumnModel().getColumnCount() > 0) {
+            userDetailTable.getColumnModel().getColumn(0).setResizable(false);
+            userDetailTable.getColumnModel().getColumn(1).setResizable(false);
+            userDetailTable.getColumnModel().getColumn(2).setResizable(false);
+            userDetailTable.getColumnModel().getColumn(3).setResizable(false);
+            userDetailTable.getColumnModel().getColumn(4).setResizable(false);
+            userDetailTable.getColumnModel().getColumn(5).setResizable(false);
+            userDetailTable.getColumnModel().getColumn(6).setResizable(false);
+            userDetailTable.getColumnModel().getColumn(7).setResizable(false);
         }
 
         title_label3.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
@@ -748,13 +854,6 @@ public class AdDashboard extends javax.swing.JFrame {
 
         jLabel4.setText("address:");
 
-        deletebtn.setText("Delete");
-        deletebtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deletebtnActionPerformed(evt);
-            }
-        });
-
         jLabel5.setText("Phone No.:");
 
         phonenotxt.addActionListener(new java.awt.event.ActionListener() {
@@ -763,9 +862,17 @@ public class AdDashboard extends javax.swing.JFrame {
             }
         });
 
+        searchtxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchtxtActionPerformed(evt);
+            }
+        });
         searchtxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 searchtxtKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                searchtxtKeyTyped(evt);
             }
         });
 
@@ -832,15 +939,7 @@ public class AdDashboard extends javax.swing.JFrame {
             .addGroup(jp2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jp2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 666, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(updatebtn)
-                            .addGroup(jp2Layout.createSequentialGroup()
-                                .addComponent(jButton1)
-                                .addGap(147, 147, 147)
-                                .addComponent(clearbtn))))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 666, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jp2Layout.createSequentialGroup()
                         .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jp2Layout.createSequentialGroup()
@@ -851,41 +950,42 @@ public class AdDashboard extends javax.swing.JFrame {
                                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(title_label3)))
-                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2Layout.createSequentialGroup()
+                                    .addGap(118, 118, 118)
+                                    .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel7)
+                                        .addComponent(jLabel8)
+                                        .addComponent(jLabel6))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(usernametxt, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                                        .addComponent(rolecbx, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(passwordtxt)))
+                                .addGroup(jp2Layout.createSequentialGroup()
+                                    .addGap(115, 115, 115)
+                                    .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel5)
+                                        .addComponent(jLabel4)
+                                        .addComponent(jLabel3)
+                                        .addComponent(jLabel2))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(addresstxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                                        .addComponent(nametxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(idtxt, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(phonenotxt))))
                             .addGroup(jp2Layout.createSequentialGroup()
-                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2Layout.createSequentialGroup()
-                                        .addGap(118, 118, 118)
-                                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel7)
-                                            .addComponent(jLabel8)
-                                            .addComponent(jLabel6))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(usernametxt, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
-                                            .addComponent(rolecbx, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(passwordtxt)))
-                                    .addGroup(jp2Layout.createSequentialGroup()
-                                        .addGap(115, 115, 115)
-                                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel5)
-                                            .addComponent(jLabel4)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jLabel2))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(addresstxt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
-                                            .addComponent(nametxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(idtxt, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(phonenotxt))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2Layout.createSequentialGroup()
-                                .addGap(111, 111, 111)
-                                .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(deletebtn)
-                                    .addComponent(addbtn, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(34, 34, 34)))))
-                .addContainerGap(87, Short.MAX_VALUE))
+                                .addGap(159, 159, 159)
+                                .addComponent(jButton1)
+                                .addGap(65, 65, 65)
+                                .addComponent(clearbtn)
+                                .addGap(65, 65, 65)
+                                .addComponent(updatebtn)
+                                .addGap(65, 65, 65)
+                                .addComponent(addbtn)))))
+                .addContainerGap(86, Short.MAX_VALUE))
         );
         jp2Layout.setVerticalGroup(
             jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -931,12 +1031,9 @@ public class AdDashboard extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(updatebtn)
-                            .addComponent(addbtn))
-                        .addGap(18, 18, 18)
-                        .addGroup(jp2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(clearbtn)
-                            .addComponent(deletebtn)
-                            .addComponent(jButton1)))
+                            .addComponent(addbtn)
+                            .addComponent(jButton1)
+                            .addComponent(clearbtn)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
@@ -999,7 +1096,7 @@ public class AdDashboard extends javax.swing.JFrame {
             }
         });
 
-        GenerateReceiptBtn.setText("Generate Receipt");
+        GenerateReceiptBtn.setText("Generate Transaction Receipt");
         GenerateReceiptBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 GenerateReceiptBtnActionPerformed(evt);
@@ -1009,6 +1106,13 @@ public class AdDashboard extends javax.swing.JFrame {
         title_label5.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
         title_label5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         title_label5.setText("Top-up System");
+
+        clearTableBtn.setText("Clear History");
+        clearTableBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearTableBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jp3Layout = new javax.swing.GroupLayout(jp3);
         jp3.setLayout(jp3Layout);
@@ -1022,19 +1126,24 @@ public class AdDashboard extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(title_label5))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 840, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
-                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(GenerateReceiptBtn)
-                    .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel11)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
-                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cbxPaymentMethod, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(topUpTxt)
-                    .addComponent(topupBtn, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cbxSelectId, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jp3Layout.createSequentialGroup()
+                        .addGap(85, 85, 85)
+                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cbxPaymentMethod, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(topUpTxt)
+                            .addComponent(topupBtn, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cbxSelectId, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jp3Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(clearTableBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(GenerateReceiptBtn)))
                 .addGap(60, 60, 60))
         );
         jp3Layout.setVerticalGroup(
@@ -1056,9 +1165,11 @@ public class AdDashboard extends javax.swing.JFrame {
                             .addComponent(jLabel11)
                             .addComponent(topUpTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(54, 54, 54)
+                        .addComponent(topupBtn)
+                        .addGap(37, 37, 37)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(topupBtn)
-                            .addComponent(GenerateReceiptBtn))
+                            .addComponent(GenerateReceiptBtn)
+                            .addComponent(clearTableBtn))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jp3Layout.createSequentialGroup()
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1083,7 +1194,7 @@ public class AdDashboard extends javax.swing.JFrame {
                 .addComponent(jp1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jp2, javax.swing.GroupLayout.DEFAULT_SIZE, 1287, Short.MAX_VALUE))
+                .addComponent(jp2, javax.swing.GroupLayout.DEFAULT_SIZE, 1306, Short.MAX_VALUE))
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jp3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1325,20 +1436,18 @@ public class AdDashboard extends javax.swing.JFrame {
 
     private void searchtxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchtxtKeyReleased
         try {
-            String searchText = searchtxt.getText().trim(); // Get search text
-            DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
-            model.setRowCount(0); // Clear the table before adding data
-
+            String searchText = searchtxt.getText().trim();
+            DefaultTableModel model = (DefaultTableModel) userDetailTable.getModel();
+            model.setRowCount(0);
             if (searchText.isEmpty()) {
-                // If search text is empty, reset the table to show all data
                 refreshData();
+                return;
             }
 
             FileReader fr = new FileReader("users.txt");
             BufferedReader br = new BufferedReader(fr);
             String line;
 
-            // Read through the file line by line
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
                 String id = data[0].trim();
@@ -1349,81 +1458,36 @@ public class AdDashboard extends javax.swing.JFrame {
                 String password = data[5].trim();
                 String role = data[6].trim();
 
-                // Check if any field matches the search text
-                if (id.toLowerCase().contains(searchText.toLowerCase())
-                        || name.toLowerCase().contains(searchText.toLowerCase())
-                        || address.toLowerCase().contains(searchText.toLowerCase())
-                        || phoneno.toLowerCase().contains(searchText.toLowerCase())
-                        || username.toLowerCase().contains(searchText.toLowerCase())
-                        || password.toLowerCase().contains(searchText.toLowerCase())
-                        || role.toLowerCase().contains(searchText.toLowerCase())) {
+                String searchableText = id + " " + name + " " + address + " " + phoneno + " " + username + " " + role;
+
+                // Check if the search text matches the order in the searchable text
+                if (isOrderedMatch(searchText.toLowerCase(), searchableText.toLowerCase())) {
                     // Add the matching record to the table
                     model.addRow(new Object[]{id, name, address, phoneno, username, password, role});
                 }
             }
-            br.close(); // Close the file reader
+            br.close();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error reading file: " + e.getMessage());
         }
-    }//GEN-LAST:event_searchtxtKeyReleased
+    }
 
-    private void deletebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletebtnActionPerformed
-        // TODO add your handling code here:
-        try {
-            //get selected row of data
-            int selectedRow = employeeTable.getSelectedRow();
-            String employeeId = (String) employeeTable.getValueAt(selectedRow, 0);
-            FileReader fr = new FileReader("users.txt");
-            BufferedReader br = new BufferedReader(fr);
-            String read;
+// Helper method to check if the search text follows the word order in the searchable text
+    private boolean isOrderedMatch(String searchText, String searchableText) {
+        String[] searchWords = searchText.split("\\s+");
+        String[] searchableWords = searchableText.split("\\s+");
 
-            ArrayList<ArrayList<String>> employeeList = new ArrayList<>();
-            while ((read = br.readLine()) != null) {
-                ArrayList<String> record = new ArrayList<>();
-                record.add(read.split(";")[0]);
-                record.add(read.split(";")[1]);
-                record.add(read.split(";")[2]);
-                record.add(read.split(";")[3]);
-                record.add(read.split(";")[4]);
-                record.add(read.split(";")[5]);
-                record.add(read.split(";")[6]);
-                employeeList.add(record);
-            }
-            for (int row = 0; row < employeeList.size(); row++) {
-                if (employeeList.get(row).get(0).equals(employeeId)) {
-                    employeeList.remove(row);
-                    break;
+        int searchIndex = 0;
+        for (String searchableWord : searchableWords) {
+            if (searchableWord.equals(searchWords[searchIndex])) {
+                searchIndex++;
+                if (searchIndex == searchWords.length) {
+                    return true;
                 }
             }
-
-            // Writing the updated TODO records back to the file
-            FileWriter fw = new FileWriter("users.txt");
-            for (int i = 0; i < employeeList.size(); i++) {
-                fw.write(employeeList.get(i).get(0) + ";");
-                fw.write(employeeList.get(i).get(1) + ";");
-                fw.write(employeeList.get(i).get(2) + ";");
-                fw.write(employeeList.get(i).get(3) + ";");
-                fw.write(employeeList.get(i).get(4) + ";");
-                fw.write(employeeList.get(i).get(5) + ";");
-                fw.write(employeeList.get(i).get(6) + ";\n");
-            }
-
-            fw.close();
-
-            idtxt.setText("");
-            nametxt.setText("");
-            addresstxt.setText("");
-            phonenotxt.setText("");
-            usernametxt.setText("");
-            passwordtxt.setText("");
-            rolecbx.setSelectedIndex(0);
-
-            JOptionPane.showMessageDialog(null, "successfully deleted a record");
-            this.refreshData();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Successfully deleted employee");
         }
-    }//GEN-LAST:event_deletebtnActionPerformed
+        return false;
+    }//GEN-LAST:event_searchtxtKeyReleased
 
     private void updatebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatebtnActionPerformed
         try {
@@ -1435,7 +1499,7 @@ public class AdDashboard extends javax.swing.JFrame {
             String password = new String(passwordtxt.getPassword());
             String role = rolecbx.getSelectedItem().toString();
 
-            int selectedRow = employeeTable.getSelectedRow();
+            int selectedRow = userDetailTable.getSelectedRow();
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(null, "No record selected for editing!");
                 rolecbx.addActionListener(e -> updateIDBasedOnRole());
@@ -1459,7 +1523,7 @@ public class AdDashboard extends javax.swing.JFrame {
                 return;
             }
 
-            String originalId = (String) employeeTable.getValueAt(selectedRow, 0); // get id from selected row
+            String originalId = (String) userDetailTable.getValueAt(selectedRow, 0); // get id from selected row
 
             BufferedReader br = new BufferedReader(new FileReader("users.txt"));
             ArrayList<String> lines = new ArrayList<>();
@@ -1608,6 +1672,79 @@ public class AdDashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_topUpTxtActionPerformed
 
+    private void clearTableBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearTableBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_clearTableBtnActionPerformed
+
+    private void sortRoleCbxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortRoleCbxActionPerformed
+        String selectedRole = (String) sortRoleCbx.getSelectedItem();
+        searchField.setText("");
+        filterTableByRole(selectedRole);
+    }//GEN-LAST:event_sortRoleCbxActionPerformed
+
+    private void searchtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchtxtActionPerformed
+
+    }//GEN-LAST:event_searchtxtActionPerformed
+
+    private void searchFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchFieldKeyReleased
+        try {
+            String search = searchField.getText().trim();
+            DefaultTableModel model = (DefaultTableModel) userTable.getModel();
+            model.setRowCount(0);
+            if (search.isEmpty()) {
+                refreshData();
+                return;
+            }
+
+            FileReader fr = new FileReader("users.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(";");
+                String id = data[0].trim();
+                String name = data[1].trim();
+                String address = data[2].trim();
+                String phoneno = data[3].trim();
+                String username = data[4].trim();
+                String role = data[6].trim();
+                String balance = data[7].trim();
+
+                if (!role.equalsIgnoreCase("Customer")) {
+                    balance = "-";
+                }
+
+                String searchableText = id + " " + name + " " + address + " " + phoneno + " " + username;
+
+                // Check if the search text matches the order in the searchable text
+                if (isOrderedMatch(search.toLowerCase(), searchableText.toLowerCase())) {
+                    // Add the matching record to the table
+                    model.addRow(new Object[]{id, name, address, phoneno, username, role, balance});
+                }
+            }
+            br.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error reading file: " + e.getMessage());
+        }
+    }//GEN-LAST:event_searchFieldKeyReleased
+
+    private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchFieldActionPerformed
+
+    private void searchtxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchtxtKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchtxtKeyTyped
+
+    private void clearSearchBtnKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_clearSearchBtnKeyReleased
+
+    }//GEN-LAST:event_clearSearchBtnKeyReleased
+
+    private void clearSearchBtnMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearSearchBtnMouseReleased
+        searchField.setText("");
+        sortRoleCbx.setSelectedIndex(0);
+    }//GEN-LAST:event_clearSearchBtnMouseReleased
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1647,11 +1784,10 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JTextField addresstxt;
     private javax.swing.JComboBox<String> cbxPaymentMethod;
     private java.awt.Choice cbxSelectId;
+    private javax.swing.JButton clearSearchBtn;
+    private javax.swing.JButton clearTableBtn;
     private javax.swing.JButton clearbtn;
-    private javax.swing.JButton deletebtn;
     private javax.swing.JPanel editAccount;
-    private javax.swing.JTable employeeTable;
-    private javax.swing.JTable employeeTable1;
     private javax.swing.JPanel home;
     private javax.swing.JTextField idtxt;
     private javax.swing.JButton jButton1;
@@ -1662,6 +1798,8 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1682,7 +1820,9 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JPasswordField passwordtxt;
     private javax.swing.JTextField phonenotxt;
     private javax.swing.JComboBox<String> rolecbx;
+    private javax.swing.JTextField searchField;
     private javax.swing.JTextField searchtxt;
+    private javax.swing.JComboBox<String> sortRoleCbx;
     private javax.swing.JLabel tab1;
     private javax.swing.JLabel tab2;
     private javax.swing.JLabel tab3;
@@ -1696,6 +1836,8 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JButton topupBtn;
     private javax.swing.JTable topupTable;
     private javax.swing.JButton updatebtn;
+    private javax.swing.JTable userDetailTable;
+    private javax.swing.JTable userTable;
     private javax.swing.JTextField usernametxt;
     // End of variables declaration//GEN-END:variables
 

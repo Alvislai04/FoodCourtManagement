@@ -17,6 +17,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -25,12 +26,15 @@ public class DrDashboard extends javax.swing.JFrame {
     
     Login Login = new Login();
     
-
+    private OrdersDelivered ordersDelivered;
+    
+    private Chart chart;
+    
     public DrDashboard() {
         initComponents();
         usernametxt.setText(Login.getUsername());
         
-        this.setSize(1022,540); //(width,height)
+        this.setSize(1022,560); //(width,height)
         this.setResizable(false);
         
         DefaultColor = new Color(153,89,16);
@@ -63,6 +67,19 @@ public class DrDashboard extends javax.swing.JFrame {
         updateNotificationButtonState();
             }
         });
+        
+        taskhistoryTable.getModel().addTableModelListener(e -> {
+            filterComboBoxActionPerformed(null); // Refresh revenue calculation
+        });
+        
+        
+         SwingUtilities.invokeLater(() -> {
+        ordersDelivered = new OrdersDelivered(taskhistoryTable);
+        });
+         
+        chart = new Chart(taskhistoryTable, chartPanel);
+        chart.updateChartFromTable("Today"); // Default chart filter
+         
                         
         }
     
@@ -169,53 +186,6 @@ public class DrDashboard extends javax.swing.JFrame {
     
     }
     
-   private void calculateTotalRevenue(String filterType) {
-    DefaultTableModel model = (DefaultTableModel) taskhistoryTable.getModel();
-    double totalRevenue = 0.0;
-    
-    // Get today's date
-    LocalDate today = LocalDate.now();
-    
-    // Loop through task history table
-    for (int i = 0; i < model.getRowCount(); i++) {
-        // Get order date
-        String dateString = model.getValueAt(i, 0).toString();
-        
-        try {
-            // Convert String to LocalDate
-            LocalDate orderDate = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            
-            // Filter based on selected option
-            if (filterType.equals("Day") && orderDate.equals(today)) {
-                totalRevenue += getOrderRevenue(model, i);
-            } 
-            else if (filterType.equals("Week") && orderDate.isAfter(today.minusDays(7))) {
-                totalRevenue += getOrderRevenue(model, i);
-            } 
-            else if (filterType.equals("Month") && orderDate.getMonth() == today.getMonth()) {
-                totalRevenue += getOrderRevenue(model, i);
-            }
-        } catch (DateTimeParseException e) {
-            System.out.println("Error parsing date: " + dateString);
-        }
-    }
-
-    // Format and display revenue
-    String formattedRevenue = String.format("RM %.2f", totalRevenue);
-    totalrevenue.setText(formattedRevenue);
-}
-
-// Helper method to get 10% of order total
-private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
-    try {
-        double orderTotal = Double.parseDouble(model.getValueAt(rowIndex, 7).toString());
-        return orderTotal * 0.1;
-    } catch (NumberFormatException e) {
-        System.out.println("Error converting price.");
-        return 0.0;
-    }
-}
-
 
      // Add a listener for row clicks in the table
     private void addTableRowClickListener() {
@@ -257,6 +227,10 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
     receiptArea.setText(receipt);
 }
     
+    
+
+    
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -293,13 +267,15 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
         searchLabel = new javax.swing.JLabel();
         SearchBtn = new javax.swing.JButton();
         revenueDbPanel = new javax.swing.JPanel();
-        taskhistoryLabel3 = new javax.swing.JLabel();
+        revenueDbLabel = new javax.swing.JLabel();
         totalRevenuePanel = new javax.swing.JPanel();
         revenueLabel = new javax.swing.JLabel();
         totalrevenue = new javax.swing.JLabel();
         ordersDeliveredPanel = new javax.swing.JPanel();
         ordersDeliveredLabel = new javax.swing.JLabel();
+        totalorders = new javax.swing.JLabel();
         filterComboBox = new javax.swing.JComboBox<>();
+        chartPanel = new javax.swing.JPanel();
         viewtasksPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         viewtasksTable = new javax.swing.JTable();
@@ -727,7 +703,7 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
                         .addComponent(SearchBtn))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 690, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(taskhistoryLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 1, Short.MAX_VALUE))
+                .addGap(0, 271, Short.MAX_VALUE))
         );
         taskhistoryPanelLayout.setVerticalGroup(
             taskhistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -748,12 +724,16 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
         taskhistoryPanel.setBounds(0, 0, 710, 460);
 
         revenueDbPanel.setBackground(new java.awt.Color(153, 89, 16));
+        revenueDbPanel.setMinimumSize(new java.awt.Dimension(720, 480));
+        revenueDbPanel.setPreferredSize(new java.awt.Dimension(720, 480));
 
-        taskhistoryLabel3.setBackground(new java.awt.Color(255, 255, 255));
-        taskhistoryLabel3.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
-        taskhistoryLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        taskhistoryLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        taskhistoryLabel3.setText("REVENUE DASHBOARD");
+        revenueDbLabel.setBackground(new java.awt.Color(255, 255, 255));
+        revenueDbLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
+        revenueDbLabel.setForeground(new java.awt.Color(255, 255, 255));
+        revenueDbLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        revenueDbLabel.setText("REVENUE DASHBOARD");
+
+        totalRevenuePanel.setBackground(new java.awt.Color(255, 255, 255));
 
         revenueLabel.setBackground(new java.awt.Color(0, 0, 0));
         revenueLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
@@ -762,7 +742,9 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
         revenueLabel.setText("TOTAL REVENUE");
         revenueLabel.setOpaque(true);
 
-        totalrevenue.setText("jLabel3");
+        totalrevenue.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        totalrevenue.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        totalrevenue.setText("total revenue");
 
         javax.swing.GroupLayout totalRevenuePanelLayout = new javax.swing.GroupLayout(totalRevenuePanel);
         totalRevenuePanel.setLayout(totalRevenuePanelLayout);
@@ -783,6 +765,8 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
                 .addGap(0, 22, Short.MAX_VALUE))
         );
 
+        ordersDeliveredPanel.setBackground(new java.awt.Color(255, 255, 255));
+
         ordersDeliveredLabel.setBackground(new java.awt.Color(0, 0, 0));
         ordersDeliveredLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         ordersDeliveredLabel.setForeground(new java.awt.Color(255, 255, 255));
@@ -790,17 +774,27 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
         ordersDeliveredLabel.setText("ORDERS DELIVERED ");
         ordersDeliveredLabel.setOpaque(true);
 
+        totalorders.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        totalorders.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        totalorders.setText("no. of orders delivered");
+
         javax.swing.GroupLayout ordersDeliveredPanelLayout = new javax.swing.GroupLayout(ordersDeliveredPanel);
         ordersDeliveredPanel.setLayout(ordersDeliveredPanelLayout);
         ordersDeliveredPanelLayout.setHorizontalGroup(
             ordersDeliveredPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(ordersDeliveredLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+            .addGroup(ordersDeliveredPanelLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(totalorders, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         ordersDeliveredPanelLayout.setVerticalGroup(
             ordersDeliveredPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ordersDeliveredPanelLayout.createSequentialGroup()
                 .addComponent(ordersDeliveredLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 94, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(totalorders, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 22, Short.MAX_VALUE))
         );
 
         filterComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Day", "Week", "Month", " " }));
@@ -810,39 +804,57 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
             }
         });
 
+        chartPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout chartPanelLayout = new javax.swing.GroupLayout(chartPanel);
+        chartPanel.setLayout(chartPanelLayout);
+        chartPanelLayout.setHorizontalGroup(
+            chartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        chartPanelLayout.setVerticalGroup(
+            chartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 232, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout revenueDbPanelLayout = new javax.swing.GroupLayout(revenueDbPanel);
         revenueDbPanel.setLayout(revenueDbPanelLayout);
         revenueDbPanelLayout.setHorizontalGroup(
             revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(taskhistoryLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(revenueDbLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, revenueDbPanelLayout.createSequentialGroup()
                 .addGap(45, 45, 45)
-                .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addComponent(ordersDeliveredPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                .addComponent(totalRevenuePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(chartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(revenueDbPanelLayout.createSequentialGroup()
+                        .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(44, 44, 44)
+                        .addComponent(ordersDeliveredPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                        .addComponent(totalRevenuePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(44, 44, 44))
         );
         revenueDbPanelLayout.setVerticalGroup(
             revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(revenueDbPanelLayout.createSequentialGroup()
-                .addComponent(taskhistoryLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(revenueDbLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
                 .addGroup(revenueDbPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(totalRevenuePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ordersDeliveredPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(filterComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 244, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(chartPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         welcomePanel.add(revenueDbPanel);
         revenueDbPanel.setBounds(0, 0, 720, 460);
 
         viewtasksPanel.setBackground(new java.awt.Color(153, 89, 16));
-        viewtasksPanel.setMinimumSize(new java.awt.Dimension(700, 580));
+        viewtasksPanel.setMinimumSize(new java.awt.Dimension(720, 480));
         viewtasksPanel.setName(""); // NOI18N
-        viewtasksPanel.setPreferredSize(new java.awt.Dimension(980, 580));
+        viewtasksPanel.setPreferredSize(new java.awt.Dimension(720, 480));
 
         viewtasksTable.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         viewtasksTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -944,26 +956,21 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
                         .addContainerGap())
                     .addGroup(viewtasksPanelLayout.createSequentialGroup()
                         .addComponent(receiptArea, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                         .addGroup(viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(viewtasksPanelLayout.createSequentialGroup()
-                                .addGap(53, 53, 53)
-                                .addGroup(viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(viewtasksPanelLayout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(jLabel1)
-                                        .addGap(56, 56, 56))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
-                                        .addComponent(CollectedBtn)
-                                        .addGap(103, 103, 103))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
-                                        .addComponent(DeliveredBtn)
-                                        .addGap(101, 101, 101))))))))
+                                .addGroup(viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, viewtasksPanelLayout.createSequentialGroup()
+                                        .addGap(9, 9, 9)
+                                        .addComponent(jLabel1)))
+                                .addGap(56, 56, 56))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
+                                .addComponent(CollectedBtn)
+                                .addGap(111, 111, 111))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
+                                .addComponent(DeliveredBtn)
+                                .addGap(110, 110, 110))))))
         );
         viewtasksPanelLayout.setVerticalGroup(
             viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -971,25 +978,25 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
                 .addComponent(taskhistoryLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(viewtasksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(viewtasksPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(receiptArea, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(viewtasksPanelLayout.createSequentialGroup()
-                        .addGap(75, 75, 75)
+                        .addGap(43, 43, 43)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(CollectedBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(DeliveredBtn)
-                        .addGap(45, 45, 45)))
-                .addGap(36, 36, 36))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewtasksPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(receiptArea, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(58, 58, 58))))
         );
 
         welcomePanel.add(viewtasksPanel);
-        viewtasksPanel.setBounds(0, 0, 710, 460);
+        viewtasksPanel.setBounds(0, 0, 720, 480);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1284,7 +1291,7 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
 
 // Search logic
         private boolean searchInTable(String query) {
-            DefaultTableModel model = (DefaultTableModel) viewtasksTable.getModel();
+            DefaultTableModel model = (DefaultTableModel) taskhistoryTable.getModel();
             boolean found = false;
 
             for (int row = 0; row < model.getRowCount(); row++) {
@@ -1292,8 +1299,8 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
                     String cellValue = model.getValueAt(row, col).toString();
                     if (cellValue.toLowerCase().contains(query.toLowerCase())) {
                         // Highlight the found row
-                        viewtasksTable.setRowSelectionInterval(row, row);
-                        viewtasksTable.scrollRectToVisible(viewtasksTable.getCellRect(row, 0, true));
+                        taskhistoryTable.setRowSelectionInterval(row, row);
+                        taskhistoryTable.scrollRectToVisible(taskhistoryTable.getCellRect(row, 0, true));
                         searchLabel.setText("Delivery found: Row " + (row + 1));
                         found = true;
                         break;
@@ -1302,7 +1309,7 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
                 if (found) break; // Stop searching once a match is found
             }
             if (!found) {
-                viewtasksTable.clearSelection(); // Clear selection if no match is found
+                taskhistoryTable.clearSelection(); // Clear selection if no match is found
             }
             return found;
         
@@ -1369,8 +1376,20 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
 
     private void filterComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterComboBoxActionPerformed
         // TODO add your handling code here:
-        String selectedFilter = filterComboBox.getSelectedItem().toString();
-    calculateTotalRevenue(selectedFilter);
+         String selectedOption = filterComboBox.getSelectedItem().toString(); 
+        TotalRevenue revenueCalculator = new TotalRevenue(taskhistoryTable);
+        double totalRevenue = revenueCalculator.calculateRevenue(selectedOption);
+
+        // Display the total revenue (assuming you have a JLabel named revenueLabel)
+        totalrevenue.setText("Total Revenue: RM " + String.format("%.2f", totalRevenue));
+        
+         //  Get total orders delivered using OrdersDelivered class
+        int totalOrders = ordersDelivered.countOrders(selectedOption);
+        totalorders.setText("Total Orders: " + totalOrders);
+        
+        
+        chart.updateChartFromTable(selectedOption);
+        
         
     }//GEN-LAST:event_filterComboBoxActionPerformed
 
@@ -1421,6 +1440,7 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
     private javax.swing.JButton DeclineBtn;
     private javax.swing.JButton DeliveredBtn;
     private javax.swing.JButton SearchBtn;
+    private javax.swing.JPanel chartPanel;
     private javax.swing.JPanel custreviewsPanel;
     private javax.swing.JLabel custreviewsTab;
     private javax.swing.JLabel drName;
@@ -1440,19 +1460,15 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
     private javax.swing.JLabel ordersDeliveredLabel;
     private javax.swing.JPanel ordersDeliveredPanel;
     private javax.swing.JTextArea receiptArea;
+    private javax.swing.JLabel revenueDbLabel;
     private javax.swing.JPanel revenueDbPanel;
     private javax.swing.JLabel revenueDbTab;
     private javax.swing.JLabel revenueLabel;
-    private javax.swing.JLabel revenueLabel2;
-    private javax.swing.JLabel revenueLabel3;
-    private javax.swing.JPanel revenuePanel2;
-    private javax.swing.JPanel revenuePanel3;
     private javax.swing.JTextField searchField;
     private javax.swing.JLabel searchLabel;
     private javax.swing.JLabel taskhistoryLabel;
     private javax.swing.JLabel taskhistoryLabel1;
     private javax.swing.JLabel taskhistoryLabel2;
-    private javax.swing.JLabel taskhistoryLabel3;
     private javax.swing.JPanel taskhistoryPanel;
     private javax.swing.JLabel taskhistoryTab;
     private javax.swing.JTable taskhistoryTable;
@@ -1460,6 +1476,7 @@ private double getOrderRevenue(DefaultTableModel model, int rowIndex) {
     private javax.swing.JLabel title_lbl1;
     private javax.swing.JLabel title_lbl2;
     private javax.swing.JPanel totalRevenuePanel;
+    private javax.swing.JLabel totalorders;
     private javax.swing.JLabel totalrevenue;
     private javax.swing.JLabel usernametxt;
     private javax.swing.JPanel viewtasksPanel;

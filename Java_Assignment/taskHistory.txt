@@ -242,3 +242,164 @@ Payment Status: Unpaid
 Total: 15.00
 Proof of Delivery: C:\Users\Jenna\Pictures\20_9_2022 1_02_49 PM.png
 ------------------------------------------------------
+Delivery ID: DR001
+Food Items: Nasi Lemak
+Nasi Goreng
+Teh Ais
+Pick-up Address: 123 Street A
+Delivery Address: 456 Street B
+Phone Number: 012-3456789
+Payment Status: Paid
+Total: 25.50
+Proof of Delivery: C:\Users\Jenna\Pictures\20_9_2022 1_00_40 PM.png
+------------------------------------------------------
+Delivery ID: DR001
+Food Items: Nasi Lemak
+Nasi Goreng
+Teh Ais
+Pick-up Address: 123 Street A
+Delivery Address: 456 Street B
+Phone Number: 012-3456789
+Payment Status: Paid
+Total: 25.50
+Proof of Delivery: C:\Users\Jenna\Pictures\20_9_2022 1_00_40 PM.png
+------------------------------------------------------
+Delivery ID: DR001
+Food Items: Nasi Lemak
+Nasi Goreng
+Teh Ais
+Pick-up Address: 123 Street A
+Delivery Address: 456 Street B
+Phone Number: 012-3456789
+Payment Status: Paid
+Total: 25.50
+Proof of Delivery: C:\Users\Jenna\Pictures\8_9_2022 3_30_33 PM.png
+------------------------------------------------------
+Delivery ID: DR001
+Food Items: Nasi Lemak
+Nasi Goreng
+Teh Ais
+Pick-up Address: 123 Street A
+Delivery Address: 456 Street B
+Phone Number: 012-3456789
+Payment Status: Paid
+Total: 25.50
+Proof of Delivery: C:\Users\Jenna\Pictures\8_9_2022 3_30_33 PM.png
+------------------------------------------------------
+Delivery ID: DR002
+Food Items: Nasi Kerabu
+Mee Goreng
+Kopi Ais
+Pick-up Address: 789 Street C
+Delivery Address: 101 Street D
+Phone Number: 011-9876543
+Payment Status: Unpaid
+Total: 15.00
+Proof of Delivery: C:\Users\Jenna\Pictures\20_9_2022 1_02_49 PM.png
+------------------------------------------------------
+Delivery ID: DR001
+Food Items: Nasi Lemak
+Nasi Goreng
+Teh Ais
+Pick-up Address: 123 Street A
+Delivery Address: 456 Street B
+Phone Number: 012-3456789
+Payment Status: Paid
+Total: 25.50
+Proof of Delivery: C:\Users\Jenna\Pictures\8_9_2022 3_30_33 PM.png
+------------------------------------------------------
+Delivery ID: DR002
+Food Items: Nasi Kerabu
+Mee Goreng
+Kopi Ais
+Pick-up Address: 789 Street C
+Delivery Address: 101 Street D
+Phone Number: 011-9876543
+Payment Status: Unpaid
+Total: 15.00
+Proof of Delivery: C:\Users\Jenna\Pictures\8_9_2022 3_30_33 PM.png
+------------------------------------------------------
+Delivery ID: DR004
+Food Items: Burger, Fries, Soda
+Pick-up Address: Mall Food Court
+Delivery Address: 55 Apartment JKL
+Phone Number: 017-5566778
+Payment Status: Paid
+Total: 22.50
+Proof of Delivery: C:\Users\Jenna\Pictures\20_9_2022 1_02_49 PM.png
+------------------------------------------------------
+Delivery ID: DR003
+Food Items: Chicken Rice, Iced Lemon Tea
+Pick-up Address: 22 Jalan ABC
+Delivery Address: 90 Jalan XYZ
+Phone Number: 018-2233445
+Payment Status: Unpaid
+Total: 18.00
+Proof of Delivery: C:\Users\Jenna\Pictures\20_9_2022 1_02_49 PM.png
+------------------------------------------------------
+Delivery ID: DR001
+Food Items: Nasi Lemak
+Nasi Goreng
+Teh Ais
+Pick-up Address: 123 Street A
+Delivery Address: 456 Street B
+Phone Number: 012-3456789
+Payment Status: Paid
+Total: 25.50
+Proof of Delivery: C:\Users\Jenna\Pictures\20_9_2022 1_00_40 PM.png
+------------------------------------------------------
+Delivery ID: DR002
+Food Items: Nasi Kerabu
+Mee Goreng
+Kopi Ais
+Pick-up Address: 789 Street C
+Delivery Address: 101 Street D
+Phone Number: 011-9876543
+Payment Status: Unpaid
+Total: 15.00
+Proof of Delivery: C:\Users\Jenna\Pictures\20_9_2022 1_00_40 PM.png
+------------------------------------------------------
+Delivery ID: DR001
+Food Items: Nasi Lemak
+Nasi Goreng
+Teh Ais
+Pick-up Address: 123 Street A
+Delivery Address: 456 Street B
+Phone Number: 012-3456789
+Payment Status: Paid
+Total: 25.50
+Proof of Delivery: C:\Users\Jenna\Pictures\20_9_2022 1_00_40 PM.png
+------------------------------------------------------
+Delivery ID: DR002
+Food Items: Nasi Kerabu
+Mee Goreng
+Kopi Ais
+Pick-up Address: 789 Street C
+Delivery Address: 101 Street D
+Phone Number: 011-9876543
+Payment Status: Unpaid
+Total: 15.00
+Proof of Delivery: C:\Users\Jenna\Pictures\20_9_2022 1_01_03 PM.png
+------------------------------------------------------
+Delivery ID: DR001
+Food Items: Nasi Lemak
+Nasi Goreng
+Teh Ais
+Pick-up Address: 123 Street A
+Delivery Address: 456 Street B
+Phone Number: 012-3456789
+Payment Status: Paid
+Total: 25.50
+Proof of Delivery: C:\Users\Jenna\Pictures\20_9_2022 1_00_40 PM.png
+------------------------------------------------------
+Delivery ID: DR001
+Food Items: Nasi Lemak
+Nasi Goreng
+Teh Ais
+Pick-up Address: 123 Street A
+Delivery Address: 456 Street B
+Phone Number: 012-3456789
+Payment Status: Paid
+Total: 25.50
+Proof of Delivery: C:\Users\Jenna\Pictures\20_9_2022 1_00_40 PM.png
+------------------------------------------------------

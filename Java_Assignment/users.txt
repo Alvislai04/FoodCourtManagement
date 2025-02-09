@@ -1,5 +1,6 @@
-V01;najib;najib;999;vendor@test;123;Vendor;
-D01;najib;najib;999;dr@test;123;Delivery Runner;
-C01;najib;najib;999;customer@test;123;Customer;
-C02;rosmah;rosmah;999;rosmah@obama;123;Customer;
-C03;tom;jerry;333;tom@jerry;123;Customer;
+V01;najib;najib;999;vendor@test;123;Vendor;0;
+D01;najib;najib;999;dr@test;123;Delivery Runner;0;
+C01;najib;najib;999;customer@test;123;Customer;165.00
+C02;rosmah;rosmah;999;rosmah@obama;123;Customer;0
+C03;tom;jerry;333;tom@jerry;123;Customer;77.00
+C04;754;457;754;574;574;Customer;54.00

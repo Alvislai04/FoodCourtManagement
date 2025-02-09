@@ -6,8 +6,6 @@ package system.customer;
 
 import com.system.Login;
 import java.awt.Color;
-import java.awt.Image;
-import javax.swing.ImageIcon;
 
 /**
  *

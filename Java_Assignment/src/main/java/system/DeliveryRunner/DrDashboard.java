@@ -233,8 +233,6 @@ public class DrDashboard extends javax.swing.JFrame {
     
     private void loadCustomerReviews() {
         
-        
-     String runnerID = Login.getUsername(); // Assuming username matches runner ID
     File file = new File("reviews.txt");
 
     if (!file.exists()) {
@@ -247,20 +245,21 @@ public class DrDashboard extends javax.swing.JFrame {
         String line;
         
         while ((line = br.readLine()) != null) {
-            String[] data = line.split(";", -1); // Format: RunnerID;Rating;Comment
+            String[] data = line.split(",", -1); // Format: deliveryID;Rating;Comment
             
             if (data.length >= 3) {
-                String id = data[0];   // ID of the delivery runner
+                String deliveryID = data[0];   // ID of the delivery runner
                 String rating = data[1]; // Star rating
                 String comment = data[2]; // Review text
                 
                 // Check if the review belongs to the logged-in runner
-                if (runnerID.equals(id)) {
-                    reviewsText.append("⭐ Rating: ").append(rating).append("/5\n")
+               
+                    reviewsText.append("Delivery ID: ").append(deliveryID).append("\n")
+                               .append("⭐ Rating: ").append(rating).append("/5\n")
                                .append("📝 Comment: ").append(comment).append("\n\n");
                 }
             }
-        }
+        
 
         // Display the reviews or show a default message
         if (reviewsText.length() > 0) {
@@ -1326,15 +1325,15 @@ public class DrDashboard extends javax.swing.JFrame {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(taskHistoryFilePath, true))) {
             // Write the data into the file, each entry is written in a new line
-            writer.write("Delivery ID: " + deliveryID + "\n");
-            writer.write("Food Items: " + foodItems + "\n");
-            writer.write("Pick-up Address: " + pickupAddress + "\n");
-            writer.write("Delivery Address: " + deliveryAddress + "\n");
-            writer.write("Phone Number: " + phoneNumber + "\n");
-            writer.write("Payment Status: " + paymentStatus + "\n");
-            writer.write("Total: " + total + "\n");
-            writer.write("Proof of Delivery: " + proofOfDelivery + "\n");
+            writer.write(deliveryID + "\n" +  // Delivery ID on its own line
+             "Food Items: " + foodItems + "\n" +  // Food items on a new line
+             pickupAddress + ";" + deliveryAddress + ";" +  
+             phoneNumber + ";" + paymentStatus + ";" + total + ";" + proofOfDelivery + "\n");
+        
             writer.write("------------------------------------------------------\n"); // Add a separator for better readability
+            
+            writer.newLine(); 
+            
         } catch (IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error saving task history.");

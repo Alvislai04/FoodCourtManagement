@@ -21,10 +21,10 @@ public class ReviewForm extends JFrame {
     private JTextArea reviewText;
     private JButton submitButton;
     private JButton skipButton;
-    public String runnerId; //runner id
+    private String deliveryID; 
 
-    public ReviewForm(String runnerId) {
-        this.runnerId = runnerId;
+    public ReviewForm(String deliveryID) {
+        this.deliveryID = deliveryID;
         setTitle("Order Delivered! Leave a Review");
         setSize(400, 300);
         setLayout(new BorderLayout());
@@ -65,7 +65,7 @@ public class ReviewForm extends JFrame {
         String review = reviewText.getText().trim();
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("reviews.txt", true))) {
-            writer.write(runnerId + "," + rating + "," + review);
+            writer.write(deliveryID + "," + rating + "," + review);
             writer.newLine();
         } catch (IOException ex) {
             ex.printStackTrace();

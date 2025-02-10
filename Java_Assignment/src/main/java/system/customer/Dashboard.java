@@ -6,6 +6,10 @@ package system.customer;
 
 import com.system.Login;
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -357,14 +361,39 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_CommentTabMousePressed
 
     private void LeaveReviewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaveReviewBtnActionPerformed
-        String runnerId = null; //need to change this if without this will have error, shouldnt be like this
         // TODO add your handling code here:
-        
-         ReviewForm reviewForm = new ReviewForm(runnerId); 
-         reviewForm.setVisible(true); //added by Jenna
+        String deliveryID = getLatestDeliveryID(); // Fetch delivery ID (you need to implement this method)
+
+    if (deliveryID != null) {  
+        ReviewForm reviewForm = new ReviewForm(deliveryID); // Pass the correct deliveryID
+        reviewForm.setVisible(true);
+    } else {
+        JOptionPane.showMessageDialog(this, "Delivery ID not found.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
         
     }//GEN-LAST:event_LeaveReviewBtnActionPerformed
+        private String getLatestDeliveryID() {
+        String taskHistoryFilePath = "taskHistory.txt";
+        String latestDeliveryID = null;
 
+        try (BufferedReader reader = new BufferedReader(new FileReader(taskHistoryFilePath))) {
+            String line;
+            
+            // Read through the file line by line
+            while ((line = reader.readLine()) != null) {
+            line = line.trim();  // Remove extra spaces
+            if (line.startsWith("DR")) {  // Find the line containing the Delivery ID
+                latestDeliveryID = line.replace("Delivery ID:", "").trim(); // Extract only the ID
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading task history.");
+        }
+
+        return latestDeliveryID; // Return the last found delivery ID
+    }
+   
+    
     private void goToLogout(){
         Login loginframe = new Login();
         loginframe.setVisible(true);

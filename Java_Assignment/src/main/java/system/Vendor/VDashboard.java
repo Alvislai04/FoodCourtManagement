@@ -7,10 +7,12 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -20,7 +22,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import system.Vendor.User;
 
 
 public class VDashboard extends javax.swing.JFrame {
@@ -37,10 +38,12 @@ public class VDashboard extends javax.swing.JFrame {
     double balance;
             
     Login LogIn = new Login();
-//    User User = new User(id, name, address, phoneno, username, password, role, balance);
-//    User.getId();  
-    
 
+    private BufferedImage tempImage;
+    private String tempImageFileName;
+    private JDialog dialog;
+    // filepath for storing image temporarily
+    
     
     public VDashboard() {
         initComponents();
@@ -698,7 +701,7 @@ public class VDashboard extends javax.swing.JFrame {
         new Object[]{} // Empty array removes all default buttons
     );
 
-    JDialog dialog = optionPane.createDialog("Add New Food Item");
+    dialog = optionPane.createDialog("Add New Food Item");
     optionPane.setBorder(null);
     
     dialog.setVisible(true);
@@ -718,7 +721,43 @@ public class VDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_clearBtnMouseClicked
 
     private void addBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addBtnMouseClicked
+        String foodId = foodIdField.getText();
+        String foodName = foodNameField.getText();
+        String price = priceField.getText();
+        
+        if (foodId.isEmpty() || foodName.isEmpty() || price.isEmpty() || tempImage == null) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields and upload an image!");
+            return;
+        } else {
+                
+            String foodPicturesFolderPath = "foodPictures";
+            File foodPicturesFolder = new File(foodPicturesFolderPath);
+            if (!foodPicturesFolder.exists()) {
+                JOptionPane.showMessageDialog(this, "foodPictures folder not found.");
+            }
 
+            String fileName = tempImageFileName;
+            File outputFile = new File(foodPicturesFolder, fileName);
+
+            try {
+            ImageIO.write(tempImage, "png", outputFile); // Save as PNG (or use "jpg" for JPEG)
+            String imageFilePath = outputFile.getAbsolutePath(); // Store the file path
+
+            // Process the data (e.g., save to a file or database)
+            String data = foodId + "," + foodName + "," + price + "," + imageFilePath + "\n";
+            try (java.io.FileWriter fw = new java.io.FileWriter("foodItems.txt", true)) {
+                fw.write(data);
+                JOptionPane.showMessageDialog(this, "Item added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error saving item: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error saving image: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            dialog.dispose();
+        }
+
+        
     }//GEN-LAST:event_addBtnMouseClicked
 
     private void uploadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadBtnActionPerformed
@@ -726,7 +765,7 @@ public class VDashboard extends javax.swing.JFrame {
         
         // Create a file filter for image files
     javax.swing.filechooser.FileNameExtensionFilter filter = new javax.swing.filechooser.FileNameExtensionFilter(
-        "Image Files", "png", "jpg", "jpeg" // Allowed file extensions
+        "Png Files", "png" // Allowed file extensions
     );
     chooser.setFileFilter(filter); // Set the filter to the file chooser
 
@@ -737,13 +776,17 @@ public class VDashboard extends javax.swing.JFrame {
     if (returnValue == JFileChooser.APPROVE_OPTION) {
         // Get the selected file
         File selectedFile = chooser.getSelectedFile();
+        tempImageFileName = selectedFile.getName();
 
         // Load the image and set it as the icon for imageLabel
         try {
-            // Read the image file
-            ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
+            
+            tempImage = ImageIO.read(selectedFile); // Store the image in memory
 
-            // Resize the image to fit the label (optional)
+            // Display the image in imageLabel
+            ImageIcon imageIcon = new ImageIcon(tempImage);
+
+            // Resize the image to fit the label
             Image image = imageIcon.getImage();
             Image scaledImage = image.getScaledInstance(
                 imageLabel.getWidth(), 
@@ -756,8 +799,8 @@ public class VDashboard extends javax.swing.JFrame {
             imageLabel.setIcon(imageIcon);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error loading image: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+         }
         }
-    }
     }//GEN-LAST:event_uploadBtnActionPerformed
 
     private void foodNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_foodNameFieldActionPerformed

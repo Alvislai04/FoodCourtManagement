@@ -6,14 +6,18 @@ package system.customer;
 
 import com.system.Login;
 import java.awt.Color;
-import java.awt.Image;
-import javax.swing.ImageIcon;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author nickkhawchunmin
  */
 public class Dashboard extends javax.swing.JFrame {
+    
+    
 
     /**
      * Creates new form Dashboard
@@ -29,6 +33,7 @@ public class Dashboard extends javax.swing.JFrame {
         OrderTab.setBackground(Color.black);//set OrderTab to black and order Opened after login
         }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -52,6 +57,7 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         OrderPanel = new javax.swing.JPanel();
         OrderStatusPanel = new javax.swing.JPanel();
+        LeaveReviewBtn = new javax.swing.JButton();
         OrderHistoryPanel = new javax.swing.JPanel();
         CommentPanel = new javax.swing.JPanel();
 
@@ -218,15 +224,28 @@ public class Dashboard extends javax.swing.JFrame {
 
         OrderStatusPanel.setBackground(new java.awt.Color(0, 51, 255));
 
+        LeaveReviewBtn.setText("LEAVE REVIEW");
+        LeaveReviewBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LeaveReviewBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout OrderStatusPanelLayout = new javax.swing.GroupLayout(OrderStatusPanel);
         OrderStatusPanel.setLayout(OrderStatusPanelLayout);
         OrderStatusPanelLayout.setHorizontalGroup(
             OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 590, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderStatusPanelLayout.createSequentialGroup()
+                .addContainerGap(372, Short.MAX_VALUE)
+                .addComponent(LeaveReviewBtn)
+                .addGap(110, 110, 110))
         );
         OrderStatusPanelLayout.setVerticalGroup(
             OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 552, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderStatusPanelLayout.createSequentialGroup()
+                .addContainerGap(272, Short.MAX_VALUE)
+                .addComponent(LeaveReviewBtn)
+                .addGap(257, 257, 257))
         );
 
         jPanel1.add(OrderStatusPanel);
@@ -341,6 +360,40 @@ public class Dashboard extends javax.swing.JFrame {
         OrderTab.setBackground(new Color(153,89,16));
     }//GEN-LAST:event_CommentTabMousePressed
 
+    private void LeaveReviewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaveReviewBtnActionPerformed
+        // TODO add your handling code here:
+        String deliveryID = getLatestDeliveryID(); // Fetch delivery ID (you need to implement this method)
+
+    if (deliveryID != null) {  
+        ReviewForm reviewForm = new ReviewForm(deliveryID); // Pass the correct deliveryID
+        reviewForm.setVisible(true);
+    } else {
+        JOptionPane.showMessageDialog(this, "Delivery ID not found.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+        
+    }//GEN-LAST:event_LeaveReviewBtnActionPerformed
+        private String getLatestDeliveryID() {
+        String taskHistoryFilePath = "taskHistory.txt";
+        String latestDeliveryID = null;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(taskHistoryFilePath))) {
+            String line;
+            
+            // Read through the file line by line
+            while ((line = reader.readLine()) != null) {
+            line = line.trim();  // Remove extra spaces
+            if (line.startsWith("DR")) {  // Find the line containing the Delivery ID
+                latestDeliveryID = line.replace("Delivery ID:", "").trim(); // Extract only the ID
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading task history.");
+        }
+
+        return latestDeliveryID; // Return the last found delivery ID
+    }
+   
+    
     private void goToLogout(){
         Login loginframe = new Login();
         loginframe.setVisible(true);
@@ -385,6 +438,7 @@ public class Dashboard extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel CommentPanel;
     private javax.swing.JLabel CommentTab;
+    private javax.swing.JButton LeaveReviewBtn;
     private javax.swing.JPanel OrderHistoryPanel;
     private javax.swing.JLabel OrderHistoryTab;
     private javax.swing.JPanel OrderPanel;

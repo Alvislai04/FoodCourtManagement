@@ -83,6 +83,52 @@ public class VDashboard extends javax.swing.JFrame {
         }
     }
     
+    
+    private void openFoodDescription (int index) {
+         String vendorFoodFilePath = "vendorFood.txt";
+    JLabel[] descriptionFood = {descriptionFoodId, descriptionFoodName, descriptionFoodPrice};
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {
+        String line;
+        int currentIndex = 0;
+        while ((line = reader.readLine()) != null) {
+            // Only process the line that matches the clicked icon's index
+            if (currentIndex == index) {
+                String[] data = line.split(",");
+                String foodId = data[0];
+                String foodName = data[1];
+                String price = data[2];
+                String imagePath = data[3];
+
+                // Update the description panel with the food details
+                descriptionFood[0].setText("ID: " + foodId);
+                descriptionFood[1].setText("Name: " + foodName);
+                descriptionFood[2].setText("Price: " + price);
+
+                // Create and show the dialog
+                JOptionPane optionPane = new JOptionPane(
+                    descriptionPanel, 
+                    JOptionPane.PLAIN_MESSAGE, 
+                    JOptionPane.DEFAULT_OPTION, 
+                    null, 
+                    new Object[]{}
+                );
+
+                JDialog dialog = optionPane.createDialog("Food Details");
+                optionPane.setBorder(null);
+                dialog.setVisible(true);
+                dialog.pack();
+
+                break; // Exit the loop after finding the matching item
+            }
+            currentIndex++;
+        }
+    } catch (IOException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }
+    
     private void loadFoodImages () {
         String vendorFoodFilePath = "vendorFood.txt";
         JLabel[] foodIcon = {foodIcon1, foodIcon2, foodIcon3, foodIcon4, foodIcon5, foodIcon6};
@@ -113,7 +159,7 @@ public class VDashboard extends javax.swing.JFrame {
 
                     // Set the icon and text for the current label
                     foodIcon[index].setIcon(icon);
-                    foodLabels[index].setText(foodName + " - RM" + price);
+                    foodLabels[index].setText(foodName + " - " + price);
                 } else {
                     System.out.println("Image not found: " + imagePath);
                 }
@@ -141,6 +187,14 @@ public class VDashboard extends javax.swing.JFrame {
         foodNameField = new javax.swing.JTextField();
         priceField = new javax.swing.JTextField();
         uploadBtn = new javax.swing.JButton();
+        descriptionPanel = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        descriptionFoodId = new javax.swing.JLabel();
+        descriptionFoodName = new javax.swing.JLabel();
+        descriptionFoodPrice = new javax.swing.JLabel();
+        removeBtn = new javax.swing.JButton();
         jpOrders = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         orderTable = new javax.swing.JTable();
@@ -299,6 +353,81 @@ public class VDashboard extends javax.swing.JFrame {
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
+        descriptionPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel4.setText("Food ID");
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("Food Name");
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setText("Food Price");
+
+        descriptionFoodId.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        descriptionFoodId.setForeground(new java.awt.Color(0, 0, 0));
+        descriptionFoodId.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        descriptionFoodId.setText("foodID");
+
+        descriptionFoodName.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        descriptionFoodName.setForeground(new java.awt.Color(0, 0, 0));
+        descriptionFoodName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        descriptionFoodName.setText("foodName");
+
+        descriptionFoodPrice.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        descriptionFoodPrice.setForeground(new java.awt.Color(0, 0, 0));
+        descriptionFoodPrice.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        descriptionFoodPrice.setText("foodPrice");
+
+        removeBtn.setText("Remove");
+        removeBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout descriptionPanelLayout = new javax.swing.GroupLayout(descriptionPanel);
+        descriptionPanel.setLayout(descriptionPanelLayout);
+        descriptionPanelLayout.setHorizontalGroup(
+            descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(descriptionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(descriptionFoodId)
+                    .addComponent(descriptionFoodName)
+                    .addComponent(descriptionFoodPrice))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, descriptionPanelLayout.createSequentialGroup()
+                .addContainerGap(193, Short.MAX_VALUE)
+                .addComponent(removeBtn)
+                .addGap(19, 19, 19))
+        );
+        descriptionPanelLayout.setVerticalGroup(
+            descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(descriptionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(descriptionFoodId)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(descriptionFoodName)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(descriptionFoodPrice)
+                .addGap(18, 18, 18)
+                .addComponent(removeBtn)
+                .addGap(11, 11, 11))
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
 
@@ -449,21 +578,51 @@ public class VDashboard extends javax.swing.JFrame {
 
         foodIcon3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         foodIcon3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        foodIcon3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                foodIcon3MouseClicked(evt);
+            }
+        });
 
         foodIcon2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         foodIcon2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        foodIcon2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                foodIcon2MouseClicked(evt);
+            }
+        });
 
         foodIcon5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         foodIcon5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        foodIcon5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                foodIcon5MouseClicked(evt);
+            }
+        });
 
         foodIcon6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         foodIcon6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        foodIcon6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                foodIcon6MouseClicked(evt);
+            }
+        });
 
         foodIcon4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         foodIcon4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        foodIcon4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                foodIcon4MouseClicked(evt);
+            }
+        });
 
         foodIcon1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         foodIcon1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        foodIcon1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                foodIcon1MouseClicked(evt);
+            }
+        });
 
         foodLabel1.setForeground(new java.awt.Color(0, 0, 0));
         foodLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -607,12 +766,6 @@ public class VDashboard extends javax.swing.JFrame {
         menuTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         menuTab.setOpaque(true);
         menuTab.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                menuTabMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                menuTabMouseExited(evt);
-            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 menuTabMousePressed(evt);
             }
@@ -823,15 +976,6 @@ public class VDashboard extends javax.swing.JFrame {
         jpRevenue.setVisible(true);
     }//GEN-LAST:event_revenueTabMousePressed
 
-    private void menuTabMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuTabMouseEntered
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_menuTabMouseEntered
-
-    private void menuTabMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuTabMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuTabMouseExited
-
     private void menuTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuTabMousePressed
         menuTab.setBackground(ClickedColor);
         ordersTab.setBackground(DefaultColor);
@@ -858,7 +1002,11 @@ public class VDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_ordersTabMousePressed
 
     private void menuAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuAddMouseClicked
-
+        foodIdField.setText("");
+        foodNameField.setText("");
+        priceField.setText("");
+        imageLabel.setIcon(null);
+        
     JOptionPane optionPane = new JOptionPane(
         addPanel, 
         JOptionPane.PLAIN_MESSAGE, 
@@ -976,6 +1124,36 @@ public class VDashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_foodNameFieldActionPerformed
 
+    private void foodIcon1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon1MouseClicked
+        openFoodDescription(0);
+    }//GEN-LAST:event_foodIcon1MouseClicked
+
+    private void foodIcon2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon2MouseClicked
+        openFoodDescription(1);
+    }//GEN-LAST:event_foodIcon2MouseClicked
+
+    private void foodIcon3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon3MouseClicked
+        openFoodDescription(2);
+    }//GEN-LAST:event_foodIcon3MouseClicked
+
+    private void foodIcon4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon4MouseClicked
+        openFoodDescription(3);
+    }//GEN-LAST:event_foodIcon4MouseClicked
+
+    private void foodIcon5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon5MouseClicked
+        openFoodDescription(4);
+    }//GEN-LAST:event_foodIcon5MouseClicked
+
+    private void foodIcon6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon6MouseClicked
+        openFoodDescription(5);
+    }//GEN-LAST:event_foodIcon6MouseClicked
+
+    private void removeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBtnActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showConfirmDialog(null, 
+                "Do you want to remove this item?", "Remove food...",JOptionPane.YES_NO_CANCEL_OPTION);
+    }//GEN-LAST:event_removeBtnActionPerformed
+
     private void goToLogout(){
         Login loginframe = new Login();
         loginframe.setVisible(true);
@@ -1021,6 +1199,10 @@ public class VDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel addBtn;
     private javax.swing.JPanel addPanel;
     private javax.swing.JLabel clearBtn;
+    private javax.swing.JLabel descriptionFoodId;
+    private javax.swing.JLabel descriptionFoodName;
+    private javax.swing.JLabel descriptionFoodPrice;
+    private javax.swing.JPanel descriptionPanel;
     private javax.swing.JLabel foodIDLabel;
     private javax.swing.JLabel foodIcon1;
     private javax.swing.JLabel foodIcon2;
@@ -1042,6 +1224,9 @@ public class VDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
@@ -1065,6 +1250,7 @@ public class VDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel ordersTab;
     private javax.swing.JTextField priceField;
     private javax.swing.JLabel priceLabel;
+    private javax.swing.JButton removeBtn;
     private javax.swing.JLabel revenueTab;
     private javax.swing.JLabel reviewTab;
     private javax.swing.JLabel title_lbl1;

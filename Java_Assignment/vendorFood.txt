@@ -1,0 +1,4 @@
+V01-F001,Double Cheese Burger,RM15.90,foodPictures\burger.png
+V01-F001,Spaghetti Bolognese,RM13.00,foodPictures\spaghet.png
+V01-F003,Grilled Salmon,RM21,foodPictures\salmon.png
+V01-F004,Fried Rice,RM11,foodPictures\fried rice.png

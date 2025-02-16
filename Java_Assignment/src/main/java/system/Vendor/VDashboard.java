@@ -28,14 +28,14 @@ public class VDashboard extends javax.swing.JFrame {
     
     Color DefaultColor, ClickedColor;
 
-    String id;
-    String name;
-    String address;
-    String phoneno;
-    String username;
-    String password;
-    String role;
-    double balance;
+//    String id;
+//    String name;
+//    String address;
+//    String phoneno;
+//    String username;
+//    String password;
+//    String role;
+//    double balance;
             
     Login LogIn = new Login();
 
@@ -62,26 +62,69 @@ public class VDashboard extends javax.swing.JFrame {
     }
     
     private void populateOrderTable() {
-    // Define column names
-    String[] columnNames = {"Order ID", "Cust. Name", "Food Ordered", "Quantity", "Total Price", "Order Date/Time", "Order Status"};
-    
-    // Use the correct DefaultTableModel
-    DefaultTableModel model = new DefaultTableModel(columnNames, 0); 
-    orderTable.setModel(model); // Set model to the table
-    orderTable.setRowHeight(50);
+        // Define column names
+        String[] columnNames = {"Order ID", "Cust. Name", "Food Ordered", "Quantity", "Total Price", "Order Date/Time", "Order Status"};
 
-    try (BufferedReader reader = new BufferedReader(new FileReader("customerOrder.txt"))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] data = line.split(",");
-            if (data.length == 6) { 
-                model.addRow(data); // Add row to the correct model
+        // Use the correct DefaultTableModel
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0); 
+        orderTable.setModel(model); // Set model to the table
+        orderTable.setRowHeight(50);
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("customerOrder.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data.length == 6) { 
+                    model.addRow(data); // Add row to the correct model
+                }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    } catch (IOException e) {
-        e.printStackTrace();
     }
-}
+    
+    private void loadFoodImages () {
+        String vendorFoodFilePath = "vendorFood.txt";
+        JLabel[] foodIcon = {foodIcon1, foodIcon2, foodIcon3, foodIcon4, foodIcon5, foodIcon6};
+        JLabel[] foodLabels = {foodLabel1, foodLabel2, foodLabel3, foodLabel4, foodLabel5, foodLabel6};
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {
+            String line;
+            int index = 0; // Track the current label index
+
+            while ((line = reader.readLine()) != null && index < foodIcon.length) {
+                String[] data = line.split(",");
+                String foodId = data[0];
+                String foodName = data[1];
+                String price = data[2];
+                String imagePath = data[3]; // Relative path to the image
+
+                // Load the image
+                File imageFile = new File(imagePath);
+                if (imageFile.exists()) {
+                    BufferedImage image = ImageIO.read(imageFile);
+                    ImageIcon icon = new ImageIcon(image);
+
+                    // Resize the image (optional)
+                    Image scaledImage = image.getScaledInstance(
+                        187, 179, Image.SCALE_SMOOTH
+                    );
+                    icon = new ImageIcon(scaledImage);
+
+                    // Set the icon and text for the current label
+                    foodIcon[index].setIcon(icon);
+                    foodLabels[index].setText(foodName + " - RM" + price);
+                } else {
+                    System.out.println("Image not found: " + imagePath);
+                }
+
+                index++; // Move to the next label
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -113,9 +156,22 @@ public class VDashboard extends javax.swing.JFrame {
         jpRevenue = new javax.swing.JPanel();
         jScrollMenu = new javax.swing.JScrollPane();
         jScrollMenu.getVerticalScrollBar().setUnitIncrement(16);
-        jPanel3 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        menuPanel = new javax.swing.JPanel();
+        menuTitle = new javax.swing.JLabel();
+        menuAdd = new javax.swing.JLabel();
+        foodIcon3 = new javax.swing.JLabel();
+        foodIcon2 = new javax.swing.JLabel();
+        foodIcon5 = new javax.swing.JLabel();
+        foodIcon6 = new javax.swing.JLabel();
+        foodIcon4 = new javax.swing.JLabel();
+        foodIcon1 = new javax.swing.JLabel();
+        foodLabel1 = new javax.swing.JLabel();
+        foodLabel2 = new javax.swing.JLabel();
+        foodLabel3 = new javax.swing.JLabel();
+        foodLabel4 = new javax.swing.JLabel();
+        foodLabel5 = new javax.swing.JLabel();
+        foodLabel6 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         jpDivider = new javax.swing.JPanel();
         jpTab = new javax.swing.JPanel();
         nameLabel1 = new javax.swing.JLabel();
@@ -373,46 +429,156 @@ public class VDashboard extends javax.swing.JFrame {
 
         jScrollMenu.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        jPanel3.setBackground(new java.awt.Color(254, 254, 254));
+        menuPanel.setBackground(new java.awt.Color(254, 254, 254));
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel9.setText("Menu");
+        menuTitle.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
+        menuTitle.setForeground(new java.awt.Color(0, 0, 0));
+        menuTitle.setText("Menu");
 
-        jLabel5.setBackground(new java.awt.Color(153, 89, 16));
-        jLabel5.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Add");
-        jLabel5.setOpaque(true);
-        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+        menuAdd.setBackground(new java.awt.Color(153, 89, 16));
+        menuAdd.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        menuAdd.setForeground(new java.awt.Color(255, 255, 255));
+        menuAdd.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        menuAdd.setText("Add");
+        menuAdd.setOpaque(true);
+        menuAdd.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel5MouseClicked(evt);
+                menuAddMouseClicked(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        foodIcon3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodIcon3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        foodIcon2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodIcon2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        foodIcon5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodIcon5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        foodIcon6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodIcon6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        foodIcon4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodIcon4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        foodIcon1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodIcon1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        foodLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        foodLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodLabel1.setText("Food Number 1");
+
+        foodLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        foodLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodLabel2.setText("Food Number 2");
+
+        foodLabel3.setForeground(new java.awt.Color(0, 0, 0));
+        foodLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodLabel3.setText("Food Number 3");
+
+        foodLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        foodLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodLabel4.setText("Food Number 4");
+
+        foodLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        foodLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodLabel5.setText("Food Number 5");
+
+        foodLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        foodLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodLabel6.setText("Food Number 6");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel3.setText("*Add food items. Up to 6 only.");
+
+        javax.swing.GroupLayout menuPanelLayout = new javax.swing.GroupLayout(menuPanel);
+        menuPanel.setLayout(menuPanelLayout);
+        menuPanelLayout.setHorizontalGroup(
+            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuPanelLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(640, Short.MAX_VALUE))
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(menuPanelLayout.createSequentialGroup()
+                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(menuPanelLayout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(foodIcon1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(foodLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(foodIcon4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(foodLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(60, 60, 60)
+                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(foodLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(foodIcon2, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(foodLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(foodIcon5, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(60, 60, 60)
+                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(foodIcon3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(foodLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(foodIcon6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(foodLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(menuTitle)
+                    .addGroup(menuPanelLayout.createSequentialGroup()
+                        .addComponent(menuAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(487, Short.MAX_VALUE))
+        menuPanelLayout.setVerticalGroup(
+            menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menuPanelLayout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(menuTitle)
+                .addGap(6, 6, 6)
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(menuAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(42, 42, 42)
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
+                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(foodIcon1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(menuPanelLayout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addComponent(foodIcon3, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(menuPanelLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(foodLabel3))
+                            .addGroup(menuPanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(foodLabel1)))
+                        .addGap(39, 39, 39)
+                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(foodIcon4, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(foodIcon6, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(foodLabel4)
+                            .addComponent(foodLabel6)))
+                    .addGroup(menuPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(foodIcon2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(foodLabel2)
+                        .addGap(39, 39, 39)
+                        .addComponent(foodIcon5, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(foodLabel5)))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
 
-        jScrollMenu.setViewportView(jPanel3);
+        jScrollMenu.setViewportView(menuPanel);
+        loadFoodImages();
 
         jpDivider.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -691,7 +857,7 @@ public class VDashboard extends javax.swing.JFrame {
         jpRevenue.setVisible(false);
     }//GEN-LAST:event_ordersTabMousePressed
 
-    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+    private void menuAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuAddMouseClicked
 
     JOptionPane optionPane = new JOptionPane(
         addPanel, 
@@ -707,14 +873,16 @@ public class VDashboard extends javax.swing.JFrame {
     dialog.setVisible(true);
     dialog.pack();
 
-    }//GEN-LAST:event_jLabel5MouseClicked
+    }//GEN-LAST:event_menuAddMouseClicked
 
     private void foodIdFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_foodIdFieldActionPerformed
-        // TODO add your handling code here:
+        
+        
+        
+        
     }//GEN-LAST:event_foodIdFieldActionPerformed
 
     private void clearBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearBtnMouseClicked
-        // TODO add your handling code here:
         foodIdField.setText("");
         foodNameField.setText("");
         priceField.setText("");
@@ -741,11 +909,12 @@ public class VDashboard extends javax.swing.JFrame {
 
             try {
             ImageIO.write(tempImage, "png", outputFile); // Save as PNG (or use "jpg" for JPEG)
-            String imageFilePath = outputFile.getAbsolutePath(); // Store the file path
+            // Store the relative path (e.g., "foodPictures/image.png")
+            String relativeImagePath = foodPicturesFolderPath + File.separator + fileName;
 
             // Process the data (e.g., save to a file or database)
-            String data = foodId + "," + foodName + "," + price + "," + imageFilePath + "\n";
-            try (java.io.FileWriter fw = new java.io.FileWriter("foodItems.txt", true)) {
+            String data = foodId + "," + foodName + "," + "RM" + price + "," + relativeImagePath + "\n";
+            try (java.io.FileWriter fw = new java.io.FileWriter("vendorFood.txt", true)) {
                 fw.write(data);
                 JOptionPane.showMessageDialog(this, "Item added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException e) {
@@ -757,7 +926,7 @@ public class VDashboard extends javax.swing.JFrame {
             dialog.dispose();
         }
 
-        
+        loadFoodImages();
     }//GEN-LAST:event_addBtnMouseClicked
 
     private void uploadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadBtnActionPerformed
@@ -853,19 +1022,29 @@ public class VDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel addPanel;
     private javax.swing.JLabel clearBtn;
     private javax.swing.JLabel foodIDLabel;
+    private javax.swing.JLabel foodIcon1;
+    private javax.swing.JLabel foodIcon2;
+    private javax.swing.JLabel foodIcon3;
+    private javax.swing.JLabel foodIcon4;
+    private javax.swing.JLabel foodIcon5;
+    private javax.swing.JLabel foodIcon6;
     private javax.swing.JTextField foodIdField;
+    private javax.swing.JLabel foodLabel1;
+    private javax.swing.JLabel foodLabel2;
+    private javax.swing.JLabel foodLabel3;
+    private javax.swing.JLabel foodLabel4;
+    private javax.swing.JLabel foodLabel5;
+    private javax.swing.JLabel foodLabel6;
     private javax.swing.JTextField foodNameField;
     private javax.swing.JLabel foodNameLabel;
     private javax.swing.JLabel imageLabel;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollMenu;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -877,7 +1056,10 @@ public class VDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jpTab;
     private javax.swing.JPanel jpTitle;
     private javax.swing.JButton logoutBtn;
+    private javax.swing.JLabel menuAdd;
+    private javax.swing.JPanel menuPanel;
     private javax.swing.JLabel menuTab;
+    private javax.swing.JLabel menuTitle;
     private javax.swing.JLabel nameLabel1;
     private javax.swing.JTable orderTable;
     private javax.swing.JLabel ordersTab;

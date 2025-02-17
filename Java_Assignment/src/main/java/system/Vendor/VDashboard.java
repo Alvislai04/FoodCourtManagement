@@ -85,7 +85,7 @@ public class VDashboard extends javax.swing.JFrame {
     
     
     private void openFoodDescription (int index) {
-         String vendorFoodFilePath = "vendorFood.txt";
+    String vendorFoodFilePath = "vendorFood.txt";
     JLabel[] descriptionFood = {descriptionFoodId, descriptionFoodName, descriptionFoodPrice};
 
     try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {

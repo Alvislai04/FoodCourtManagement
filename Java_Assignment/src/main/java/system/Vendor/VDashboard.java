@@ -26,18 +26,12 @@ import javax.swing.table.DefaultTableModel;
 
 public class VDashboard extends javax.swing.JFrame {
     
-    Color DefaultColor, ClickedColor;
+    String vendorId;
+    String vendorName;
+    double vendorBalance;
 
-//    String id;
-//    String name;
-//    String address;
-//    String phoneno;
-//    String username;
-//    String password;
-//    String role;
-//    double balance;
-            
-    Login LogIn = new Login();
+    
+    Color DefaultColor, ClickedColor;
 
     private BufferedImage tempImage;
     private String tempImageFileName;
@@ -45,9 +39,17 @@ public class VDashboard extends javax.swing.JFrame {
     // filepath for storing image temporarily
     
     
-    public VDashboard() {
+    public VDashboard(String vendorId, String vendorName, double vendorBalance) {
         initComponents();
+        this.vendorId = vendorId;
+        this.vendorName = vendorName;
+        this.vendorBalance = vendorBalance;
+        
+        // Set label to vendor's name
+        nameLabel1.setText(vendorName);
+        
         populateOrderTable();
+        
         setResizable(false); // Disable resizing window
         setLocationRelativeTo(null); // Set window to center
         jScrollMenu.setVisible(true);
@@ -57,8 +59,6 @@ public class VDashboard extends javax.swing.JFrame {
         DefaultColor = new Color(153,89,16);
         ClickedColor = new Color(0,0,0);
         
-        // Set labels to username, getName doesn't work yet.
-        nameLabel1.setText(LogIn.getUsername());
     }
     
     private void populateOrderTable() {
@@ -207,6 +207,11 @@ public class VDashboard extends javax.swing.JFrame {
         jpReviews = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jList2 = new javax.swing.JList<>();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jpRevenue = new javax.swing.JPanel();
         jScrollMenu = new javax.swing.JScrollPane();
         jScrollMenu.getVerticalScrollBar().setUnitIncrement(16);
@@ -234,6 +239,7 @@ public class VDashboard extends javax.swing.JFrame {
         reviewTab = new javax.swing.JLabel();
         revenueTab = new javax.swing.JLabel();
         logoutBtn = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
         jpTitle = new javax.swing.JPanel();
         title_lbl1 = new javax.swing.JLabel();
         title_lbl2 = new javax.swing.JLabel();
@@ -515,19 +521,60 @@ public class VDashboard extends javax.swing.JFrame {
                         .addContainerGap(40, Short.MAX_VALUE))))
         );
 
-        jpReviews.setBackground(new java.awt.Color(255, 153, 51));
+        jpReviews.setBackground(new java.awt.Color(255, 255, 255));
+
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel7.setText("Customer Reviews");
+
+        jList2.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane5.setViewportView(jList2);
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane4.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 807, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(61, 61, 61)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 575, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(jLabel7)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane5)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         jScrollPane2.setViewportView(jPanel1);
@@ -536,11 +583,11 @@ public class VDashboard extends javax.swing.JFrame {
         jpReviews.setLayout(jpReviewsLayout);
         jpReviewsLayout.setHorizontalGroup(
             jpReviewsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
         );
         jpReviewsLayout.setVerticalGroup(
             jpReviewsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
         );
 
         jpRevenue.setBackground(new java.awt.Color(102, 255, 153));
@@ -749,20 +796,20 @@ public class VDashboard extends javax.swing.JFrame {
         );
         jpDividerLayout.setVerticalGroup(
             jpDividerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 614, Short.MAX_VALUE)
+            .addGap(0, 615, Short.MAX_VALUE)
         );
 
         jpTab.setBackground(new java.awt.Color(255, 255, 255));
         jpTab.setToolTipText("");
 
-        nameLabel1.setFont(new java.awt.Font("Segoe UI Black", 1, 36)); // NOI18N
+        nameLabel1.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
         nameLabel1.setText("Vendorname");
 
         menuTab.setBackground(new java.awt.Color(153, 89, 16));
         menuTab.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         menuTab.setForeground(new java.awt.Color(255, 255, 255));
         menuTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        menuTab.setText("Menu");
+        menuTab.setText("Restaurant Menu");
         menuTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         menuTab.setOpaque(true);
         menuTab.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -775,7 +822,7 @@ public class VDashboard extends javax.swing.JFrame {
         ordersTab.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         ordersTab.setForeground(new java.awt.Color(255, 255, 255));
         ordersTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        ordersTab.setText("Orders");
+        ordersTab.setText("Customer Orders");
         ordersTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ordersTab.setOpaque(true);
         ordersTab.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -819,33 +866,37 @@ public class VDashboard extends javax.swing.JFrame {
             }
         });
 
+        jLabel9.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel9.setText("Welcome,");
+
         javax.swing.GroupLayout jpTabLayout = new javax.swing.GroupLayout(jpTab);
         jpTab.setLayout(jpTabLayout);
         jpTabLayout.setHorizontalGroup(
             jpTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpTabLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jpTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(reviewTab, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(ordersTab, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(menuTab, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(revenueTab, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
+                    .addComponent(logoutBtn)
+                    .addComponent(jLabel9)
                     .addGroup(jpTabLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jpTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(reviewTab, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ordersTab, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(menuTab, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(revenueTab, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)))
-                    .addGroup(jpTabLayout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(nameLabel1))
-                    .addGroup(jpTabLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(logoutBtn)))
+                        .addGap(6, 6, 6)
+                        .addComponent(nameLabel1)))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
         jpTabLayout.setVerticalGroup(
             jpTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpTabLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addComponent(nameLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nameLabel1)
+                .addGap(12, 12, 12)
                 .addComponent(menuTab, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(ordersTab, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -853,7 +904,7 @@ public class VDashboard extends javax.swing.JFrame {
                 .addComponent(reviewTab, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(revenueTab, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 231, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 227, Short.MAX_VALUE)
                 .addComponent(logoutBtn)
                 .addContainerGap())
         );
@@ -878,7 +929,7 @@ public class VDashboard extends javax.swing.JFrame {
                 .addComponent(title_lbl1)
                 .addGap(2, 2, 2)
                 .addComponent(title_lbl2)
-                .addGap(0, 1022, Short.MAX_VALUE))
+                .addGap(0, 1013, Short.MAX_VALUE))
         );
         jpTitleLayout.setVerticalGroup(
             jpTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -899,25 +950,25 @@ public class VDashboard extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 314, Short.MAX_VALUE)
+                    .addGap(0, 304, Short.MAX_VALUE)
                     .addComponent(jpReviews, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 313, Short.MAX_VALUE)
+                    .addGap(0, 304, Short.MAX_VALUE)
                     .addComponent(jpRevenue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 313, Short.MAX_VALUE)
+                    .addGap(0, 304, Short.MAX_VALUE)
                     .addComponent(jpOrders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 313, Short.MAX_VALUE)
+                    .addGap(0, 304, Short.MAX_VALUE)
                     .addComponent(jScrollMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 814, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(287, 287, 287)
                     .addComponent(jpDivider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(815, Short.MAX_VALUE)))
+                    .addContainerGap(806, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -927,19 +978,19 @@ public class VDashboard extends javax.swing.JFrame {
                 .addComponent(jpTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 33, Short.MAX_VALUE)
+                    .addGap(0, 31, Short.MAX_VALUE)
                     .addComponent(jpReviews, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 33, Short.MAX_VALUE)
+                    .addGap(0, 34, Short.MAX_VALUE)
                     .addComponent(jpRevenue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 32, Short.MAX_VALUE)
+                    .addGap(0, 33, Short.MAX_VALUE)
                     .addComponent(jpOrders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 31, Short.MAX_VALUE)
+                    .addGap(0, 32, Short.MAX_VALUE)
                     .addComponent(jScrollMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 583, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jpDivider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1150,8 +1201,11 @@ public class VDashboard extends javax.swing.JFrame {
 
     private void removeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBtnActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showConfirmDialog(null, 
-                "Do you want to remove this item?", "Remove food...",JOptionPane.YES_NO_CANCEL_OPTION);
+        int result = JOptionPane.showConfirmDialog(null, 
+                "Do you want to remove this item?", "Remove food...",JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+            
+        }
     }//GEN-LAST:event_removeBtnActionPerformed
 
     private void goToLogout(){
@@ -1190,7 +1244,7 @@ public class VDashboard extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new VDashboard().setVisible(true);
+                new VDashboard("", "", 0.0).setVisible(true);
             }
         });
     }
@@ -1227,13 +1281,19 @@ public class VDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JList<String> jList1;
+    private javax.swing.JList<String> jList2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollMenu;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JTable jTable1;
     private javax.swing.JPanel jpDivider;
     private javax.swing.JPanel jpOrders;
     private javax.swing.JPanel jpRevenue;

@@ -32,6 +32,8 @@ public class Login extends javax.swing.JFrame {
         return Login.username;
     }
     
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -120,7 +122,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
         jPanel1.add(login_btn);
-        login_btn.setBounds(250, 370, 72, 23);
+        login_btn.setBounds(250, 370, 76, 27);
 
         clear_btn.setText("Clear");
         clear_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -130,7 +132,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
         jPanel1.add(clear_btn);
-        clear_btn.setBounds(50, 370, 72, 23);
+        clear_btn.setBounds(50, 370, 76, 27);
 
         noacc_lbl.setFont(new java.awt.Font("Tw Cen MT", 1, 12)); // NOI18N
         noacc_lbl.setText("No account? Kindly seek Administrator for help.");
@@ -218,6 +220,10 @@ public class Login extends javax.swing.JFrame {
 
             String usernameGui = usernametxt.getText();
             String passwordGui = new String(passwordtxt.getPassword());
+            
+            String vendorId = "";
+            String vendorName = "";
+            double vendorBalance = 0.0;
 
             for (String filename : filenames) {
                 try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
@@ -247,7 +253,7 @@ public class Login extends javax.swing.JFrame {
                             }
                         } else if (filename.equals("users.txt")) {
 
-                            if (credentials.length >= 6) {
+                            if (credentials.length >= 7) {
                                 String usernameFile = credentials[4];
                                 String passwordFile = credentials[5];
                                 String userType = credentials[6];
@@ -260,6 +266,11 @@ public class Login extends javax.swing.JFrame {
                                         isCustomer = true;
                                     } else if ("Vendor".equalsIgnoreCase(userType)) {
                                         isVendor = true;
+                                        
+                                        vendorId = credentials[0]; // ID is at index 0
+                                        vendorName = credentials[1]; // Name is at index 1
+                                        vendorBalance = Double.parseDouble(credentials[7]);
+                                        
                                     } else if ("Delivery Runner".equalsIgnoreCase(userType)) {
                                         isDeliveryRunner = true;
                                     }
@@ -287,7 +298,7 @@ public class Login extends javax.swing.JFrame {
                 } else if (isVendor) { // Vendor
                     JOptionPane.showMessageDialog(null, "Successfully logged in as Vendor");
                     this.dispose();
-                    goToVDashboard();
+                    goToVDashboard(vendorId, vendorName, vendorBalance);
                 } else if (isDeliveryRunner) { // Delivery Runner
                     JOptionPane.showMessageDialog(null, "Successfully logged in as Delivery Runner");
                     this.dispose();
@@ -335,8 +346,8 @@ public class Login extends javax.swing.JFrame {
         dispose();
     }
     
-    private void goToVDashboard(){ // Vendor Dashboard
-        VDashboard vendorframe = new VDashboard();
+    private void goToVDashboard(String vendorId, String vendorName, double vendorBalance){ // Vendor Dashboard
+        VDashboard vendorframe = new VDashboard(vendorId, vendorName, vendorBalance);
         vendorframe.setVisible(true);
         dispose();
     }

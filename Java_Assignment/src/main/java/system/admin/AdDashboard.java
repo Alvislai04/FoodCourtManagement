@@ -87,7 +87,7 @@ public class AdDashboard extends javax.swing.JFrame {
                     try {
                         // Get selected row of data
                         int selectedRow = userDetailTable.getSelectedRow();
-                        String employeeId = (String) userDetailTable.getValueAt(selectedRow, 0);
+                        String employeeId = (String) userDetailTable.getValueAt(selectedRow, 0); 
 
                         // Remove from users.txt
                         removeIdFromFile("users.txt", employeeId);
@@ -508,18 +508,14 @@ public class AdDashboard extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         topUpTxt = new javax.swing.JTextField();
         topupBtn = new javax.swing.JButton();
-        GenerateReceiptBtn = new javax.swing.JButton();
         title_label5 = new javax.swing.JLabel();
         cbxSelectId = new java.awt.Choice();
         jLabel14 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel15 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.gray);
         setMinimumSize(new java.awt.Dimension(1300, 586));
-        setPreferredSize(new java.awt.Dimension(1350, 600));
         setSize(new java.awt.Dimension(1300, 586));
 
         Navigation.setBackground(java.awt.Color.gray);
@@ -819,7 +815,7 @@ public class AdDashboard extends javax.swing.JFrame {
                         .addComponent(title_label2))
                     .addGroup(jp1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1292, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1288, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jp1Layout.setVerticalGroup(
@@ -829,7 +825,7 @@ public class AdDashboard extends javax.swing.JFrame {
                 .addGroup(jp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(title_label2)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(jp1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1127,22 +1123,11 @@ public class AdDashboard extends javax.swing.JFrame {
             }
         });
 
-        GenerateReceiptBtn.setText("Generate Transaction Receipt");
-        GenerateReceiptBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GenerateReceiptBtnActionPerformed(evt);
-            }
-        });
-
         title_label5.setFont(new java.awt.Font("Showcard Gothic", 1, 36)); // NOI18N
         title_label5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         title_label5.setText("Top-up System");
 
         jLabel14.setText("Select a customer id: ");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "January", "February", "March", "May", "June", "July", "August", "September", "October", "November", "December" }));
-
-        jLabel15.setText("Sort by month:");
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1166,12 +1151,10 @@ public class AdDashboard extends javax.swing.JFrame {
                                 .addComponent(title_label5)))
                         .addGap(85, 85, 85)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel11)
-                                .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addComponent(GenerateReceiptBtn))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cbxPaymentMethod, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(topUpTxt)
@@ -1182,10 +1165,6 @@ public class AdDashboard extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(jLabel15)
-                        .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jp3Layout.setVerticalGroup(
@@ -1207,21 +1186,16 @@ public class AdDashboard extends javax.swing.JFrame {
                             .addComponent(jLabel11)
                             .addComponent(topUpTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(54, 54, 54)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(topupBtn)
-                            .addComponent(GenerateReceiptBtn))
+                        .addComponent(topupBtn)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jp3Layout.createSequentialGroup()
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(title_label5))
                         .addGap(18, 18, 18)
-                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel1)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -1241,7 +1215,7 @@ public class AdDashboard extends javax.swing.JFrame {
                 .addComponent(jp1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jp2, javax.swing.GroupLayout.DEFAULT_SIZE, 1310, Short.MAX_VALUE))
+                .addComponent(jp2, javax.swing.GroupLayout.DEFAULT_SIZE, 1306, Short.MAX_VALUE))
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jp3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1249,7 +1223,7 @@ public class AdDashboard extends javax.swing.JFrame {
             mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jp1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jp2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE))
+                .addComponent(jp2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE))
             .addGroup(mainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jp3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1719,10 +1693,6 @@ public class AdDashboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_topupBtnActionPerformed
 
-    private void GenerateReceiptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateReceiptBtnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_GenerateReceiptBtnActionPerformed
-
     private void topUpTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_topUpTxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_topUpTxtActionPerformed
@@ -1833,7 +1803,6 @@ public class AdDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton GenerateReceiptBtn;
     private javax.swing.JPanel Navigation;
     private javax.swing.JTextField addresstxt;
     private javax.swing.JComboBox<String> cbxPaymentMethod;
@@ -1848,14 +1817,12 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

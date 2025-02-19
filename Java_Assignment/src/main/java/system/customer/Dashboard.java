@@ -53,8 +53,10 @@ public class Dashboard extends javax.swing.JFrame {
         OrderHistoryTab = new javax.swing.JLabel();
         CommentTab = new javax.swing.JLabel();
         logout = new javax.swing.JButton();
+        CommentTab1 = new javax.swing.JLabel();
         line = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
+        Notification = new javax.swing.JPanel();
         OrderPanel = new javax.swing.JPanel();
         OrderStatusPanel = new javax.swing.JPanel();
         LeaveReviewBtn = new javax.swing.JButton();
@@ -156,22 +158,36 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
+        CommentTab1.setBackground(new java.awt.Color(153, 89, 16));
+        CommentTab1.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        CommentTab1.setForeground(new java.awt.Color(255, 255, 255));
+        CommentTab1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        CommentTab1.setText("Notification");
+        CommentTab1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        CommentTab1.setOpaque(true);
+        CommentTab1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                CommentTab1MousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout menubarLayout = new javax.swing.GroupLayout(menubar);
         menubar.setLayout(menubarLayout);
         menubarLayout.setHorizontalGroup(
             menubarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menubarLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(menubarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(CommentTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(OrderHistoryTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(OrderStatusTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(OrderTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
-                .addContainerGap())
             .addGroup(menubarLayout.createSequentialGroup()
                 .addComponent(logout)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(menubarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(menubarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(CommentTab, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(OrderHistoryTab, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(OrderStatusTab, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(OrderTab, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                    .addComponent(CommentTab1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         menubarLayout.setVerticalGroup(
             menubarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,8 +203,10 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(CommentTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(CommentTab1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(logout)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         line.setBackground(new java.awt.Color(0, 0, 0));
@@ -206,6 +224,21 @@ public class Dashboard extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new javax.swing.OverlayLayout(jPanel1));
+
+        Notification.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout NotificationLayout = new javax.swing.GroupLayout(Notification);
+        Notification.setLayout(NotificationLayout);
+        NotificationLayout.setHorizontalGroup(
+            NotificationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 590, Short.MAX_VALUE)
+        );
+        NotificationLayout.setVerticalGroup(
+            NotificationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 552, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(Notification);
 
         OrderPanel.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -372,6 +405,10 @@ public class Dashboard extends javax.swing.JFrame {
     }
         
     }//GEN-LAST:event_LeaveReviewBtnActionPerformed
+
+    private void CommentTab1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CommentTab1MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CommentTab1MousePressed
         private String getLatestDeliveryID() {
         String taskHistoryFilePath = "taskHistory.txt";
         String latestDeliveryID = null;
@@ -438,7 +475,9 @@ public class Dashboard extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel CommentPanel;
     private javax.swing.JLabel CommentTab;
+    private javax.swing.JLabel CommentTab1;
     private javax.swing.JButton LeaveReviewBtn;
+    private javax.swing.JPanel Notification;
     private javax.swing.JPanel OrderHistoryPanel;
     private javax.swing.JLabel OrderHistoryTab;
     private javax.swing.JPanel OrderPanel;

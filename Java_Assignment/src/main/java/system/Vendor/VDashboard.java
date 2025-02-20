@@ -12,6 +12,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,6 +33,9 @@ public class VDashboard extends javax.swing.JFrame {
     String vendorId;
     String vendorName;
     double vendorBalance;
+    String selectedFoodId;
+    
+    String vendorFoodFilePath = "vendorFood.txt";
 
     
     Color DefaultColor, ClickedColor;
@@ -63,7 +70,7 @@ public class VDashboard extends javax.swing.JFrame {
     
     private void populateOrderTable() {
         // Define column names
-        String[] columnNames = {"Order ID", "Cust. Name", "Food Ordered", "Quantity", "Total Price", "Order Date/Time", "Order Status"};
+        String[] columnNames = {"Order ID", "Cust. Name", "Food Ordered", "Total Price", "Order Date/Time", "Order Status"};
 
         // Use the correct DefaultTableModel
         DefaultTableModel model = new DefaultTableModel(columnNames, 0); 
@@ -84,8 +91,7 @@ public class VDashboard extends javax.swing.JFrame {
     }
     
     
-    private void openFoodDescription (int index) {
-    String vendorFoodFilePath = "vendorFood.txt";
+    private void storeFoodInfo (int index) {
     JLabel[] descriptionFood = {descriptionFoodId, descriptionFoodName, descriptionFoodPrice};
 
     try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {
@@ -129,8 +135,44 @@ public class VDashboard extends javax.swing.JFrame {
     }
     }
     
+    private void storeSelectedFood() {
+        
+        JLabel[] foodIcon = {foodIcon1, foodIcon2, foodIcon3, foodIcon4, foodIcon5, foodIcon6};
+        JLabel[] foodLabels = {foodLabel1, foodLabel2, foodLabel3, foodLabel4, foodLabel5, foodLabel6};
+        
+        
+        
+        
+    
+    }
+    
+    private void removeFoodItem(String foodId) {
+        File file = new File(vendorFoodFilePath);
+        
+        try {
+            Path path = file.toPath();
+            List<String> lines = Files.readAllLines(path);
+            
+            List<String> updatedLines = new ArrayList<>();
+            for (String line : lines) {
+                String[] data = line.split(",");
+                if (!data[0].equals(foodId)) {
+                    updatedLines.add(line);
+                }
+            }
+            
+            Files.write(path, updatedLines);
+        
+            
+            loadFoodImages();
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error updating vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
     private void loadFoodImages () {
-        String vendorFoodFilePath = "vendorFood.txt";
+
         JLabel[] foodIcon = {foodIcon1, foodIcon2, foodIcon3, foodIcon4, foodIcon5, foodIcon6};
         JLabel[] foodLabels = {foodLabel1, foodLabel2, foodLabel3, foodLabel4, foodLabel5, foodLabel6};
 
@@ -149,13 +191,13 @@ public class VDashboard extends javax.swing.JFrame {
                 File imageFile = new File(imagePath);
                 if (imageFile.exists()) {
                     BufferedImage image = ImageIO.read(imageFile);
-                    ImageIcon icon = new ImageIcon(image);
+
 
                     // Resize the image (optional)
                     Image scaledImage = image.getScaledInstance(
                         187, 179, Image.SCALE_SMOOTH
                     );
-                    icon = new ImageIcon(scaledImage);
+                    ImageIcon icon = new ImageIcon(scaledImage);
 
                     // Set the icon and text for the current label
                     foodIcon[index].setIcon(icon);
@@ -198,8 +240,6 @@ public class VDashboard extends javax.swing.JFrame {
         jpOrders = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         orderTable = new javax.swing.JTable();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
@@ -449,13 +489,6 @@ public class VDashboard extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(orderTable);
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane3.setViewportView(jList1);
-
         jLabel1.setBackground(new java.awt.Color(153, 89, 16));
         jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -487,19 +520,18 @@ public class VDashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jpOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpOrdersLayout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jpOrdersLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
+                        .addGroup(jpOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 771, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpOrdersLayout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(87, 87, 87)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())
                     .addGroup(jpOrdersLayout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
-                        .addGroup(jpOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(104, 104, 104))))
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jpOrdersLayout.setVerticalGroup(
             jpOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -507,18 +539,13 @@ public class VDashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3)
-                    .addGroup(jpOrdersLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(40, Short.MAX_VALUE))))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addGroup(jpOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         jpReviews.setBackground(new java.awt.Color(255, 255, 255));
@@ -560,8 +587,8 @@ public class VDashboard extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(61, 61, 61)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(64, Short.MAX_VALUE))
         );
@@ -1176,35 +1203,37 @@ public class VDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_foodNameFieldActionPerformed
 
     private void foodIcon1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon1MouseClicked
-        openFoodDescription(0);
+        storeFoodInfo(0);
     }//GEN-LAST:event_foodIcon1MouseClicked
 
     private void foodIcon2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon2MouseClicked
-        openFoodDescription(1);
+        storeFoodInfo(1);
     }//GEN-LAST:event_foodIcon2MouseClicked
 
     private void foodIcon3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon3MouseClicked
-        openFoodDescription(2);
+        storeFoodInfo(2);
     }//GEN-LAST:event_foodIcon3MouseClicked
 
     private void foodIcon4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon4MouseClicked
-        openFoodDescription(3);
+        storeFoodInfo(3);
     }//GEN-LAST:event_foodIcon4MouseClicked
 
     private void foodIcon5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon5MouseClicked
-        openFoodDescription(4);
+        storeFoodInfo(4);
     }//GEN-LAST:event_foodIcon5MouseClicked
 
     private void foodIcon6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon6MouseClicked
-        openFoodDescription(5);
+        storeFoodInfo(5);
     }//GEN-LAST:event_foodIcon6MouseClicked
 
     private void removeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBtnActionPerformed
-        // TODO add your handling code here:
+
         int result = JOptionPane.showConfirmDialog(null, 
                 "Do you want to remove this item?", "Remove food...",JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
-            
+            System.out.println(selectedFoodId);
+            removeFoodItem(selectedFoodId);
+
         }
     }//GEN-LAST:event_removeBtnActionPerformed
 
@@ -1284,13 +1313,11 @@ public class VDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JList<String> jList2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollMenu;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable1;

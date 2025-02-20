@@ -6,12 +6,18 @@ package system.customer;
 
 import com.system.Login;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import system.admin.TransactionPanel;
 
@@ -29,13 +35,101 @@ public class Dashboard extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);//to center the gui form
         this.pack();//to make gui full screen
 
-        this.setSize(801, 561);// Set the size of the frame
+        this.setSize(1000, 561);// Set the size of the frame
         this.setResizable(false);// Prevent the frame from being resizable
 
-        OrderTab.setBackground(Color.black);//set OrderTab to black and order Opened after login
+        MenuTab.setBackground(Color.black);//set OrderTab to black and order Opened after login
         NotificationPanel.setVisible(false);
         TransactionPanel panel = new TransactionPanel();
         panel.loadUserTransaction(Login.getLoggedInUserId());
+    }
+    
+    private void openOrderPanel (int index) {
+    String vendorFoodFilePath = "vendorFood.txt";
+    JLabel[] descriptionFood = {descriptionFoodId, descriptionFoodName, descriptionFoodPrice};
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {
+        String line;
+        int currentIndex = 0;
+        while ((line = reader.readLine()) != null) {
+            // Only process the line that matches the clicked icon's index
+            if (currentIndex == index) {
+                String[] data = line.split(",");
+                String foodId = data[0];
+                String foodName = data[1];
+                String price = data[2];
+                String imagePath = data[3];
+
+                // Update the description panel with the food details
+                descriptionFood[0].setText("ID: " + foodId);
+                descriptionFood[1].setText("Name: " + foodName);
+                descriptionFood[2].setText("Price: " + price);
+
+                // Create and show the dialog
+                JOptionPane optionPane = new JOptionPane(
+                    OrderPanel, 
+                    JOptionPane.PLAIN_MESSAGE, 
+                    JOptionPane.DEFAULT_OPTION, 
+                    null, 
+                    new Object[]{}
+                );
+
+                JDialog dialog = optionPane.createDialog("Food Details");
+                optionPane.setBorder(null);
+                dialog.setVisible(true);
+                dialog.pack();
+
+                break; // Exit the loop after finding the matching item
+            }
+            currentIndex++;
+        }
+    } catch (IOException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }
+    
+    private void loadFoodImages () {
+        String vendorFoodFilePath = "vendorFood.txt";
+        JLabel[] foodIcon = {foodIcon1, foodIcon2, foodIcon3, foodIcon4, foodIcon5, foodIcon6};
+        JLabel[] foodLabels = {foodLabel1, foodLabel2, foodLabel3, foodLabel4, foodLabel5, foodLabel6};
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {
+            String line;
+            int index = 0; // Track the current label index
+
+            while ((line = reader.readLine()) != null && index < foodIcon.length) {
+                String[] data = line.split(",");
+                String foodId = data[0];
+                String foodName = data[1];
+                String price = data[2];
+                String imagePath = data[3]; // Relative path to the image
+
+                // Load the image
+                File imageFile = new File(imagePath);
+                if (imageFile.exists()) {
+                    BufferedImage image = ImageIO.read(imageFile);
+                    ImageIcon icon = new ImageIcon(image);
+
+                    // Resize the image (optional)
+                    Image scaledImage = image.getScaledInstance(
+                        187, 179, Image.SCALE_SMOOTH
+                    );
+                    icon = new ImageIcon(scaledImage);
+
+                    // Set the icon and text for the current label
+                    foodIcon[index].setIcon(icon);
+                    foodLabels[index].setText(foodName + " - " + price);
+                } else {
+                    System.out.println("Image not found: " + imagePath);
+                }
+
+                index++; // Move to the next label
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -47,26 +141,149 @@ public class Dashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        OrderPanel = new javax.swing.JPanel();
+        CancelBtn = new javax.swing.JButton();
+        quantity = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        OrderBtn = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        descriptionFoodName = new javax.swing.JLabel();
+        descriptionFoodPrice = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        descriptionFoodId = new javax.swing.JLabel();
         title = new javax.swing.JPanel();
         title_lbl1 = new javax.swing.JLabel();
         title_lbl2 = new javax.swing.JLabel();
         logout = new javax.swing.JButton();
         menubar = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        OrderTab = new javax.swing.JLabel();
+        MenuTab = new javax.swing.JLabel();
         OrderStatusTab = new javax.swing.JLabel();
         OrderHistoryTab = new javax.swing.JLabel();
-        CommentTab = new javax.swing.JLabel();
-        CommentTab1 = new javax.swing.JLabel();
+        ComplaintTab = new javax.swing.JLabel();
+        NotificationTab = new javax.swing.JLabel();
         line = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         NotificationPanel = new javax.swing.JPanel();
-        transactionPanel2 = new system.admin.TransactionPanel();
-        OrderPanel = new javax.swing.JPanel();
+        MenuPanel = new javax.swing.JPanel();
+        foodLabel3 = new javax.swing.JLabel();
+        foodLabel4 = new javax.swing.JLabel();
+        foodLabel5 = new javax.swing.JLabel();
+        foodIcon3 = new javax.swing.JLabel();
+        foodLabel6 = new javax.swing.JLabel();
+        foodIcon2 = new javax.swing.JLabel();
+        foodIcon5 = new javax.swing.JLabel();
+        foodIcon6 = new javax.swing.JLabel();
+        foodIcon4 = new javax.swing.JLabel();
+        foodIcon1 = new javax.swing.JLabel();
+        foodLabel1 = new javax.swing.JLabel();
+        foodLabel2 = new javax.swing.JLabel();
         OrderStatusPanel = new javax.swing.JPanel();
         LeaveReviewBtn = new javax.swing.JButton();
         OrderHistoryPanel = new javax.swing.JPanel();
-        CommentPanel = new javax.swing.JPanel();
+        ComplaintPanel = new javax.swing.JPanel();
+
+        CancelBtn.setText("Cancel");
+        CancelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelBtnActionPerformed(evt);
+            }
+        });
+
+        quantity.setText("0");
+        quantity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quantityActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Quantity:");
+
+        OrderBtn.setText("Order");
+        OrderBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OrderBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
+        jLabel3.setText("Order");
+
+        descriptionFoodName.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        descriptionFoodName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        descriptionFoodName.setText("foodName");
+
+        descriptionFoodPrice.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        descriptionFoodPrice.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        descriptionFoodPrice.setText("foodPrice");
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel4.setText("Food ID");
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel5.setText("Food Name");
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel6.setText("Food Price");
+
+        descriptionFoodId.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        descriptionFoodId.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        descriptionFoodId.setText("foodID");
+
+        javax.swing.GroupLayout OrderPanelLayout = new javax.swing.GroupLayout(OrderPanel);
+        OrderPanel.setLayout(OrderPanelLayout);
+        OrderPanelLayout.setHorizontalGroup(
+            OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(OrderPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(OrderPanelLayout.createSequentialGroup()
+                        .addComponent(CancelBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(OrderBtn))
+                    .addGroup(OrderPanelLayout.createSequentialGroup()
+                        .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(descriptionFoodId)
+                            .addComponent(descriptionFoodName)
+                            .addComponent(descriptionFoodPrice))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        OrderPanelLayout.setVerticalGroup(
+            OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(descriptionFoodId)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(descriptionFoodName)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(descriptionFoodPrice)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CancelBtn)
+                    .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(OrderBtn))
+                .addGap(17, 17, 17))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -119,16 +336,16 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Dashboard");
 
-        OrderTab.setBackground(new java.awt.Color(153, 89, 16));
-        OrderTab.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
-        OrderTab.setForeground(new java.awt.Color(255, 255, 255));
-        OrderTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        OrderTab.setText("Order");
-        OrderTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        OrderTab.setOpaque(true);
-        OrderTab.addMouseListener(new java.awt.event.MouseAdapter() {
+        MenuTab.setBackground(new java.awt.Color(153, 89, 16));
+        MenuTab.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        MenuTab.setForeground(new java.awt.Color(255, 255, 255));
+        MenuTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        MenuTab.setText("Menu");
+        MenuTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        MenuTab.setOpaque(true);
+        MenuTab.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                OrderTabMousePressed(evt);
+                MenuTabMousePressed(evt);
             }
         });
 
@@ -158,29 +375,29 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        CommentTab.setBackground(new java.awt.Color(153, 89, 16));
-        CommentTab.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
-        CommentTab.setForeground(new java.awt.Color(255, 255, 255));
-        CommentTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        CommentTab.setText("Comment");
-        CommentTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        CommentTab.setOpaque(true);
-        CommentTab.addMouseListener(new java.awt.event.MouseAdapter() {
+        ComplaintTab.setBackground(new java.awt.Color(153, 89, 16));
+        ComplaintTab.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        ComplaintTab.setForeground(new java.awt.Color(255, 255, 255));
+        ComplaintTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        ComplaintTab.setText("Comment");
+        ComplaintTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        ComplaintTab.setOpaque(true);
+        ComplaintTab.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                CommentTabMousePressed(evt);
+                ComplaintTabMousePressed(evt);
             }
         });
 
-        CommentTab1.setBackground(new java.awt.Color(153, 89, 16));
-        CommentTab1.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
-        CommentTab1.setForeground(new java.awt.Color(255, 255, 255));
-        CommentTab1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        CommentTab1.setText("Notification");
-        CommentTab1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        CommentTab1.setOpaque(true);
-        CommentTab1.addMouseListener(new java.awt.event.MouseAdapter() {
+        NotificationTab.setBackground(new java.awt.Color(153, 89, 16));
+        NotificationTab.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
+        NotificationTab.setForeground(new java.awt.Color(255, 255, 255));
+        NotificationTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        NotificationTab.setText("Notification");
+        NotificationTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        NotificationTab.setOpaque(true);
+        NotificationTab.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                CommentTab1MousePressed(evt);
+                NotificationTabMousePressed(evt);
             }
         });
 
@@ -191,12 +408,12 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(menubarLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(menubarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(CommentTab, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ComplaintTab, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(OrderHistoryTab, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(OrderStatusTab, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(OrderTab, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(MenuTab, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
-                    .addComponent(CommentTab1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(NotificationTab, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         menubarLayout.setVerticalGroup(
@@ -205,15 +422,15 @@ public class Dashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(OrderTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(MenuTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(OrderStatusTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(OrderHistoryTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(CommentTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ComplaintTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(CommentTab1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(NotificationTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -239,35 +456,159 @@ public class Dashboard extends javax.swing.JFrame {
         NotificationPanel.setLayout(NotificationPanelLayout);
         NotificationPanelLayout.setHorizontalGroup(
             NotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, NotificationPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(transactionPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(185, 185, 185))
+            .addGap(0, 697, Short.MAX_VALUE)
         );
         NotificationPanelLayout.setVerticalGroup(
             NotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(NotificationPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(transactionPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(466, Short.MAX_VALUE))
+            .addGap(0, 552, Short.MAX_VALUE)
         );
 
         jPanel1.add(NotificationPanel);
 
-        OrderPanel.setBackground(new java.awt.Color(255, 255, 255));
+        MenuPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        javax.swing.GroupLayout OrderPanelLayout = new javax.swing.GroupLayout(OrderPanel);
-        OrderPanel.setLayout(OrderPanelLayout);
-        OrderPanelLayout.setHorizontalGroup(
-            OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 591, Short.MAX_VALUE)
+        foodLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodLabel3.setText("Food Number 3");
+
+        foodLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodLabel4.setText("Food Number 4");
+
+        foodLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodLabel5.setText("Food Number 5");
+
+        foodIcon3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodIcon3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        foodIcon3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                foodIcon3MouseClicked(evt);
+            }
+        });
+
+        foodLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodLabel6.setText("Food Number 6");
+
+        foodIcon2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodIcon2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        foodIcon2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                foodIcon2MouseClicked(evt);
+            }
+        });
+
+        foodIcon5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodIcon5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        foodIcon5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                foodIcon5MouseClicked(evt);
+            }
+        });
+
+        foodIcon6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodIcon6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        foodIcon6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                foodIcon6MouseClicked(evt);
+            }
+        });
+
+        foodIcon4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodIcon4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        foodIcon4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                foodIcon4MouseClicked(evt);
+            }
+        });
+
+        foodIcon1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodIcon1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        foodIcon1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                foodIcon1MouseClicked(evt);
+            }
+        });
+
+        foodLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodLabel1.setText("Food Number 1");
+
+        foodLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodLabel2.setText("Food Number 2");
+
+        javax.swing.GroupLayout MenuPanelLayout = new javax.swing.GroupLayout(MenuPanel);
+        MenuPanel.setLayout(MenuPanelLayout);
+        MenuPanelLayout.setHorizontalGroup(
+            MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 697, Short.MAX_VALUE)
+            .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(MenuPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(MenuPanelLayout.createSequentialGroup()
+                            .addGap(4, 4, 4)
+                            .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(foodIcon1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(foodLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(foodIcon4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(foodLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGap(60, 60, 60)
+                    .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(foodLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(foodIcon2, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(foodLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(foodIcon5, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGap(60, 60, 60)
+                    .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(foodIcon3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(foodLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(foodIcon6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(foodLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
-        OrderPanelLayout.setVerticalGroup(
-            OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        MenuPanelLayout.setVerticalGroup(
+            MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 552, Short.MAX_VALUE)
+            .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(MenuPanelLayout.createSequentialGroup()
+                    .addGap(53, 53, 53)
+                    .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MenuPanelLayout.createSequentialGroup()
+                            .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(foodIcon1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(MenuPanelLayout.createSequentialGroup()
+                                    .addGap(2, 2, 2)
+                                    .addComponent(foodIcon3, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(MenuPanelLayout.createSequentialGroup()
+                                    .addGap(6, 6, 6)
+                                    .addComponent(foodLabel3))
+                                .addGroup(MenuPanelLayout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(foodLabel1)))
+                            .addGap(39, 39, 39)
+                            .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(foodIcon4, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(foodIcon6, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(foodLabel4)
+                                .addComponent(foodLabel6)))
+                        .addGroup(MenuPanelLayout.createSequentialGroup()
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(foodIcon2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(foodLabel2)
+                            .addGap(39, 39, 39)
+                            .addComponent(foodIcon5, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(foodLabel5)))
+                    .addContainerGap(54, Short.MAX_VALUE)))
         );
 
-        jPanel1.add(OrderPanel);
+        jPanel1.add(MenuPanel);
 
         OrderStatusPanel.setBackground(new java.awt.Color(0, 51, 255));
 
@@ -283,7 +624,7 @@ public class Dashboard extends javax.swing.JFrame {
         OrderStatusPanelLayout.setHorizontalGroup(
             OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderStatusPanelLayout.createSequentialGroup()
-                .addContainerGap(373, Short.MAX_VALUE)
+                .addContainerGap(466, Short.MAX_VALUE)
                 .addComponent(LeaveReviewBtn)
                 .addGap(110, 110, 110))
         );
@@ -303,7 +644,7 @@ public class Dashboard extends javax.swing.JFrame {
         OrderHistoryPanel.setLayout(OrderHistoryPanelLayout);
         OrderHistoryPanelLayout.setHorizontalGroup(
             OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 591, Short.MAX_VALUE)
+            .addGap(0, 697, Short.MAX_VALUE)
         );
         OrderHistoryPanelLayout.setVerticalGroup(
             OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -312,20 +653,20 @@ public class Dashboard extends javax.swing.JFrame {
 
         jPanel1.add(OrderHistoryPanel);
 
-        CommentPanel.setBackground(new java.awt.Color(255, 0, 255));
+        ComplaintPanel.setBackground(new java.awt.Color(255, 0, 255));
 
-        javax.swing.GroupLayout CommentPanelLayout = new javax.swing.GroupLayout(CommentPanel);
-        CommentPanel.setLayout(CommentPanelLayout);
-        CommentPanelLayout.setHorizontalGroup(
-            CommentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 591, Short.MAX_VALUE)
+        javax.swing.GroupLayout ComplaintPanelLayout = new javax.swing.GroupLayout(ComplaintPanel);
+        ComplaintPanel.setLayout(ComplaintPanelLayout);
+        ComplaintPanelLayout.setHorizontalGroup(
+            ComplaintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 697, Short.MAX_VALUE)
         );
-        CommentPanelLayout.setVerticalGroup(
-            CommentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        ComplaintPanelLayout.setVerticalGroup(
+            ComplaintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 552, Short.MAX_VALUE)
         );
 
-        jPanel1.add(CommentPanel);
+        jPanel1.add(ComplaintPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -359,61 +700,61 @@ public class Dashboard extends javax.swing.JFrame {
         goToLogout();
     }//GEN-LAST:event_logoutActionPerformed
 
-    private void OrderTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderTabMousePressed
+    private void MenuTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MenuTabMousePressed
         // TODO add your handling code here:
         NotificationPanel.setVisible(false);
-        OrderPanel.setVisible(true);
+        MenuPanel.setVisible(true);
         OrderStatusPanel.setVisible(false);
         OrderHistoryPanel.setVisible(false);
-        CommentPanel.setVisible(false);
-        OrderTab.setBackground(Color.black);
+        ComplaintPanel.setVisible(false);
+        MenuTab.setBackground(Color.black);
         OrderStatusTab.setBackground(new Color(153, 89, 16));
         OrderHistoryTab.setBackground(new Color(153, 89, 16));
-        CommentTab.setBackground(new Color(153, 89, 16));
+        ComplaintTab.setBackground(new Color(153, 89, 16));
         NotificationPanel.setBackground(new Color(153, 89, 16));
-    }//GEN-LAST:event_OrderTabMousePressed
+    }//GEN-LAST:event_MenuTabMousePressed
 
     private void OrderStatusTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderStatusTabMousePressed
         // TODO add your handling code here:
         NotificationPanel.setVisible(false);
-        OrderPanel.setVisible(false);
+        MenuPanel.setVisible(false);
         OrderStatusPanel.setVisible(true);
         OrderHistoryPanel.setVisible(false);
-        CommentPanel.setVisible(false);
+        ComplaintPanel.setVisible(false);
         OrderStatusTab.setBackground(Color.black);
-        OrderTab.setBackground(new Color(153, 89, 16));
+        MenuTab.setBackground(new Color(153, 89, 16));
         OrderHistoryTab.setBackground(new Color(153, 89, 16));
-        CommentTab.setBackground(new Color(153, 89, 16));
+        ComplaintTab.setBackground(new Color(153, 89, 16));
         NotificationPanel.setBackground(new Color(153, 89, 16));
     }//GEN-LAST:event_OrderStatusTabMousePressed
 
     private void OrderHistoryTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderHistoryTabMousePressed
         // TODO add your handling code here:
         NotificationPanel.setVisible(false);
-        OrderPanel.setVisible(false);
+        MenuPanel.setVisible(false);
         OrderStatusPanel.setVisible(false);
         OrderHistoryPanel.setVisible(true);
-        CommentPanel.setVisible(false);
+        ComplaintPanel.setVisible(false);
         OrderHistoryTab.setBackground(Color.black);
         OrderStatusTab.setBackground(new Color(153, 89, 16));
-        OrderTab.setBackground(new Color(153, 89, 16));
-        CommentTab.setBackground(new Color(153, 89, 16));
+        MenuTab.setBackground(new Color(153, 89, 16));
+        ComplaintTab.setBackground(new Color(153, 89, 16));
         NotificationPanel.setBackground(new Color(153, 89, 16));
     }//GEN-LAST:event_OrderHistoryTabMousePressed
 
-    private void CommentTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CommentTabMousePressed
+    private void ComplaintTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ComplaintTabMousePressed
         // TODO add your handling code here:
         NotificationPanel.setVisible(false);
-        OrderPanel.setVisible(false);
+        MenuPanel.setVisible(false);
         OrderStatusPanel.setVisible(false);
         OrderHistoryPanel.setVisible(false);
-        CommentPanel.setVisible(true);
-        CommentTab.setBackground(Color.black);
+        ComplaintPanel.setVisible(true);
+        ComplaintTab.setBackground(Color.black);
         OrderStatusTab.setBackground(new Color(153, 89, 16));
         OrderHistoryTab.setBackground(new Color(153, 89, 16));
-        OrderTab.setBackground(new Color(153, 89, 16));
+        MenuTab.setBackground(new Color(153, 89, 16));
         NotificationPanel.setBackground(new Color(153, 89, 16));
-    }//GEN-LAST:event_CommentTabMousePressed
+    }//GEN-LAST:event_ComplaintTabMousePressed
 
     private void LeaveReviewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaveReviewBtnActionPerformed
         // TODO add your handling code here:
@@ -428,18 +769,18 @@ public class Dashboard extends javax.swing.JFrame {
 
     }//GEN-LAST:event_LeaveReviewBtnActionPerformed
 
-    private void CommentTab1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CommentTab1MousePressed
+    private void NotificationTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_NotificationTabMousePressed
 
         NotificationPanel.setVisible(true);
-        OrderPanel.setVisible(false);
+        MenuPanel.setVisible(false);
         OrderStatusPanel.setVisible(false);
         OrderHistoryPanel.setVisible(false);
-        CommentPanel.setVisible(false);
+        ComplaintPanel.setVisible(false);
         NotificationPanel.setBackground(Color.black);
         OrderStatusTab.setBackground(new Color(153, 89, 16));
         OrderHistoryTab.setBackground(new Color(153, 89, 16));
-        CommentTab.setBackground(new Color(153, 89, 16));
-        OrderTab.setBackground(new Color(153, 89, 16));
+        ComplaintTab.setBackground(new Color(153, 89, 16));
+        MenuTab.setBackground(new Color(153, 89, 16));
 
         String loggedInUser = Login.getLoggedInUserId(); // Example: "C01"
 
@@ -448,7 +789,43 @@ public class Dashboard extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "User not logged in!");
         }
-    }//GEN-LAST:event_CommentTab1MousePressed
+    }//GEN-LAST:event_NotificationTabMousePressed
+
+    private void foodIcon3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon3MouseClicked
+        openOrderPanel(2);
+    }//GEN-LAST:event_foodIcon3MouseClicked
+
+    private void foodIcon2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon2MouseClicked
+        openOrderPanel(1);
+    }//GEN-LAST:event_foodIcon2MouseClicked
+
+    private void foodIcon5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon5MouseClicked
+        openOrderPanel(4);
+    }//GEN-LAST:event_foodIcon5MouseClicked
+
+    private void foodIcon6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon6MouseClicked
+        openOrderPanel(5);
+    }//GEN-LAST:event_foodIcon6MouseClicked
+
+    private void foodIcon4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon4MouseClicked
+        openOrderPanel(3);
+    }//GEN-LAST:event_foodIcon4MouseClicked
+
+    private void foodIcon1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_foodIcon1MouseClicked
+       openOrderPanel(0);
+    }//GEN-LAST:event_foodIcon1MouseClicked
+
+    private void quantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_quantityActionPerformed
+
+    private void CancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CancelBtnActionPerformed
+
+    private void OrderBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_OrderBtnActionPerformed
 
     private void updateNotificationPanel(String userID) {
         System.out.println("Updating Notification Panel for: " + userID);
@@ -541,25 +918,48 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel CommentPanel;
-    private javax.swing.JLabel CommentTab;
-    private javax.swing.JLabel CommentTab1;
+    private javax.swing.JButton CancelBtn;
+    private javax.swing.JPanel ComplaintPanel;
+    private javax.swing.JLabel ComplaintTab;
     private javax.swing.JButton LeaveReviewBtn;
+    private javax.swing.JPanel MenuPanel;
+    private javax.swing.JLabel MenuTab;
     private javax.swing.JPanel NotificationPanel;
+    private javax.swing.JLabel NotificationTab;
+    private javax.swing.JButton OrderBtn;
     private javax.swing.JPanel OrderHistoryPanel;
     private javax.swing.JLabel OrderHistoryTab;
     private javax.swing.JPanel OrderPanel;
     private javax.swing.JPanel OrderStatusPanel;
     private javax.swing.JLabel OrderStatusTab;
-    private javax.swing.JLabel OrderTab;
+    private javax.swing.JLabel descriptionFoodId;
+    private javax.swing.JLabel descriptionFoodName;
+    private javax.swing.JLabel descriptionFoodPrice;
+    private javax.swing.JLabel foodIcon1;
+    private javax.swing.JLabel foodIcon2;
+    private javax.swing.JLabel foodIcon3;
+    private javax.swing.JLabel foodIcon4;
+    private javax.swing.JLabel foodIcon5;
+    private javax.swing.JLabel foodIcon6;
+    private javax.swing.JLabel foodLabel1;
+    private javax.swing.JLabel foodLabel2;
+    private javax.swing.JLabel foodLabel3;
+    private javax.swing.JLabel foodLabel4;
+    private javax.swing.JLabel foodLabel5;
+    private javax.swing.JLabel foodLabel6;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel line;
     private javax.swing.JButton logout;
     private javax.swing.JPanel menubar;
+    private javax.swing.JTextField quantity;
     private javax.swing.JPanel title;
     private javax.swing.JLabel title_lbl1;
     private javax.swing.JLabel title_lbl2;
-    private system.admin.TransactionPanel transactionPanel2;
     // End of variables declaration//GEN-END:variables
 }

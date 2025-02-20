@@ -1,12 +1,2 @@
 V01-F001,Grilled Salmon,RM21,1
 V01-F001,Grilled Salmon,RM21,2
-ORD1740078622737,customer@test,Grilled Salmon,RM21,21/02/2025 03:10,Pending,1
-ORD1740078628020,customer@test,Burger,RM21,21/02/2025 03:10,Pending,2
-ORD1740079100746,customer@test,Grilled Salmon,RM21,21/02/2025 03:18,Pending,2
-ORD1740079105179,customer@test,Burger,RM21,21/02/2025 03:18,Pending,1
-ORD1740079345950,customer@test,Grilled Salmon,RM21,21/02/2025 03:22,Pending,2
-ORD1740079553040,customer@test,Grilled Salmon,RM21,21/02/2025 03:25,Pending,3
-ORD1740079558542,customer@test,Burger,RM11,21/02/2025 03:25,Pending,1
-ORD1740079794894,customer@test,Grilled Salmon,RM21,21/02/2025 03:29,Pending,1
-ORD1740079939827,customer@test,Grilled Salmon,63.00,21/02/2025 03:32,Pending,3
-ORD1740079986009,customer@test,Grilled Salmon,84.00,21/02/2025 03:33,Pending,4

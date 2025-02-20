@@ -25,6 +25,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 import system.admin.TransactionPanel;
 
 /**
@@ -51,49 +52,64 @@ public class Dashboard extends javax.swing.JFrame {
         panel.loadUserTransaction(Login.getLoggedInUserId());
     }
     
-    private void openOrderPanel (int index) {
+    // Overloaded method to support menu clicks
+private void openOrderPanel(int index) {
+    openOrderPanel(index, null, null, null);
+}
+
+// Updated method to support both normal opening and reordering
+private void openOrderPanel(Integer index, String reorderFoodName, String reorderPrice, String reorderQuantity) {
     String vendorFoodFilePath = "vendorFood.txt";
     JLabel[] descriptionFood = {descriptionFoodId, descriptionFoodName, descriptionFoodPrice};
 
     try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {
         String line;
         int currentIndex = 0;
+        boolean found = false;
+
         while ((line = reader.readLine()) != null) {
-            // Only process the line that matches the clicked icon's index
-            if (currentIndex == index) {
+            if (index != null && currentIndex == index) { // Case 1: Opening from menu
                 String[] data = line.split(",");
-                String foodId = data[0];
-                String foodName = data[1];
-                String price = data[2];
-
-                // Update the description panel with the food details
-                descriptionFood[0].setText("ID: " + foodId);
-                descriptionFood[1].setText("Name: " + foodName);
-                descriptionFood[2].setText("Price: " + price);
-
-                // Create and show the dialog
-                JOptionPane optionPane = new JOptionPane(
-                    OrderPanel, 
-                    JOptionPane.PLAIN_MESSAGE, 
-                    JOptionPane.DEFAULT_OPTION, 
-                    null, 
-                    new Object[]{}
-                );
-
-                JDialog dialog = optionPane.createDialog("Food Details");
-                optionPane.setBorder(null);
-                dialog.setVisible(true);
-                dialog.pack();
-
-                break; // Exit the loop after finding the matching item
+                descriptionFood[0].setText("ID: " + data[0]);
+                descriptionFood[1].setText("Name: " + data[1]);
+                descriptionFood[2].setText("Price: " + data[2]);
+                found = true;
+                break;
             }
             currentIndex++;
         }
+
+        // Case 2: Opening from reorder button
+        if (index == null) {
+            descriptionFood[0].setText(""); // No need for ID when reordering
+            descriptionFood[1].setText("Name: " + reorderFoodName);
+            descriptionFood[2].setText("Price: " + reorderPrice);
+            quantity.setText(reorderQuantity); // Pre-fill quantity
+            found = true;
+        }
+
+        if (found) {
+            // Show OrderPanel
+            JOptionPane optionPane = new JOptionPane(
+                OrderPanel, 
+                JOptionPane.PLAIN_MESSAGE, 
+                JOptionPane.DEFAULT_OPTION, 
+                null, 
+                new Object[]{}
+            );
+
+            JDialog dialog = optionPane.createDialog("Food Details");
+            optionPane.setBorder(null);
+            dialog.setVisible(true);
+            dialog.pack();
+        }
+
     } catch (IOException ex) {
         ex.printStackTrace();
         JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
     }
-    }
+}
+
     
     private void loadFoodImages () {
         String vendorFoodFilePath = "vendorFood.txt";
@@ -138,7 +154,7 @@ public class Dashboard extends javax.swing.JFrame {
         }
     }
    private void saveOrder(String orderId, String customerEmail, String foodName, String price, String orderTime, String status, int quantity) {
-    String orderFilePath = "customerOrders.txt";
+    String orderFilePath = "customerOrder.txt";
 
     System.out.println("Inside saveOrder method...");
 
@@ -158,6 +174,99 @@ public class Dashboard extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(OrderPanel, "Error saving order! Check file permissions.", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
+   private String generateOrderId() {
+    String orderFilePath = "customerOrders.txt";
+    int lastOrderNumber = 0;
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(orderFilePath))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (line.startsWith("ORD")) { // Check if line starts with 'ORD'
+                String[] data = line.split(",");
+                String lastOrderId = data[0]; // Example: "ORD003"
+
+                // Extract numeric part (003)
+                String numberPart = lastOrderId.substring(3); 
+                int orderNumber = Integer.parseInt(numberPart);
+                lastOrderNumber = Math.max(lastOrderNumber, orderNumber); // Keep track of max ID
+            }
+        }
+    } catch (IOException | NumberFormatException ex) {
+        ex.printStackTrace(); // Print error for debugging
+    }
+
+    // Increment and format new order ID
+    int newOrderNumber = lastOrderNumber + 1;
+    return String.format("ORD%03d", newOrderNumber); // ORD001, ORD002, etc.
+}
+   private void loadOrdersIntoTable() {
+    DefaultTableModel model = (DefaultTableModel) StatusjTable1.getModel();
+    model.setRowCount(0); // Clear old data
+
+    try (BufferedReader reader = new BufferedReader(new FileReader("customerOrders.txt"))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] data = line.split(",");
+            if (data.length == 7) { // Ensure correct format
+                model.addRow(new Object[]{data[0], data[2], data[3], data[5], data[6]});
+            }
+        }
+    } catch (IOException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error loading orders!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+   private void updateOrderStatus(String orderId, String newStatus) {
+    String orderFilePath = "customerOrders.txt";
+    List<String> updatedOrders = new ArrayList<>();
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(orderFilePath))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] data = line.split(",");
+            if (data[0].equals(orderId)) {
+                data[5] = newStatus; // Change status
+                line = String.join(",", data);
+            }
+            updatedOrders.add(line);
+        }
+    } catch (IOException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error updating order status!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Write updated orders back to the file
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(orderFilePath))) {
+        for (String order : updatedOrders) {
+            writer.write(order);
+            writer.newLine();
+        }
+    } catch (IOException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error saving order updates!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+   private void loadOrderHistory() {
+    DefaultTableModel model = (DefaultTableModel) HistoryjTable1.getModel();
+    model.setRowCount(0); // Clear old data
+
+    try (BufferedReader reader = new BufferedReader(new FileReader("customerOrders.txt"))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] data = line.split(",");
+            if (data.length == 7) { // Ensure correct format
+                model.addRow(new Object[]{data[0], data[2], data[3], data[5], data[6]});
+            }
+        }
+    } catch (IOException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error loading order history!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -178,6 +287,8 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         descriptionFoodId = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         title = new javax.swing.JPanel();
         title_lbl1 = new javax.swing.JLabel();
         title_lbl2 = new javax.swing.JLabel();
@@ -209,7 +320,13 @@ public class Dashboard extends javax.swing.JFrame {
         foodLabel2 = new javax.swing.JLabel();
         OrderStatusPanel = new javax.swing.JPanel();
         LeaveReviewBtn = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        StatusjTable1 = new javax.swing.JTable();
+        CancelBtn = new javax.swing.JButton();
         OrderHistoryPanel = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        HistoryjTable1 = new javax.swing.JTable();
+        ReorderBtn = new javax.swing.JButton();
         ComplaintPanel = new javax.swing.JPanel();
 
         quantity.setText("0");
@@ -252,20 +369,27 @@ public class Dashboard extends javax.swing.JFrame {
         descriptionFoodId.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         descriptionFoodId.setText("foodID");
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null},
+                {null},
+                {null},
+                {null}
+            },
+            new String [] {
+                "Review"
+            }
+        ));
+        jScrollPane3.setViewportView(jTable1);
+
         javax.swing.GroupLayout OrderPanelLayout = new javax.swing.GroupLayout(OrderPanel);
         OrderPanel.setLayout(OrderPanelLayout);
         OrderPanelLayout.setHorizontalGroup(
             OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(OrderPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(OrderPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 114, Short.MAX_VALUE)
-                        .addComponent(OrderBtn))
-                    .addGroup(OrderPanelLayout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(descriptionFoodPrice)
                             .addComponent(jLabel3)
@@ -273,33 +397,45 @@ public class Dashboard extends javax.swing.JFrame {
                             .addComponent(jLabel5)
                             .addComponent(jLabel6)
                             .addComponent(descriptionFoodId)
-                            .addComponent(descriptionFoodName))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(descriptionFoodName)
+                            .addGroup(OrderPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(OrderBtn))
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
                 .addContainerGap())
         );
         OrderPanelLayout.setVerticalGroup(
             OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderPanelLayout.createSequentialGroup()
+            .addGroup(OrderPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(descriptionFoodId)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(descriptionFoodName)
-                .addGap(26, 26, 26)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(descriptionFoodPrice)
-                .addGap(18, 18, 18)
-                .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(OrderBtn))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(OrderPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(OrderPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(descriptionFoodId)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(descriptionFoodName)
+                        .addGap(26, 26, 26)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(descriptionFoodPrice)
+                        .addGap(18, 18, 18)
+                        .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(OrderBtn)
+                        .addGap(0, 7, Short.MAX_VALUE))))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -396,7 +532,7 @@ public class Dashboard extends javax.swing.JFrame {
         ComplaintTab.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
         ComplaintTab.setForeground(new java.awt.Color(255, 255, 255));
         ComplaintTab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        ComplaintTab.setText("Comment");
+        ComplaintTab.setText("Complaint");
         ComplaintTab.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ComplaintTab.setOpaque(true);
         ComplaintTab.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -478,7 +614,7 @@ public class Dashboard extends javax.swing.JFrame {
             NotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(NotificationPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(notificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 685, Short.MAX_VALUE)
+                .addComponent(notificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
                 .addContainerGap())
         );
         NotificationPanelLayout.setVerticalGroup(
@@ -563,7 +699,7 @@ public class Dashboard extends javax.swing.JFrame {
         MenuPanel.setLayout(MenuPanelLayout);
         MenuPanelLayout.setHorizontalGroup(
             MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 697, Short.MAX_VALUE)
+            .addGap(0, 721, Short.MAX_VALUE)
             .addGroup(MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(MenuPanelLayout.createSequentialGroup()
                     .addContainerGap()
@@ -636,7 +772,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         jPanel1.add(MenuPanel);
 
-        OrderStatusPanel.setBackground(new java.awt.Color(0, 51, 255));
+        OrderStatusPanel.setBackground(new java.awt.Color(255, 255, 255));
 
         LeaveReviewBtn.setText("LEAVE REVIEW");
         LeaveReviewBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -645,36 +781,125 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
+        StatusjTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Order ID", "Food Name", "Final Price", "Status", "Quantity"
+            }
+        ));
+        jScrollPane1.setViewportView(StatusjTable1);
+
+        CancelBtn.setText("Cancel Order");
+        CancelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout OrderStatusPanelLayout = new javax.swing.GroupLayout(OrderStatusPanel);
         OrderStatusPanel.setLayout(OrderStatusPanelLayout);
         OrderStatusPanelLayout.setHorizontalGroup(
             OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderStatusPanelLayout.createSequentialGroup()
-                .addContainerGap(466, Short.MAX_VALUE)
-                .addComponent(LeaveReviewBtn)
-                .addGap(110, 110, 110))
+            .addGroup(OrderStatusPanelLayout.createSequentialGroup()
+                .addGap(122, 122, 122)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(OrderStatusPanelLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(CancelBtn)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderStatusPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                        .addComponent(LeaveReviewBtn)
+                        .addContainerGap())))
         );
         OrderStatusPanelLayout.setVerticalGroup(
             OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderStatusPanelLayout.createSequentialGroup()
-                .addContainerGap(272, Short.MAX_VALUE)
-                .addComponent(LeaveReviewBtn)
-                .addGap(257, 257, 257))
+                .addContainerGap(49, Short.MAX_VALUE)
+                .addGroup(OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderStatusPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(76, 76, 76))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderStatusPanelLayout.createSequentialGroup()
+                        .addComponent(CancelBtn)
+                        .addGap(65, 65, 65)
+                        .addComponent(LeaveReviewBtn)
+                        .addGap(186, 186, 186))))
         );
 
         jPanel1.add(OrderStatusPanel);
 
-        OrderHistoryPanel.setBackground(new java.awt.Color(51, 255, 51));
+        OrderHistoryPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        HistoryjTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Order ID", "Food Name", "Final Price", "Quantity"
+            }
+        ));
+        jScrollPane2.setViewportView(HistoryjTable1);
+
+        ReorderBtn.setText("Reorder");
+        ReorderBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ReorderBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout OrderHistoryPanelLayout = new javax.swing.GroupLayout(OrderHistoryPanel);
         OrderHistoryPanel.setLayout(OrderHistoryPanelLayout);
         OrderHistoryPanelLayout.setHorizontalGroup(
             OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 697, Short.MAX_VALUE)
+            .addGroup(OrderHistoryPanelLayout.createSequentialGroup()
+                .addGap(122, 122, 122)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(ReorderBtn)
+                .addContainerGap(53, Short.MAX_VALUE))
         );
         OrderHistoryPanelLayout.setVerticalGroup(
             OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 552, Short.MAX_VALUE)
+            .addGroup(OrderHistoryPanelLayout.createSequentialGroup()
+                .addGroup(OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(OrderHistoryPanelLayout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(OrderHistoryPanelLayout.createSequentialGroup()
+                        .addGap(262, 262, 262)
+                        .addComponent(ReorderBtn)))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         jPanel1.add(OrderHistoryPanel);
@@ -685,7 +910,7 @@ public class Dashboard extends javax.swing.JFrame {
         ComplaintPanel.setLayout(ComplaintPanelLayout);
         ComplaintPanelLayout.setHorizontalGroup(
             ComplaintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 697, Short.MAX_VALUE)
+            .addGap(0, 721, Short.MAX_VALUE)
         );
         ComplaintPanelLayout.setVerticalGroup(
             ComplaintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -871,7 +1096,7 @@ public class Dashboard extends javax.swing.JFrame {
         String finalPrice = String.format("%.2f", totalPrice);
 
         // Generate order ID
-        String orderId = "ORD" + System.currentTimeMillis();
+        String orderId = generateOrderId();
         String customerEmail = "customer@test"; // Replace with actual user data
 
         // Get current date/time
@@ -902,6 +1127,42 @@ public class Dashboard extends javax.swing.JFrame {
         ex.printStackTrace(); // Print error in console for debugging
     }
     }//GEN-LAST:event_OrderBtnActionPerformed
+
+    private void CancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelBtnActionPerformed
+        int selectedRow = StatusjTable1.getSelectedRow();
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select an order to cancel!", "No Selection", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Get order details
+    String orderId = (String) StatusjTable1.getValueAt(selectedRow, 0);
+    String foodName = (String) StatusjTable1.getValueAt(selectedRow, 1);
+    String quantity = (String) StatusjTable1.getValueAt(selectedRow, 4);
+
+    // Confirm cancellation
+    int confirm = JOptionPane.showConfirmDialog(this, "Cancel order: " + foodName + " (" + quantity + ")?", "Confirm", JOptionPane.YES_NO_OPTION);
+    if (confirm == JOptionPane.YES_OPTION) {
+        updateOrderStatus(orderId, "Cancelled");
+        loadOrdersIntoTable(); // Refresh table
+    }
+    }//GEN-LAST:event_CancelBtnActionPerformed
+
+    private void ReorderBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReorderBtnActionPerformed
+        int selectedRow = HistoryjTable1.getSelectedRow();
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select an order to reorder!", "No Selection", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Get order details
+    String foodName = (String) HistoryjTable1.getValueAt(selectedRow, 1);
+    String price = (String) HistoryjTable1.getValueAt(selectedRow, 2);
+    String quantity = String.valueOf(HistoryjTable1.getValueAt(selectedRow, 4));
+
+    // Open Order Panel for reorder
+    openOrderPanel(null, foodName, price, quantity);
+    }//GEN-LAST:event_ReorderBtnActionPerformed
 
         private void updateNotificationPanel(String userID) {
         System.out.println("Updating Notification Panel for: " + userID);
@@ -1049,8 +1310,10 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton CancelBtn;
     private javax.swing.JPanel ComplaintPanel;
     private javax.swing.JLabel ComplaintTab;
+    private javax.swing.JTable HistoryjTable1;
     private javax.swing.JButton LeaveReviewBtn;
     private javax.swing.JPanel MenuPanel;
     private javax.swing.JLabel MenuTab;
@@ -1062,6 +1325,8 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel OrderPanel;
     private javax.swing.JPanel OrderStatusPanel;
     private javax.swing.JLabel OrderStatusTab;
+    private javax.swing.JButton ReorderBtn;
+    private javax.swing.JTable StatusjTable1;
     private javax.swing.JLabel descriptionFoodId;
     private javax.swing.JLabel descriptionFoodName;
     private javax.swing.JLabel descriptionFoodPrice;
@@ -1084,6 +1349,10 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTable1;
     private javax.swing.JPanel line;
     private javax.swing.JButton logout;
     private javax.swing.JPanel menubar;

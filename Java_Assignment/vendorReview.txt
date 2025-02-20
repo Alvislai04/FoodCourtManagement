@@ -1,0 +1,2 @@
+CR001, Najib, 19/2/2025, Good, Good restaurant. Good service. Food arrived within 30 minutes. 
+CR002, Rosmah, 20/2/2025, Bad, I don't like this restaurant. This restaurant has veri bad food!!

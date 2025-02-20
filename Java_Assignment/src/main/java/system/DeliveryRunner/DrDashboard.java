@@ -1456,20 +1456,27 @@ public class DrDashboard extends javax.swing.JFrame {
 
     private void filterComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterComboBoxActionPerformed
         // TODO add your handling code here:
-         String selectedOption = filterComboBox.getSelectedItem().toString(); 
-        TotalRevenue revenueCalculator = new TotalRevenue(taskhistoryTable);
-        double totalRevenue = revenueCalculator.calculateRevenue(selectedOption);
+       String selectedOption = filterComboBox.getSelectedItem().toString(); 
 
-        // Display the total revenue (assuming you have a JLabel named revenueLabel)
+     if (taskhistoryTable != null) {  // Ensure table is not null
+        OrderStatistics revenueCalculator = new TotalRevenue(taskhistoryTable);
+        double totalRevenue = revenueCalculator.calculate(selectedOption);
         totalrevenue.setText("Total Revenue: RM " + String.format("%.2f", totalRevenue));
-        
-         //  Get total orders delivered using OrdersDelivered class
-        int totalOrders = ordersDelivered.countOrders(selectedOption);
+
+        OrderStatistics ordersCalculator = new OrdersDelivered(taskhistoryTable);
+        int totalOrders = (int) ordersCalculator.calculate(selectedOption);
         totalorders.setText("Total Orders: " + totalOrders);
-        
-        
-        chart.updateChartFromTable(selectedOption);
-        
+
+        if (chart != null) {
+            chart.updateChartFromTable(selectedOption);
+        } else {
+            System.out.println("Chart object is null!");
+        }
+    } else {
+        System.out.println("Error: taskhistoryTable is null.");
+    }
+
+
         
     }//GEN-LAST:event_filterComboBoxActionPerformed
 

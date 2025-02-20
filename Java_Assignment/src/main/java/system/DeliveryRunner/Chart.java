@@ -27,15 +27,28 @@ import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+//ENCAPSULATION
+
 public class Chart extends JPanel {
     private JTable taskhistoryTable;
     private JPanel chartPanel;
 
+    // Constructor
     public Chart(JTable taskhistoryTable, JPanel chartPanel) {
         this.taskhistoryTable = taskhistoryTable;
         this.chartPanel = chartPanel;
     }
 
+    // Encapsulated Getters
+    public JTable getTaskHistoryTable() {
+        return taskhistoryTable;
+    }
+
+    public JPanel getChartPanel() {
+        return chartPanel;
+    }
+
+    // Method to update chart from table
     public void updateChartFromTable(String filterOption) {
         DefaultTableModel model = (DefaultTableModel) taskhistoryTable.getModel();
 
@@ -47,7 +60,7 @@ public class Chart extends JPanel {
 
         for (int i = 0; i < model.getRowCount(); i++) {
             String dateString = model.getValueAt(i, 0).toString(); // Column 0 = Date
-            double revenue = Double.parseDouble(model.getValueAt(i, 7).toString());  //column 7 = total
+            double revenue = Double.parseDouble(model.getValueAt(i, 7).toString()); // Column 7 = total
 
             LocalDate orderDate = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
@@ -56,7 +69,7 @@ public class Chart extends JPanel {
                 ordersData[0]++;
             }
             if (orderDate.isAfter(today.minusDays(7)) && orderDate.isBefore(today.plusDays(1))) {
-                revenueData[1] += revenue *0.1;
+                revenueData[1] += revenue * 0.1;
                 ordersData[1]++;
             }
             if (orderDate.getMonth() == today.getMonth() && orderDate.getYear() == today.getYear()) {
@@ -68,33 +81,31 @@ public class Chart extends JPanel {
         updateChart(revenueData, ordersData, labels);
     }
 
-    public void updateChart(double[] revenue, int[] orders, String[] labels) {
+    // Method to update chart
+    private void updateChart(double[] revenue, int[] orders, String[] labels) {
         CategoryDataset revenueDataset = createRevenueDataset(revenue, labels);
         CategoryDataset ordersDataset = createOrdersDataset(orders, labels);
 
         JFreeChart chart = ChartFactory.createBarChart(
-                "Total Revenue & Orders Delivered", // Title
-                "Time Period", // X-axis label
-                "Total Revenue (RM)", // Y-axis label (Left)
+                "Total Revenue & Orders Delivered",
+                "Time Period",
+                "Total Revenue (RM)",
                 revenueDataset
         );
 
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        plot.setRangeAxis(1, new NumberAxis("Orders Delivered")); // Second Y-axis
+        plot.setRangeAxis(1, new NumberAxis("Orders Delivered"));
         plot.setDataset(1, ordersDataset);
-        plot.mapDatasetToRangeAxis(1, 1); 
+        plot.mapDatasetToRangeAxis(1, 1);
 
-        // Bar chart for revenue
         BarRenderer barRenderer = new BarRenderer();
         plot.setRenderer(0, barRenderer);
 
-        // Line chart for orders
         LineAndShapeRenderer lineRenderer = new LineAndShapeRenderer();
         plot.setRenderer(1, lineRenderer);
 
         plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
 
-        // Refresh chart panel
         ChartPanel chartPanelComponent = new ChartPanel(chart);
         chartPanelComponent.setPreferredSize(new Dimension(620, 220));
         chartPanel.removeAll();
@@ -104,6 +115,7 @@ public class Chart extends JPanel {
         chartPanel.repaint();
     }
 
+    // Private dataset creation methods
     private CategoryDataset createRevenueDataset(double[] revenue, String[] labels) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (int i = 0; i < revenue.length; i++) {
@@ -119,4 +131,5 @@ public class Chart extends JPanel {
         }
         return dataset;
     }
+    
 }

@@ -3,6 +3,7 @@ package system.Manager;
 
 import com.system.Login;
 
+
 public class MDashboard extends javax.swing.JFrame {
 
     public MDashboard() {
@@ -221,18 +222,26 @@ public class MDashboard extends javax.swing.JFrame {
 
     private void reviewTab4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reviewTab4MousePressed
         // TODO add your handling code here:
+        new Items().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_reviewTab4MousePressed
 
     private void reviewTab3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reviewTab3MousePressed
         // TODO add your handling code here:
+        new Feedback().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_reviewTab3MousePressed
 
     private void reviewTab2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reviewTab2MousePressed
         // TODO add your handling code here:
+        new Runner_Performance().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_reviewTab2MousePressed
 
     private void reviewTab1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reviewTab1MousePressed
         // TODO add your handling code here:
+        new Revenue().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_reviewTab1MousePressed
 
     private void goToLogin(){

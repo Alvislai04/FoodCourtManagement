@@ -4,6 +4,17 @@
  */
 package system.Manager;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author itzra
@@ -15,6 +26,7 @@ public class Items extends javax.swing.JFrame {
      */
     public Items() {
         initComponents();
+        populateItemTable();
     }
 
     /**
@@ -37,19 +49,24 @@ public class Items extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "ItemID", "VenderID", "Item Name", "Price", "Category", "Description", "Availability"
+                "ItemID", "Item Name", "Price"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Return");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Discard");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -62,6 +79,11 @@ public class Items extends javax.swing.JFrame {
         jLabel1.setText("Items Management");
 
         jButton3.setText("Refresh");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -103,9 +125,120 @@ public class Items extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void updateTextFile(List<String> linesToRemove) {
+    File inputFile = new File("vendorFood.txt");
+    File tempFile = new File("vendorFood_temp.txt");
+
+    try (BufferedReader br = new BufferedReader(new FileReader(inputFile));
+         BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
+
+        String line;
+        
+        // Read each line of the file
+        while ((line = br.readLine()) != null) {
+            String itemID = line.split(",")[0]; // Get the ItemID from the line
+
+            // If the ItemID is not in the list of rows to remove, write it to the temporary file
+            if (!linesToRemove.contains(itemID)) {
+                bw.write(line);
+                bw.newLine();
+            }
+        }
+
+        // After processing all lines, delete the original file and rename the temporary file
+        if (inputFile.delete()) {
+            if (tempFile.renameTo(inputFile)) {
+                System.out.println("File updated successfully.");
+            } else {
+                System.out.println("Failed to rename the temporary file.");
+            }
+        } else {
+            System.out.println("Failed to delete the original file.");
+        }
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+    
+    private void populateItemTable(){
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        
+        // Clear existing data
+        model.setRowCount(0);
+
+        try (BufferedReader br = new BufferedReader(new FileReader("vendorFood.txt"))) {
+            String line;
+            
+            // Read each line of the file
+            while ((line = br.readLine()) != null) {
+                String[] itemData = line.split(",");
+                
+                // Extract ItemID, Item Name, and Price (ignoring the image path)
+                String itemID = itemData[0];
+                String itemName = itemData[1];
+                String price = itemData[2];
+
+                // Add a new row to the table with the extracted data
+                model.addRow(new Object[]{itemID, itemName, price});
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+    // Get the indices of the selected rows
+    int[] selectedRows = jTable1.getSelectedRows();
+    
+    // If no rows are selected, show a message
+    if (selectedRows.length == 0) {
+        JOptionPane.showMessageDialog(this, "No rows selected for deletion.");
+        return;
+    }
+
+    // Show confirmation dialog
+    int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to delete the selected item(s)?",
+            "Delete Confirmation",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+    );
+
+    if (confirm == JOptionPane.YES_OPTION) {
+        // Create a list to store the lines that need to be removed from the text file
+        List<String> linesToRemove = new ArrayList<>();
+
+        // Collect ItemIDs from the selected rows in the table
+        for (int i = 0; i < selectedRows.length; i++) {
+            String itemID = (String) model.getValueAt(selectedRows[i], 0); // Get ItemID from the selected row
+            linesToRemove.add(itemID); // Store the ItemID to remove
+        }
+
+        // Remove the selected rows from the table
+        for (int i = selectedRows.length - 1; i >= 0; i--) {
+            model.removeRow(selectedRows[i]);
+        }
+
+        // Remove corresponding data from the text file
+        updateTextFile(linesToRemove);
+    }
+
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        new MDashboard().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        populateItemTable();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments

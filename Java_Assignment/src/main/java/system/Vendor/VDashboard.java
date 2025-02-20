@@ -160,23 +160,19 @@ public class VDashboard extends javax.swing.JFrame {
     });
 }
 
-    // Helper method to check if the image path matches the GUI index
-    private boolean isIconForLine(String imagePath, int guiIndex) {
-        JLabel[] foodIcon = {foodIcon1, foodIcon2, foodIcon3, foodIcon4, foodIcon5, foodIcon6};
-        return foodIcon[guiIndex].getIcon() != null && 
-               foodIcon[guiIndex].getIcon().toString().contains(imagePath);
-    }
 
+    
     
     private void storeFoodInfo (int index) {
     JLabel[] descriptionFood = {descriptionFoodId, descriptionFoodName, descriptionFoodPrice};
 
     try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {
         String line;
+        int currentIndex = 0;
         while ((line = reader.readLine()) != null) {
-            String[] data = line.split(",");
             // Only process the line that matches the clicked icon's index
-            if (isIconForLine(data[3], index)) {
+            if (currentIndex == index) {
+                String[] data = line.split(",");
                 String foodId = data[0];
                 String foodName = data[1];
                 String price = data[2];
@@ -197,14 +193,15 @@ public class VDashboard extends javax.swing.JFrame {
                     new Object[]{}
                 );
 
-                JDialog dialog = optionPane.createDialog("Food Details");
+                dialog = optionPane.createDialog("Food Details");
                 optionPane.setBorder(null);
                 dialog.setVisible(true);
                 dialog.pack();
 
+
                 break; // Exit the loop after finding the matching item
             }
-
+            currentIndex++;
         }
     } catch (IOException ex) {
         ex.printStackTrace();
@@ -214,45 +211,39 @@ public class VDashboard extends javax.swing.JFrame {
     
     
     private void removeFoodItem() {
-        String vendorFoodFilePath = "vendorFood.txt";
-            File file = new File(vendorFoodFilePath);
-            String imagePathToDelete = null;
-
-            try {
-                List<String> lines = Files.readAllLines(file.toPath());
-                List<String> updatedLines = new ArrayList<>();
-
-                // Find the line with the selectedFoodId and capture its image path
-                for (String line : lines) {
-                    String[] data = line.split(",");
-                    if (data[0].equals(selectedFoodId)) {
-                        imagePathToDelete = data[3]; // Capture the correct image path
-                    } else {
-                        updatedLines.add(line); // Keep other lines
-                    }
+        File file = new File(vendorFoodFilePath);
+        
+        try {
+            Path path = file.toPath();
+            List<String> lines = Files.readAllLines(path);
+            
+            List<String> updatedLines = new ArrayList<>();
+            for (String line : lines) {
+                String[] data = line.split(",");
+                if (!data[0].equals(selectedFoodId)) {
+                    updatedLines.add(line);
                 }
-
-                // Delete the image file
-                if (imagePathToDelete != null) {
-                    File imageFile = new File(imagePathToDelete);
-                    if (imageFile.exists()) {
-                        Files.delete(imageFile.toPath());
-                    }
-                }
-
-                // Update the file and refresh the GUI
-                Files.write(file.toPath(), updatedLines);
-                loadFoodImages();
-
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error deleting item!", "Error", JOptionPane.ERROR_MESSAGE);
             }
+            
+            Files.write(path, updatedLines);
+        
+            
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error updating vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     private void loadFoodImages () {
 
         JLabel[] foodIcon = {foodIcon1, foodIcon2, foodIcon3, foodIcon4, foodIcon5, foodIcon6};
         JLabel[] foodLabels = {foodLabel1, foodLabel2, foodLabel3, foodLabel4, foodLabel5, foodLabel6};
+        
+         for (int i = 0; i < foodIcon.length; i++) {
+        foodIcon[i].setIcon(null); // Clear the icon
+        foodLabels[i].setText(""); // Clear the text
+        }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {
             String line;
@@ -291,6 +282,7 @@ public class VDashboard extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
         }
         
+        // Force the GUI to refresh
         menuPanel.revalidate();
         menuPanel.repaint();
     }
@@ -1492,7 +1484,10 @@ public class VDashboard extends javax.swing.JFrame {
             removeFoodItem();
             loadFoodImages();
             JOptionPane.showMessageDialog(this, "Food Item Removed!");
+            
+            if (dialog != null) {
             dialog.dispose();
+            }
         }
     }//GEN-LAST:event_removeBtnActionPerformed
 

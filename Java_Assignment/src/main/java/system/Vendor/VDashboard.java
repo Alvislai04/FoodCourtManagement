@@ -160,19 +160,23 @@ public class VDashboard extends javax.swing.JFrame {
     });
 }
 
+    // Helper method to check if the image path matches the GUI index
+    private boolean isIconForLine(String imagePath, int guiIndex) {
+        JLabel[] foodIcon = {foodIcon1, foodIcon2, foodIcon3, foodIcon4, foodIcon5, foodIcon6};
+        return foodIcon[guiIndex].getIcon() != null && 
+               foodIcon[guiIndex].getIcon().toString().contains(imagePath);
+    }
 
-    
     
     private void storeFoodInfo (int index) {
     JLabel[] descriptionFood = {descriptionFoodId, descriptionFoodName, descriptionFoodPrice};
 
     try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {
         String line;
-        int currentIndex = 0;
         while ((line = reader.readLine()) != null) {
+            String[] data = line.split(",");
             // Only process the line that matches the clicked icon's index
-            if (currentIndex == index) {
-                String[] data = line.split(",");
+            if (isIconForLine(data[3], index)) {
                 String foodId = data[0];
                 String foodName = data[1];
                 String price = data[2];
@@ -200,7 +204,7 @@ public class VDashboard extends javax.swing.JFrame {
 
                 break; // Exit the loop after finding the matching item
             }
-            currentIndex++;
+
         }
     } catch (IOException ex) {
         ex.printStackTrace();
@@ -210,28 +214,39 @@ public class VDashboard extends javax.swing.JFrame {
     
     
     private void removeFoodItem() {
-        File file = new File(vendorFoodFilePath);
-        
-        try {
-            Path path = file.toPath();
-            List<String> lines = Files.readAllLines(path);
-            
-            List<String> updatedLines = new ArrayList<>();
-            for (String line : lines) {
-                String[] data = line.split(",");
-                if (!data[0].equals(selectedFoodId)) {
-                    updatedLines.add(line);
-                }
-            }
-            
-            Files.write(path, updatedLines);
-        
-            
+        String vendorFoodFilePath = "vendorFood.txt";
+            File file = new File(vendorFoodFilePath);
+            String imagePathToDelete = null;
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error updating vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+            try {
+                List<String> lines = Files.readAllLines(file.toPath());
+                List<String> updatedLines = new ArrayList<>();
+
+                // Find the line with the selectedFoodId and capture its image path
+                for (String line : lines) {
+                    String[] data = line.split(",");
+                    if (data[0].equals(selectedFoodId)) {
+                        imagePathToDelete = data[3]; // Capture the correct image path
+                    } else {
+                        updatedLines.add(line); // Keep other lines
+                    }
+                }
+
+                // Delete the image file
+                if (imagePathToDelete != null) {
+                    File imageFile = new File(imagePathToDelete);
+                    if (imageFile.exists()) {
+                        Files.delete(imageFile.toPath());
+                    }
+                }
+
+                // Update the file and refresh the GUI
+                Files.write(file.toPath(), updatedLines);
+                loadFoodImages();
+
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error deleting item!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
     }
     
     private void loadFoodImages () {
@@ -275,6 +290,9 @@ public class VDashboard extends javax.swing.JFrame {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        
+        menuPanel.revalidate();
+        menuPanel.repaint();
     }
 
     @SuppressWarnings("unchecked")

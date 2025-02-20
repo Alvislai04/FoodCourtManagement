@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import system.admin.TransactionPanel;
 
 /**
@@ -32,6 +33,7 @@ public class Dashboard extends javax.swing.JFrame {
      */
     public Dashboard() {
         initComponents();
+        notificationScrollPane.setViewportView(notificationListPanel);
         this.setLocationRelativeTo(null);//to center the gui form
         this.pack();//to make gui full screen
 
@@ -167,6 +169,8 @@ public class Dashboard extends javax.swing.JFrame {
         line = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         NotificationPanel = new javax.swing.JPanel();
+        notificationScrollPane = new javax.swing.JScrollPane();
+        notificationListPanel = new javax.swing.JPanel();
         MenuPanel = new javax.swing.JPanel();
         foodLabel3 = new javax.swing.JLabel();
         foodLabel4 = new javax.swing.JLabel();
@@ -452,15 +456,24 @@ public class Dashboard extends javax.swing.JFrame {
 
         NotificationPanel.setBackground(new java.awt.Color(255, 255, 255));
 
+        notificationListPanel.setLayout(new javax.swing.BoxLayout(notificationListPanel, javax.swing.BoxLayout.Y_AXIS));
+        notificationScrollPane.setViewportView(notificationListPanel);
+
         javax.swing.GroupLayout NotificationPanelLayout = new javax.swing.GroupLayout(NotificationPanel);
         NotificationPanel.setLayout(NotificationPanelLayout);
         NotificationPanelLayout.setHorizontalGroup(
             NotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 697, Short.MAX_VALUE)
+            .addGroup(NotificationPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(notificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 685, Short.MAX_VALUE)
+                .addContainerGap())
         );
         NotificationPanelLayout.setVerticalGroup(
             NotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 552, Short.MAX_VALUE)
+            .addGroup(NotificationPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(notificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jPanel1.add(NotificationPanel);
@@ -776,7 +789,7 @@ public class Dashboard extends javax.swing.JFrame {
         OrderStatusPanel.setVisible(false);
         OrderHistoryPanel.setVisible(false);
         ComplaintPanel.setVisible(false);
-        NotificationPanel.setBackground(Color.black);
+        NotificationTab.setBackground(Color.black);
         OrderStatusTab.setBackground(new Color(153, 89, 16));
         OrderHistoryTab.setBackground(new Color(153, 89, 16));
         ComplaintTab.setBackground(new Color(153, 89, 16));
@@ -827,33 +840,88 @@ public class Dashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_OrderBtnActionPerformed
 
-    private void updateNotificationPanel(String userID) {
+        private void updateNotificationPanel(String userID) {
         System.out.println("Updating Notification Panel for: " + userID);
 
-        // Ensure NotificationPanel is visible
-        NotificationPanel.setVisible(true);
-        NotificationPanel.setLayout(new java.awt.BorderLayout()); // Ensure a proper layout
+        notificationListPanel.removeAll(); // Clear previous notifications
+        notificationListPanel.setLayout(new javax.swing.BoxLayout(notificationListPanel, javax.swing.BoxLayout.Y_AXIS));
 
-        // Create a new TransactionPanel instance
-        TransactionPanel transactionPanel = new TransactionPanel();
-        System.out.println("TransactionPanel instance created.");
+        java.util.List<String> transactions = new java.util.ArrayList<>();
 
-        // Load transaction data for the logged-in user
-        transactionPanel.loadUserTransaction(userID);
+        try (BufferedReader br = new BufferedReader(new FileReader("userTopup.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] details = line.split(";");
 
-        // Remove existing components in NotificationPanel
-        NotificationPanel.removeAll();
+                if (details.length >= 4 && details[0].equals(userID)) {
+                    transactions.add(line);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
 
-        // Add the updated TransactionPanel
-        NotificationPanel.add(transactionPanel, java.awt.BorderLayout.CENTER);
+        if (transactions.isEmpty()) {
+            notificationListPanel.add(new javax.swing.JLabel("No transactions found."));
+        } else {
+            java.util.Collections.reverse(transactions); // Show latest transaction at the top
 
-        // Ensure TransactionPanel is visible
-        transactionPanel.setVisible(true);
+            for (String transaction : transactions) {
+                String[] details = transaction.split(";");
+                String paymentMethod = details[1];
+                double amount = Double.parseDouble(details[2]);
+                double balance = Double.parseDouble(details[3]);
 
-        // Refresh UI to reflect changes
-        NotificationPanel.revalidate();
-        NotificationPanel.repaint();
+                javax.swing.JPanel notificationItem = new javax.swing.JPanel();
+                notificationItem.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 5));
+                notificationItem.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.BLACK, 1));
+
+                // **Set notification width to 590px & height to 45px**
+                notificationItem.setPreferredSize(new java.awt.Dimension(590, 60));
+                notificationItem.setMaximumSize(new java.awt.Dimension(590, 60));
+                notificationItem.setMinimumSize(new java.awt.Dimension(590, 60));
+
+                // **Formatted Label**
+                javax.swing.JLabel messageLabel = new javax.swing.JLabel(
+                        "<html><b>Top up amount:</b> RM " + amount + "<br>"
+                        + "<b>Payment Method:</b> " + paymentMethod + "<br>"
+                        + "<b>Total balance:</b> RM " + balance + "</html>"
+                );
+
+                messageLabel.setFont(new java.awt.Font("Arial", java.awt.Font.PLAIN, 12));
+                notificationItem.add(messageLabel);
+
+                notificationListPanel.add(notificationItem);
+            }
+        }
+
+        // **Ensure Scroll Works**
+        notificationListPanel.setPreferredSize(new java.awt.Dimension(
+                notificationListPanel.getWidth(),
+                transactions.size() * 65
+        ));
+
+        SwingUtilities.invokeLater(() -> {
+            notificationListPanel.revalidate();
+            notificationListPanel.repaint();
+        });
     }
+
+        private String getUserName(String userID) {
+    try (BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] details = line.split(";");
+            
+            if (details.length >= 2 && details[0].equals(userID)) {
+                return details[1]; // Return the name in column [1]
+            }
+        }
+    } catch (IOException e) {
+        System.out.println("Error reading users.txt: " + e.getMessage());
+    }
+    return null; // Return null if user not found
+}
 
     private String getLatestDeliveryID() {
         String taskHistoryFilePath = "taskHistory.txt";
@@ -957,6 +1025,8 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel line;
     private javax.swing.JButton logout;
     private javax.swing.JPanel menubar;
+    private javax.swing.JPanel notificationListPanel;
+    private javax.swing.JScrollPane notificationScrollPane;
     private javax.swing.JTextField quantity;
     private javax.swing.JPanel title;
     private javax.swing.JLabel title_lbl1;

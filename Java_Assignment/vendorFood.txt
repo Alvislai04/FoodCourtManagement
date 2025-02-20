@@ -1,2 +1,1 @@
 V01-F003,Grilled Salmon,RM21,foodPictures\salmon.png
-V01-F004,Fried Rice,RM11,foodPictures\fried rice.png

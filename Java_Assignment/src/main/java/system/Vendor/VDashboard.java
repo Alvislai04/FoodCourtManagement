@@ -104,7 +104,8 @@ public class VDashboard extends javax.swing.JFrame {
                 String foodId = data[0];
                 String foodName = data[1];
                 String price = data[2];
-                String imagePath = data[3];
+                
+                selectedFoodId = foodId;
 
                 // Update the description panel with the food details
                 descriptionFood[0].setText("ID: " + foodId);
@@ -146,7 +147,7 @@ public class VDashboard extends javax.swing.JFrame {
     
     }
     
-    private void removeFoodItem(String foodId) {
+    private void removeFoodItem() {
         File file = new File(vendorFoodFilePath);
         
         try {
@@ -156,7 +157,7 @@ public class VDashboard extends javax.swing.JFrame {
             List<String> updatedLines = new ArrayList<>();
             for (String line : lines) {
                 String[] data = line.split(",");
-                if (!data[0].equals(foodId)) {
+                if (!data[0].equals(selectedFoodId)) {
                     updatedLines.add(line);
                 }
             }
@@ -164,7 +165,7 @@ public class VDashboard extends javax.swing.JFrame {
             Files.write(path, updatedLines);
         
             
-            loadFoodImages();
+
         } catch (IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error updating vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1232,8 +1233,10 @@ public class VDashboard extends javax.swing.JFrame {
                 "Do you want to remove this item?", "Remove food...",JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
             System.out.println(selectedFoodId);
-            removeFoodItem(selectedFoodId);
-
+            removeFoodItem();
+            loadFoodImages();
+            JOptionPane.showMessageDialog(this, "Food Item Removed!");
+            dialog.dispose();
         }
     }//GEN-LAST:event_removeBtnActionPerformed
 

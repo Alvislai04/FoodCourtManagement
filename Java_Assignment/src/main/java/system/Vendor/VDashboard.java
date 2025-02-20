@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import system.Vendor.vendorChart;
+import system.Vendor.customListRender.MultilineListCellRenderer;
 
 
 public class VDashboard extends javax.swing.JFrame {
@@ -70,6 +71,8 @@ public class VDashboard extends javax.swing.JFrame {
         DefaultColor = new Color(153,89,16);
         ClickedColor = new Color(0,0,0);
         
+        customerReviewList.setCellRenderer(new MultilineListCellRenderer());
+        
     }
     
     private void initializeRevenueChart() {
@@ -84,7 +87,7 @@ public class VDashboard extends javax.swing.JFrame {
     
     private void populateOrderTable() {
         // Define column names
-        String[] columnNames = {"Order ID", "Cust. Name", "Food Ordered", "Total Price", "Order Date/Time", "Order Status"};
+        String[] columnNames = {"Order ID", "Cust. Name", "Food Ordered","Quantity", "Total Price", "Order Date/Time", "Order Status"};
 
         // Use the correct DefaultTableModel
         DefaultTableModel model = new DefaultTableModel(columnNames, 0); 
@@ -95,7 +98,7 @@ public class VDashboard extends javax.swing.JFrame {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length == 6) { 
+                if (data.length == 7) { 
                     model.addRow(data); // Add row to the correct model
                 }
             }
@@ -140,11 +143,11 @@ public class VDashboard extends javax.swing.JFrame {
                             // Found the row with matching ID, populate the list
                             // Assuming 'list' is the List you want to populate
                             customerReviewList.setListData(new String[]{
-                                "ID: " + data[0],
-                                "Customer Name: " + data[1],
-                                "Date: " + data[2],
-                                "Rating: " + data[3],
-                                "Review: " + data[4]
+                                "ID:\n" + data[0],
+                                "Customer Name:\n" + data[1],
+                                "Date:\n" + data[2],
+                                "Rating:\n" + data[3],
+                                "Review:\n" + data[4]
                             });
                             break; // Exit the loop once the data is found
                         }
@@ -557,8 +560,26 @@ public class VDashboard extends javax.swing.JFrame {
             new String [] {
                 "Order ID", "Cust. Name", "Food Ordered", "Quantity", "Total Price", "Order Time", "Order Status"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        orderTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(orderTable);
+        if (orderTable.getColumnModel().getColumnCount() > 0) {
+            orderTable.getColumnModel().getColumn(0).setResizable(false);
+            orderTable.getColumnModel().getColumn(1).setResizable(false);
+            orderTable.getColumnModel().getColumn(2).setResizable(false);
+            orderTable.getColumnModel().getColumn(3).setResizable(false);
+            orderTable.getColumnModel().getColumn(4).setResizable(false);
+            orderTable.getColumnModel().getColumn(5).setResizable(false);
+            orderTable.getColumnModel().getColumn(6).setResizable(false);
+        }
 
         jLabel1.setBackground(new java.awt.Color(153, 89, 16));
         jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
@@ -630,6 +651,7 @@ public class VDashboard extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setText("Customer Reviews");
 
+        customerReviewList.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         jScrollPane5.setViewportView(customerReviewList);
 
         jScrollPane6.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -805,6 +827,8 @@ public class VDashboard extends javax.swing.JFrame {
             .addGap(0, 246, Short.MAX_VALUE)
         );
 
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "[Select]", "Daily", "Weekly", "Monthly" }));
+
         javax.swing.GroupLayout jpRevenueLayout = new javax.swing.GroupLayout(jpRevenue);
         jpRevenue.setLayout(jpRevenueLayout);
         jpRevenueLayout.setHorizontalGroup(
@@ -814,16 +838,16 @@ public class VDashboard extends javax.swing.JFrame {
                 .addComponent(jLabel10)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpRevenueLayout.createSequentialGroup()
-                .addContainerGap(50, Short.MAX_VALUE)
+                .addContainerGap(48, Short.MAX_VALUE)
                 .addGroup(jpRevenueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(chartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 719, Short.MAX_VALUE)
                     .addGroup(jpRevenueLayout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                         .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         jpRevenueLayout.setVerticalGroup(
             jpRevenueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

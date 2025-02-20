@@ -7,12 +7,17 @@ package system.customer;
 import com.system.Login;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.Window;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -60,7 +65,6 @@ public class Dashboard extends javax.swing.JFrame {
                 String foodId = data[0];
                 String foodName = data[1];
                 String price = data[2];
-                String imagePath = data[3];
 
                 // Update the description panel with the food details
                 descriptionFood[0].setText("ID: " + foodId);
@@ -133,7 +137,27 @@ public class Dashboard extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+   private void saveOrder(String orderId, String customerEmail, String foodName, String price, String orderTime, String status, int quantity) {
+    String orderFilePath = "customerOrders.txt";
 
+    System.out.println("Inside saveOrder method...");
+
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(orderFilePath, true))) {
+        String orderData = orderId + "," + customerEmail + "," + foodName + "," + price + "," + orderTime + "," + status + "," + quantity;
+        
+        System.out.println("Writing to file: " + orderData);
+        writer.write(orderData);
+        writer.newLine();
+        writer.flush(); // Ensure data is written immediately
+
+        System.out.println("Order saved successfully!");
+
+    } catch (IOException ex) {
+        System.out.println("Failed to write to file!");
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(OrderPanel, "Error saving order! Check file permissions.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -822,7 +846,61 @@ public class Dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_quantityActionPerformed
 
     private void OrderBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderBtnActionPerformed
-        // TODO add your handling code here:
+        String quantityText = quantity.getText();
+    
+    try {
+        int quantityValue = Integer.parseInt(quantityText.trim()); // Ensure no spaces
+        if (quantityValue <= 0) {
+            JOptionPane.showMessageDialog(OrderPanel, "Please enter a valid quantity!", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Retrieve food details
+        String foodId = descriptionFoodId.getText().replace("ID: ", "").trim();
+        String foodName = descriptionFoodName.getText().replace("Name: ", "").trim();
+        String priceText = descriptionFoodPrice.getText().replace("Price: ", "").trim();
+
+        // Ensure price only contains numbers and a decimal point
+        priceText = priceText.replaceAll("[^0-9.]", ""); 
+
+        // Convert price to numeric value
+        double basePrice = Double.parseDouble(priceText);
+        double totalPrice = basePrice * quantityValue; // Update price based on quantity
+
+        // Format price to 2 decimal places
+        String finalPrice = String.format("%.2f", totalPrice);
+
+        // Generate order ID
+        String orderId = "ORD" + System.currentTimeMillis();
+        String customerEmail = "customer@test"; // Replace with actual user data
+
+        // Get current date/time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String orderTime = dateFormat.format(new Date());
+        String status = "Pending";
+
+        // Debugging output
+        System.out.println("Attempting to save order: " + orderId + ", " + customerEmail + ", " + foodName + ", " + finalPrice + ", " + orderTime + ", " + status + ", " + quantityValue);
+
+        // Save order
+        saveOrder(orderId, customerEmail, foodName, finalPrice, orderTime, status, quantityValue);
+
+        // Reset quantity field
+        quantity.setText("0");
+
+        // Show confirmation message
+        JOptionPane.showMessageDialog(OrderPanel, "Order placed: " + quantityValue + " x " + foodName, "Order Confirmed", JOptionPane.INFORMATION_MESSAGE);
+
+        // Close the Order Panel
+        Window window = SwingUtilities.getWindowAncestor(OrderPanel);
+        if (window != null) {
+            window.dispose(); // Close the panel window
+        }
+
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(OrderPanel, "Please enter a valid number!", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+        ex.printStackTrace(); // Print error in console for debugging
+    }
     }//GEN-LAST:event_OrderBtnActionPerformed
 
         private void updateNotificationPanel(String userID) {

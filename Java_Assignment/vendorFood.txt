@@ -1,3 +1,4 @@
 V01-F001,Grilled Salmon,RM21,foodPictures\salmon.png
-V01-F002,Burger,RM21,foodPictures\burger.png
-V01-F003,Fried Rice,RM12,foodPictures\fried rice.png
+V01-F002,Burger,RM11,foodPictures\burger.png
+V01-F003,Fried Rice,RM15,foodPictures\spaghetti.png
+V01-F004,Fried Rice,RM12,foodPictures\fried rice.png

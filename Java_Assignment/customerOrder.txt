@@ -1,3 +1,3 @@
-ORD001,customer@test,Burger,12.00,10/2/2025 15:03,Pending
-ORD002,customer2,Spaghetti,13.00,11/2/2025 12:00,Pending
-ORD003,customer3,Grilled Salmon,12.00,11/2/2025 19:00,Pending
+ORD001,customer@test,Burger,11.00,10/2/2025 15:03,Pending,1
+ORD002,customer@test,Spaghetti,30.00,11/2/2025 12:00,Pending,2
+ORD003,customer@test,Grilled Salmon,21.00,11/2/2025 19:00,Pending,1

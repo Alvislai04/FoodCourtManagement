@@ -4,11 +4,70 @@
  */
 package system.admin;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.DefaultListModel;
+
 /**
  *
  * @author alvis
  */
 public class TransactionPanel extends javax.swing.JPanel {
+
+    public void loadUserTransaction(String userID) {
+        System.out.println("Loading transactions for user: " + userID);
+
+        // Get the user's name from users.txt
+        String userName = getUserName(userID);
+        if (userName == null) {
+            System.out.println("User not found in users.txt!");
+            return;
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader("userTopup.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println("Checking line: " + line);
+                String[] details = line.split(";");
+
+                if (details.length >= 4 && details[0].equals(userID)) {
+                    System.out.println("Match found!");
+
+                    String paymentMethod = details[1];
+                    double amount = Double.parseDouble(details[2]);
+                    double balance = Double.parseDouble(details[3]);
+
+                    // Update UI with user details
+                    setName.setText(userName); // Set the real name
+                    setPayment.setText(paymentMethod);
+                    setAmount.setText("RM " + amount);
+                    setBalance.setText("RM " + balance);
+
+                    this.setVisible(true);
+                    break; // Stop after the first match
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading userTopup.txt: " + e.getMessage());
+        }
+    }
+
+    private String getUserName(String userID) {
+        try (BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] details = line.split(";");
+
+                if (details.length >= 2 && details[0].equals(userID)) {
+                    return details[1]; // Return the name in column [1]
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading users.txt: " + e.getMessage());
+        }
+        return null; // Return null if user not found
+    }
 
     /**
      * Creates new form TransactionPanel
@@ -67,14 +126,14 @@ public class TransactionPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(setPayment)
                             .addComponent(setName))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(setAmount)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 197, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
-                        .addComponent(setBalance)
-                        .addGap(57, 57, 57))))
+                        .addComponent(setBalance)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

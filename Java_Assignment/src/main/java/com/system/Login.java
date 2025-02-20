@@ -15,6 +15,16 @@ import javax.swing.JOptionPane;
 
 public class Login extends javax.swing.JFrame {
 
+    private static String loggedInUserId;  // Store the user ID
+
+    public static void setLoggedInUserId(String userId) {
+        loggedInUserId = userId;
+    }
+
+    public static String getLoggedInUserId() {
+        return loggedInUserId;
+    }
+    
     private static String username;
     public Login() {
         initComponents();
@@ -221,6 +231,7 @@ public class Login extends javax.swing.JFrame {
             String usernameGui = usernametxt.getText();
             String passwordGui = new String(passwordtxt.getPassword());
             
+            String userId = "";
             String vendorId = "";
             String vendorName = "";
             double vendorBalance = 0.0;
@@ -261,6 +272,10 @@ public class Login extends javax.swing.JFrame {
                                 if (usernameGui.equals(usernameFile) && passwordGui.equals(passwordFile)) {
                                     found = true;
                                     setUsername(usernameGui);
+                                    userId = credentials[0];  // Capture User ID (e.g., C01)
+
+                                // Save the logged-in User ID
+                                Login.setLoggedInUserId(userId);
 
                                     if ("Customer".equalsIgnoreCase(userType)) {
                                         isCustomer = true;

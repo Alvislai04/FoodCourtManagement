@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class AdDashboard extends javax.swing.JFrame {
 
+    private TransactionPanel transactionPanel = new TransactionPanel();
     String roleFilePath = "users.txt";
 
     // Prefix for different roles
@@ -1644,6 +1645,7 @@ public class AdDashboard extends javax.swing.JFrame {
             List<String> userLines = new ArrayList<>();
             boolean userFound = false;
             double newBalance = 0;
+            String customerName = "";
 
             try (BufferedReader br = new BufferedReader(new FileReader(usersFile))) {
                 String line;
@@ -1651,6 +1653,7 @@ public class AdDashboard extends javax.swing.JFrame {
                     String[] parts = line.split(";");
                     if (parts.length >= 8 && parts[0].equals(id)) {
                         userFound = true;
+                        customerName = parts[1];
                         // Update balance
                         double currentBalance = Double.parseDouble(parts[7]);
                         newBalance = currentBalance + topupAmount;

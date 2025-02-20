@@ -7,17 +7,19 @@ package system.customer;
 import com.system.Login;
 import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
+import system.admin.TransactionPanel;
 
 /**
  *
  * @author nickkhawchunmin
  */
 public class Dashboard extends javax.swing.JFrame {
-    
-    
 
     /**
      * Creates new form Dashboard
@@ -26,14 +28,16 @@ public class Dashboard extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);//to center the gui form
         this.pack();//to make gui full screen
-        
+
         this.setSize(801, 561);// Set the size of the frame
         this.setResizable(false);// Prevent the frame from being resizable
-        
-        OrderTab.setBackground(Color.black);//set OrderTab to black and order Opened after login
-        }
 
-    
+        OrderTab.setBackground(Color.black);//set OrderTab to black and order Opened after login
+        NotificationPanel.setVisible(false);
+        TransactionPanel panel = new TransactionPanel();
+        panel.loadUserTransaction(Login.getLoggedInUserId());
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,17 +50,18 @@ public class Dashboard extends javax.swing.JFrame {
         title = new javax.swing.JPanel();
         title_lbl1 = new javax.swing.JLabel();
         title_lbl2 = new javax.swing.JLabel();
+        logout = new javax.swing.JButton();
         menubar = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         OrderTab = new javax.swing.JLabel();
         OrderStatusTab = new javax.swing.JLabel();
         OrderHistoryTab = new javax.swing.JLabel();
         CommentTab = new javax.swing.JLabel();
-        logout = new javax.swing.JButton();
         CommentTab1 = new javax.swing.JLabel();
         line = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        Notification = new javax.swing.JPanel();
+        NotificationPanel = new javax.swing.JPanel();
+        transactionPanel2 = new system.admin.TransactionPanel();
         OrderPanel = new javax.swing.JPanel();
         OrderStatusPanel = new javax.swing.JPanel();
         LeaveReviewBtn = new javax.swing.JButton();
@@ -76,6 +81,13 @@ public class Dashboard extends javax.swing.JFrame {
         title_lbl2.setForeground(new java.awt.Color(153, 89, 16));
         title_lbl2.setText("TIES");
 
+        logout.setText("Logout");
+        logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout titleLayout = new javax.swing.GroupLayout(title);
         title.setLayout(titleLayout);
         titleLayout.setHorizontalGroup(
@@ -84,13 +96,21 @@ public class Dashboard extends javax.swing.JFrame {
                 .addComponent(title_lbl1)
                 .addGap(1, 1, 1)
                 .addComponent(title_lbl2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logout)
+                .addContainerGap())
         );
         titleLayout.setVerticalGroup(
             titleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(titleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(title_lbl1)
-                .addComponent(title_lbl2))
+            .addGroup(titleLayout.createSequentialGroup()
+                .addGroup(titleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(titleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(title_lbl1)
+                        .addComponent(title_lbl2))
+                    .addGroup(titleLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(logout)))
+                .addContainerGap())
         );
 
         menubar.setBackground(new java.awt.Color(255, 255, 255));
@@ -151,13 +171,6 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        logout.setText("Logout");
-        logout.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutActionPerformed(evt);
-            }
-        });
-
         CommentTab1.setBackground(new java.awt.Color(153, 89, 16));
         CommentTab1.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
         CommentTab1.setForeground(new java.awt.Color(255, 255, 255));
@@ -176,9 +189,6 @@ public class Dashboard extends javax.swing.JFrame {
         menubarLayout.setHorizontalGroup(
             menubarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menubarLayout.createSequentialGroup()
-                .addComponent(logout)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(menubarLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(menubarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(CommentTab, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -194,19 +204,17 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(menubarLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(OrderTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(OrderStatusTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(OrderHistoryTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(CommentTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(CommentTab1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(logout)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         line.setBackground(new java.awt.Color(0, 0, 0));
@@ -225,20 +233,26 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new javax.swing.OverlayLayout(jPanel1));
 
-        Notification.setBackground(new java.awt.Color(255, 255, 255));
+        NotificationPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        javax.swing.GroupLayout NotificationLayout = new javax.swing.GroupLayout(Notification);
-        Notification.setLayout(NotificationLayout);
-        NotificationLayout.setHorizontalGroup(
-            NotificationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 590, Short.MAX_VALUE)
+        javax.swing.GroupLayout NotificationPanelLayout = new javax.swing.GroupLayout(NotificationPanel);
+        NotificationPanel.setLayout(NotificationPanelLayout);
+        NotificationPanelLayout.setHorizontalGroup(
+            NotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, NotificationPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(transactionPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(185, 185, 185))
         );
-        NotificationLayout.setVerticalGroup(
-            NotificationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 552, Short.MAX_VALUE)
+        NotificationPanelLayout.setVerticalGroup(
+            NotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(NotificationPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(transactionPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(466, Short.MAX_VALUE))
         );
 
-        jPanel1.add(Notification);
+        jPanel1.add(NotificationPanel);
 
         OrderPanel.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -246,7 +260,7 @@ public class Dashboard extends javax.swing.JFrame {
         OrderPanel.setLayout(OrderPanelLayout);
         OrderPanelLayout.setHorizontalGroup(
             OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 590, Short.MAX_VALUE)
+            .addGap(0, 591, Short.MAX_VALUE)
         );
         OrderPanelLayout.setVerticalGroup(
             OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,7 +283,7 @@ public class Dashboard extends javax.swing.JFrame {
         OrderStatusPanelLayout.setHorizontalGroup(
             OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderStatusPanelLayout.createSequentialGroup()
-                .addContainerGap(372, Short.MAX_VALUE)
+                .addContainerGap(373, Short.MAX_VALUE)
                 .addComponent(LeaveReviewBtn)
                 .addGap(110, 110, 110))
         );
@@ -289,7 +303,7 @@ public class Dashboard extends javax.swing.JFrame {
         OrderHistoryPanel.setLayout(OrderHistoryPanelLayout);
         OrderHistoryPanelLayout.setHorizontalGroup(
             OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 590, Short.MAX_VALUE)
+            .addGap(0, 591, Short.MAX_VALUE)
         );
         OrderHistoryPanelLayout.setVerticalGroup(
             OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,7 +318,7 @@ public class Dashboard extends javax.swing.JFrame {
         CommentPanel.setLayout(CommentPanelLayout);
         CommentPanelLayout.setHorizontalGroup(
             CommentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 590, Short.MAX_VALUE)
+            .addGap(0, 591, Short.MAX_VALUE)
         );
         CommentPanelLayout.setVerticalGroup(
             CommentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -333,7 +347,7 @@ public class Dashboard extends javax.swing.JFrame {
                     .addComponent(menubar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(line, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 10, Short.MAX_VALUE)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
@@ -347,80 +361,135 @@ public class Dashboard extends javax.swing.JFrame {
 
     private void OrderTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderTabMousePressed
         // TODO add your handling code here:
+        NotificationPanel.setVisible(false);
         OrderPanel.setVisible(true);
         OrderStatusPanel.setVisible(false);
         OrderHistoryPanel.setVisible(false);
         CommentPanel.setVisible(false);
         OrderTab.setBackground(Color.black);
-        OrderStatusTab.setBackground(new Color(153,89,16));
-        OrderHistoryTab.setBackground(new Color(153,89,16));
-        CommentTab.setBackground(new Color(153,89,16));
+        OrderStatusTab.setBackground(new Color(153, 89, 16));
+        OrderHistoryTab.setBackground(new Color(153, 89, 16));
+        CommentTab.setBackground(new Color(153, 89, 16));
+        NotificationPanel.setBackground(new Color(153, 89, 16));
     }//GEN-LAST:event_OrderTabMousePressed
 
     private void OrderStatusTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderStatusTabMousePressed
         // TODO add your handling code here:
+        NotificationPanel.setVisible(false);
         OrderPanel.setVisible(false);
         OrderStatusPanel.setVisible(true);
         OrderHistoryPanel.setVisible(false);
         CommentPanel.setVisible(false);
         OrderStatusTab.setBackground(Color.black);
-        OrderTab.setBackground(new Color(153,89,16));
-        OrderHistoryTab.setBackground(new Color(153,89,16));
-        CommentTab.setBackground(new Color(153,89,16));
+        OrderTab.setBackground(new Color(153, 89, 16));
+        OrderHistoryTab.setBackground(new Color(153, 89, 16));
+        CommentTab.setBackground(new Color(153, 89, 16));
+        NotificationPanel.setBackground(new Color(153, 89, 16));
     }//GEN-LAST:event_OrderStatusTabMousePressed
 
     private void OrderHistoryTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderHistoryTabMousePressed
         // TODO add your handling code here:
+        NotificationPanel.setVisible(false);
         OrderPanel.setVisible(false);
         OrderStatusPanel.setVisible(false);
         OrderHistoryPanel.setVisible(true);
         CommentPanel.setVisible(false);
         OrderHistoryTab.setBackground(Color.black);
-        OrderStatusTab.setBackground(new Color(153,89,16));
-        OrderTab.setBackground(new Color(153,89,16));
-        CommentTab.setBackground(new Color(153,89,16));
+        OrderStatusTab.setBackground(new Color(153, 89, 16));
+        OrderTab.setBackground(new Color(153, 89, 16));
+        CommentTab.setBackground(new Color(153, 89, 16));
+        NotificationPanel.setBackground(new Color(153, 89, 16));
     }//GEN-LAST:event_OrderHistoryTabMousePressed
 
     private void CommentTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CommentTabMousePressed
         // TODO add your handling code here:
+        NotificationPanel.setVisible(false);
         OrderPanel.setVisible(false);
         OrderStatusPanel.setVisible(false);
         OrderHistoryPanel.setVisible(false);
         CommentPanel.setVisible(true);
         CommentTab.setBackground(Color.black);
-        OrderStatusTab.setBackground(new Color(153,89,16));
-        OrderHistoryTab.setBackground(new Color(153,89,16));
-        OrderTab.setBackground(new Color(153,89,16));
+        OrderStatusTab.setBackground(new Color(153, 89, 16));
+        OrderHistoryTab.setBackground(new Color(153, 89, 16));
+        OrderTab.setBackground(new Color(153, 89, 16));
+        NotificationPanel.setBackground(new Color(153, 89, 16));
     }//GEN-LAST:event_CommentTabMousePressed
 
     private void LeaveReviewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaveReviewBtnActionPerformed
         // TODO add your handling code here:
         String deliveryID = getLatestDeliveryID(); // Fetch delivery ID (you need to implement this method)
 
-    if (deliveryID != null) {  
-        ReviewForm reviewForm = new ReviewForm(deliveryID); // Pass the correct deliveryID
-        reviewForm.setVisible(true);
-    } else {
-        JOptionPane.showMessageDialog(this, "Delivery ID not found.", "Error", JOptionPane.ERROR_MESSAGE);
-    }
-        
+        if (deliveryID != null) {
+            ReviewForm reviewForm = new ReviewForm(deliveryID); // Pass the correct deliveryID
+            reviewForm.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Delivery ID not found.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_LeaveReviewBtnActionPerformed
 
     private void CommentTab1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CommentTab1MousePressed
-        // TODO add your handling code here:
+
+        NotificationPanel.setVisible(true);
+        OrderPanel.setVisible(false);
+        OrderStatusPanel.setVisible(false);
+        OrderHistoryPanel.setVisible(false);
+        CommentPanel.setVisible(false);
+        NotificationPanel.setBackground(Color.black);
+        OrderStatusTab.setBackground(new Color(153, 89, 16));
+        OrderHistoryTab.setBackground(new Color(153, 89, 16));
+        CommentTab.setBackground(new Color(153, 89, 16));
+        OrderTab.setBackground(new Color(153, 89, 16));
+
+        String loggedInUser = Login.getLoggedInUserId(); // Example: "C01"
+
+        if (loggedInUser != null) {
+            updateNotificationPanel(loggedInUser);
+        } else {
+            JOptionPane.showMessageDialog(null, "User not logged in!");
+        }
     }//GEN-LAST:event_CommentTab1MousePressed
-        private String getLatestDeliveryID() {
+
+    private void updateNotificationPanel(String userID) {
+        System.out.println("Updating Notification Panel for: " + userID);
+
+        // Ensure NotificationPanel is visible
+        NotificationPanel.setVisible(true);
+        NotificationPanel.setLayout(new java.awt.BorderLayout()); // Ensure a proper layout
+
+        // Create a new TransactionPanel instance
+        TransactionPanel transactionPanel = new TransactionPanel();
+        System.out.println("TransactionPanel instance created.");
+
+        // Load transaction data for the logged-in user
+        transactionPanel.loadUserTransaction(userID);
+
+        // Remove existing components in NotificationPanel
+        NotificationPanel.removeAll();
+
+        // Add the updated TransactionPanel
+        NotificationPanel.add(transactionPanel, java.awt.BorderLayout.CENTER);
+
+        // Ensure TransactionPanel is visible
+        transactionPanel.setVisible(true);
+
+        // Refresh UI to reflect changes
+        NotificationPanel.revalidate();
+        NotificationPanel.repaint();
+    }
+
+    private String getLatestDeliveryID() {
         String taskHistoryFilePath = "taskHistory.txt";
         String latestDeliveryID = null;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(taskHistoryFilePath))) {
             String line;
-            
+
             // Read through the file line by line
             while ((line = reader.readLine()) != null) {
-            line = line.trim();  // Remove extra spaces
-            if (line.startsWith("DR")) {  // Find the line containing the Delivery ID
-                latestDeliveryID = line.replace("Delivery ID:", "").trim(); // Extract only the ID
+                line = line.trim();  // Remove extra spaces
+                if (line.startsWith("DR")) {  // Find the line containing the Delivery ID
+                    latestDeliveryID = line.replace("Delivery ID:", "").trim(); // Extract only the ID
                 }
             }
         } catch (IOException e) {
@@ -429,14 +498,13 @@ public class Dashboard extends javax.swing.JFrame {
 
         return latestDeliveryID; // Return the last found delivery ID
     }
-   
-    
-    private void goToLogout(){
+
+    private void goToLogout() {
         Login loginframe = new Login();
         loginframe.setVisible(true);
         dispose();
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -477,7 +545,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel CommentTab;
     private javax.swing.JLabel CommentTab1;
     private javax.swing.JButton LeaveReviewBtn;
-    private javax.swing.JPanel Notification;
+    private javax.swing.JPanel NotificationPanel;
     private javax.swing.JPanel OrderHistoryPanel;
     private javax.swing.JLabel OrderHistoryTab;
     private javax.swing.JPanel OrderPanel;
@@ -492,5 +560,6 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JPanel title;
     private javax.swing.JLabel title_lbl1;
     private javax.swing.JLabel title_lbl2;
+    private system.admin.TransactionPanel transactionPanel2;
     // End of variables declaration//GEN-END:variables
 }

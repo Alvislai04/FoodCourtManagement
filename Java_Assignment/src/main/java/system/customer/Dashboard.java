@@ -489,7 +489,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         descriptionFoodPrice.setText("foodPrice");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jLabel4.setText("Food ID");
+        jLabel4.setText("Vendor - Food ID");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         jLabel5.setText("Food Name");
@@ -542,7 +542,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
                         .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(OrderBtn, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(27, 27, 27)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
                 .addContainerGap())
         );
         OrderPanelLayout.setVerticalGroup(
@@ -808,7 +808,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
                 .addComponent(ComplaintTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(NotificationTab, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(156, Short.MAX_VALUE))
         );
 
         line.setBackground(new java.awt.Color(0, 0, 0));

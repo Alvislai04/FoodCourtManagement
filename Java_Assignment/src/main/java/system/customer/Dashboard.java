@@ -63,6 +63,7 @@ private void openOrderPanel(int index) {
 // Updated method for reordering
 private void openOrderPanel(Integer index, String reorderFoodName, String reorderPrice, String reorderQuantity) {
     JLabel[] descriptionFood = {descriptionFoodId, descriptionFoodName, descriptionFoodPrice};
+    String selectedFoodID = null; // Store the selected Food ID
 
     if (index != null) { // Case 1: Opening from FoodPanel
         try (BufferedReader reader = new BufferedReader(new FileReader("vendorFood.txt"))) {
@@ -72,9 +73,11 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
             while ((line = reader.readLine()) != null) {
                 if (currentIndex == index) {
                     String[] data = line.split(",");
-                    descriptionFood[0].setText("ID: " + data[0]);
+                    selectedFoodID = data[0].trim(); // Store Food ID
+                    descriptionFood[0].setText("ID: " + selectedFoodID);
                     descriptionFood[1].setText("Name: " + data[1]);
                     descriptionFood[2].setText("Price: " + data[2]);
+                    System.out.println("Selected Food ID: " + selectedFoodID); // Debugging
                     break;
                 }
                 currentIndex++;
@@ -87,6 +90,12 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         descriptionFood[1].setText("Name: " + reorderFoodName);
         descriptionFood[2].setText("Price: " + reorderPrice);
         quantity.setText(reorderQuantity); // Pre-fill quantity
+    }
+
+    // If a Food ID was selected, load its reviews
+    if (selectedFoodID != null) {
+        System.out.println("Calling loadReviewsForFood with ID: " + selectedFoodID); // Debugging
+        loadReviewsForFood(selectedFoodID);
     }
 
     // Show OrderPanel
@@ -104,7 +113,6 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 }
 
 
-    
     private void loadFoodImages () {
         String vendorFoodFilePath = "vendorFood.txt";
         JLabel[] foodIcon = {foodIcon1, foodIcon2, foodIcon3, foodIcon4, foodIcon5, foodIcon6};
@@ -351,6 +359,29 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     return "REV" + String.format("%03d", lastID + 1);
 }
 
+   private void loadReviewsForFood(String foodID) {
+    DefaultTableModel model = (DefaultTableModel) ReviewjTable.getModel();
+    model.setRowCount(0); // Clear previous reviews
+
+    System.out.println("Loading reviews for Food ID: " + foodID); // Debugging
+
+    try (BufferedReader reader = new BufferedReader(new FileReader("foodReview.txt"))) {
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            String[] data = line.split(",", 4); // Ensure it splits into 4 parts: ReviewID, FoodID, Rate, ReviewText
+            System.out.println("Checking review line: " + line); // Debugging
+
+            if (data.length == 4 && data[1].trim().equals(foodID)) {
+                System.out.println("Matched Review: " + line); // Debugging
+                // Add only Rating and Review to JTable
+                model.addRow(new Object[]{data[2], data[3]});
+            }
+        }
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Error loading reviews!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -475,11 +506,11 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 
             },
             new String [] {
-                "Review"
+                "Rating", "Review"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false
+                false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1545,9 +1576,30 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     }//GEN-LAST:event_SubmitBtnActionPerformed
 
     private void SkipBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SkipBtnActionPerformed
-        Window parentWindow = SwingUtilities.getWindowAncestor(AddReviewPanel);
-    if (parentWindow != null) {
-        parentWindow.dispose(); // Close the panel
+        String selectedFoodID = FoodIDComboBox.getSelectedItem().toString();
+    String selectedRating = RateComboBox.getSelectedItem().toString();
+    
+    // Generate a new Review ID
+    String reviewID = generateNewReviewID();
+    
+    // Format: ReviewID, FoodID, Rating, (No Review)
+    String reviewEntry = reviewID + "," + selectedFoodID + "," + selectedRating + ",-"; 
+
+    // Save to foodReview.txt
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter("foodReview.txt", true))) {
+        writer.write(reviewEntry);
+        writer.newLine();
+        writer.flush();
+        JOptionPane.showMessageDialog(AddReviewPanel, "Rating submitted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+        // Close AddReviewPanel
+        Window window = SwingUtilities.getWindowAncestor(AddReviewPanel);
+        if (window != null) {
+            window.dispose();
+        }
+
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(AddReviewPanel, "Error saving rating!", "Error", JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_SkipBtnActionPerformed
 

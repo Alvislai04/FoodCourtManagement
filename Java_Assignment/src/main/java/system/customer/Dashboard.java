@@ -16,7 +16,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -52,63 +54,54 @@ public class Dashboard extends javax.swing.JFrame {
         populateOrderHistoryTable();
     }
     
-    // Overloaded method to support menu clicks
+    // Overloaded method for normal clicks
 private void openOrderPanel(int index) {
     openOrderPanel(index, null, null, null);
 }
 
-// Updated method to support both normal opening and reordering
+// Updated method for reordering
 private void openOrderPanel(Integer index, String reorderFoodName, String reorderPrice, String reorderQuantity) {
-    String vendorFoodFilePath = "vendorFood.txt";
     JLabel[] descriptionFood = {descriptionFoodId, descriptionFoodName, descriptionFoodPrice};
 
-    try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {
-        String line;
-        int currentIndex = 0;
-        boolean found = false;
+    if (index != null) { // Case 1: Opening from FoodPanel
+        try (BufferedReader reader = new BufferedReader(new FileReader("vendorFood.txt"))) {
+            String line;
+            int currentIndex = 0;
 
-        while ((line = reader.readLine()) != null) {
-            if (index != null && currentIndex == index) { // Case 1: Opening from menu
-                String[] data = line.split(",");
-                descriptionFood[0].setText("ID: " + data[0]);
-                descriptionFood[1].setText("Name: " + data[1]);
-                descriptionFood[2].setText("Price: " + data[2]);
-                found = true;
-                break;
+            while ((line = reader.readLine()) != null) {
+                if (currentIndex == index) {
+                    String[] data = line.split(",");
+                    descriptionFood[0].setText("ID: " + data[0]);
+                    descriptionFood[1].setText("Name: " + data[1]);
+                    descriptionFood[2].setText("Price: " + data[2]);
+                    break;
+                }
+                currentIndex++;
             }
-            currentIndex++;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        // Case 2: Opening from reorder button
-        if (index == null) {
-            descriptionFood[0].setText(""); // No need for ID when reordering
-            descriptionFood[1].setText("Name: " + reorderFoodName);
-            descriptionFood[2].setText("Price: " + reorderPrice);
-            quantity.setText(reorderQuantity); // Pre-fill quantity
-            found = true;
-        }
-
-        if (found) {
-            // Show OrderPanel
-            JOptionPane optionPane = new JOptionPane(
-                OrderPanel, 
-                JOptionPane.PLAIN_MESSAGE, 
-                JOptionPane.DEFAULT_OPTION, 
-                null, 
-                new Object[]{}
-            );
-
-            JDialog dialog = optionPane.createDialog("Food Details");
-            optionPane.setBorder(null);
-            dialog.setVisible(true);
-            dialog.pack();
-        }
-
-    } catch (IOException ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
+    } else { // Case 2: Opening from Reorder
+        descriptionFood[0].setText(""); // No need for ID
+        descriptionFood[1].setText("Name: " + reorderFoodName);
+        descriptionFood[2].setText("Price: " + reorderPrice);
+        quantity.setText(reorderQuantity); // Pre-fill quantity
     }
+
+    // Show OrderPanel
+    JOptionPane optionPane = new JOptionPane(
+        OrderPanel, 
+        JOptionPane.PLAIN_MESSAGE, 
+        JOptionPane.DEFAULT_OPTION, 
+        null, 
+        new Object[]{}
+    );
+
+    JDialog dialog = optionPane.createDialog("Food Details");
+    dialog.setVisible(true);
+    dialog.pack();
 }
+
 
     
     private void loadFoodImages () {
@@ -210,6 +203,9 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     StatusjTable1.setModel(model); // Set model to the table
     StatusjTable1.setRowHeight(50);
 
+    // **Clear table before loading new data**
+    model.setRowCount(0);
+
     try (BufferedReader reader = new BufferedReader(new FileReader("customerOrder.txt"))) {
         String line;
         while ((line = reader.readLine()) != null) {
@@ -233,6 +229,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         JOptionPane.showMessageDialog(null, "Error reading customerOrder.txt!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
+
 
    
    private void populateOrderHistoryTable() {
@@ -387,22 +384,20 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         OrderPanelLayout.setHorizontalGroup(
             OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(OrderPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(descriptionFoodPrice)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(descriptionFoodId)
+                    .addComponent(descriptionFoodName)
                     .addGroup(OrderPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(OrderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(descriptionFoodPrice)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(descriptionFoodId)
-                            .addComponent(descriptionFoodName)
-                            .addGroup(OrderPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(OrderBtn))
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(OrderBtn, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(27, 27, 27)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
                 .addContainerGap())
@@ -1011,19 +1006,6 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         NotificationPanel.setBackground(new Color(153, 89, 16));
     }//GEN-LAST:event_ComplaintTabMousePressed
 
-    private void LeaveReviewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaveReviewBtnActionPerformed
-        // TODO add your handling code here:
-        String deliveryID = getLatestDeliveryID(); // Fetch delivery ID (you need to implement this method)
-
-        if (deliveryID != null) {
-            ReviewForm reviewForm = new ReviewForm(deliveryID); // Pass the correct deliveryID
-            reviewForm.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Delivery ID not found.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-
-    }//GEN-LAST:event_LeaveReviewBtnActionPerformed
-
     private void NotificationTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_NotificationTabMousePressed
 
         NotificationPanel.setVisible(true);
@@ -1076,7 +1058,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 
     private void OrderBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderBtnActionPerformed
         String quantityText = quantity.getText();
-    
+
     try {
         int quantityValue = Integer.parseInt(quantityText.trim()); // Ensure no spaces
         if (quantityValue <= 0) {
@@ -1114,6 +1096,10 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         // Save order (quantity moved before price)
         saveOrder(orderId, customerEmail, foodName, quantityValue, finalPrice, orderTime, status);
 
+        // **Refresh both order status and order history tables**
+        populateOrderStatusTable(); // 🔹 Updates Order Status Table
+        populateOrderHistoryTable(); // 🔹 Updates Order History Table
+
         // Reset quantity field
         quantity.setText("0");
 
@@ -1133,12 +1119,80 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     }//GEN-LAST:event_OrderBtnActionPerformed
 
     private void CancelOrderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CancelOrderMousePressed
-        // TODO add your handling code here:
+        int selectedRow = StatusjTable1.getSelectedRow();
+    
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select an order to cancel!", "No Selection", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Get order ID from the selected row
+    String orderIdToCancel = StatusjTable1.getValueAt(selectedRow, 0).toString();
+
+    File file = new File("customerOrder.txt");
+    List<String> updatedOrders = new ArrayList<>();
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        String line;
+        
+        while ((line = reader.readLine()) != null) {
+            String[] data = line.split(",");
+
+            // Ensure valid row
+            if (data.length == 7) {
+                String orderId = data[0]; // Order ID
+
+                if (orderId.equals(orderIdToCancel)) {
+                    data[6] = "Cancelled"; // Change status to "Cancelled"
+                }
+
+                updatedOrders.add(String.join(",", data));
+            }
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error reading orders!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Write the updated list back to the file
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        for (String order : updatedOrders) {
+            writer.write(order);
+            writer.newLine();
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error updating orders!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Refresh the table
+    populateOrderStatusTable();
+    JOptionPane.showMessageDialog(this, "Order has been cancelled successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_CancelOrderMousePressed
 
     private void ReorderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ReorderMousePressed
-        // TODO add your handling code here:
+        int selectedRow = HistoryjTable1.getSelectedRow();
+    
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select an order to reorder!", "No Selection", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Extract data from the selected row
+    String foodName = HistoryjTable1.getValueAt(selectedRow, 1).toString();
+    String quantity = HistoryjTable1.getValueAt(selectedRow, 2).toString();
+    String price = HistoryjTable1.getValueAt(selectedRow, 3).toString();
+
+    // Open the OrderPanel with the extracted data
+    openOrderPanel(null, foodName, price, quantity);
     }//GEN-LAST:event_ReorderMousePressed
+
+    private void LeaveReviewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaveReviewBtnActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_LeaveReviewBtnActionPerformed
 
         private void updateNotificationPanel(String userID) {
         System.out.println("Updating Notification Panel for: " + userID);

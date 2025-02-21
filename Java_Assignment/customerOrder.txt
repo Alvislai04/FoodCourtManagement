@@ -1,6 +1,14 @@
 ORD001,customer@test,Grilled Salmon,5,105.00,21/02/2025 04:49,Pending
-ORD002,customer@test,Grilled Salmon,10,210.00,21/02/2025 14:04,Pending
+ORD002,customer@test,Grilled Salmon,10,210.00,21/02/2025 14:04,Cancelled
 ORD003,customer@test,Grilled Salmon,1,21.00,21/02/2025 14:13,Pending
 ORD004,customer@test,Grilled Salmon,6,126.00,21/02/2025 14:22,Pending
 ORD005,customer@test,Grilled Salmon,6,126.00,21/02/2025 14:28,Pending
-ORD006,customer@test,Grilled Salmon,9,189.00,21/02/2025 14:29,Pending
+ORD006,customer@test,Grilled Salmon,9,189.00,21/02/2025 14:29,Cancelled
+ORD007,customer@test,Burger,6,66.00,21/02/2025 15:35,Pending
+ORD008,customer@test,Spaghetti,1,15.00,21/02/2025 15:35,Pending
+ORD009,customer@test,Grilled Salmon,2,42.00,21/02/2025 15:39,Cancelled
+ORD010,customer@test,Grilled Salmon,3,63.00,21/02/2025 15:43,Pending
+ORD011,customer@test,Fried Rice,2,24.00,21/02/2025 15:52,Cancelled
+ORD012,customer@test,Grilled Salmon,2,42.00,21/02/2025 15:55,Pending
+ORD013,customer@test,Burger,6,66.00,21/02/2025 16:03,Pending
+ORD014,customer@test,Grilled Salmon,2,84.00,21/02/2025 16:03,Pending

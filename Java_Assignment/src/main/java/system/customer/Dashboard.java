@@ -146,14 +146,15 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
             JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-   private void saveOrder(String orderId, String customerEmail, String foodName, int quantity, String price, String orderTime, String status) {
+   private void saveOrder(String orderId, String customerEmail, String foodName, int quantity, String price, String orderDate, String orderTime, String status) {
     String orderFilePath = "customerOrder.txt"; // Ensure the correct filename
 
     System.out.println("Inside saveOrder method...");
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(orderFilePath, true))) {
-        // Modified order format: Quantity is now before the price
-        String orderData = orderId + "," + customerEmail + "," + foodName + "," + quantity + "," + price + "," + orderTime + "," + status;
+        // New order format: Separate Date and Time
+        String orderData = orderId + "," + customerEmail + "," + foodName + "," + quantity + "," 
+                         + price + "," + orderDate + "," + orderTime + "," + status;
         
         System.out.println("Writing to file: " + orderData);
         writer.write(orderData);
@@ -168,6 +169,8 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         JOptionPane.showMessageDialog(OrderPanel, "Error saving order! Check file permissions.", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
+
+
    
    private String generateOrderId() {
     String orderFilePath = "customerOrder.txt";
@@ -194,9 +197,10 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     int newOrderNumber = lastOrderNumber + 1;
     return String.format("ORD%03d", newOrderNumber); // ORD001, ORD002, etc.
 }
+   
    private void populateOrderStatusTable() {
     // Define column names (excluding customer email)
-    String[] columnNames = {"Order ID", "Food Ordered", "Quantity", "Total Price", "Order Date/Time", "Status"};
+    String[] columnNames = {"Order ID", "Food Ordered", "Quantity", "Total Price", "Order Date", "Order Time", "Status"};
 
     // Use the correct DefaultTableModel
     DefaultTableModel model = new DefaultTableModel(columnNames, 0);
@@ -211,17 +215,18 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         while ((line = reader.readLine()) != null) {
             String[] data = line.split(",");
 
-            // Ensure the row has exactly 7 columns before processing
-            if (data.length == 7) {
+            // Ensure the row has exactly 8 columns (due to new date/time format)
+            if (data.length == 8) {
                 String orderId = data[0];     // Order ID
                 String foodOrdered = data[2]; // Food Name
                 String quantity = data[3];    // Quantity
                 String totalPrice = data[4];  // Total Price
-                String orderTime = data[5];   // Order Time
-                String status = data[6];      // Status
+                String orderDate = data[5];   // Order Date (New Format)
+                String orderTime = data[6];   // Order Time (New Format)
+                String status = data[7];      // Status
 
                 // Add only necessary data to the table
-                model.addRow(new Object[]{orderId, foodOrdered, quantity, totalPrice, orderTime, status});
+                model.addRow(new Object[]{orderId, foodOrdered, quantity, totalPrice, orderDate, orderTime, status});
             }
         }
     } catch (IOException e) {
@@ -229,33 +234,35 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         JOptionPane.showMessageDialog(null, "Error reading customerOrder.txt!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
-
-
    
    private void populateOrderHistoryTable() {
     // Define column names (excluding customer email and status)
-    String[] columnNames = {"Order ID", "Food Ordered", "Quantity", "Transaction", "Order Date/Time"};
+    String[] columnNames = {"Order ID", "Food Ordered", "Quantity", "Transaction", "Order Date", "Order Time"};
 
     // Use the correct DefaultTableModel
     DefaultTableModel model = new DefaultTableModel(columnNames, 0);
     HistoryjTable1.setModel(model); // Set model to the table
     HistoryjTable1.setRowHeight(50);
 
+    // **Clear table before loading new data**
+    model.setRowCount(0);
+
     try (BufferedReader reader = new BufferedReader(new FileReader("customerOrder.txt"))) {
         String line;
         while ((line = reader.readLine()) != null) {
             String[] data = line.split(",");
 
-            // Ensure the row has exactly 7 columns before processing
-            if (data.length == 7) {
+            // Ensure the row has exactly 8 columns (due to new date/time format)
+            if (data.length == 8) {
                 String orderId = data[0];     // Order ID
                 String foodOrdered = data[2]; // Food Name
                 String quantity = data[3];    // Quantity
                 String transaction = data[4]; // Transaction (Total Price)
-                String orderTime = data[5];   // Order Date/Time
+                String orderDate = data[5];   // Order Date (New Format)
+                String orderTime = data[6];   // Order Time (New Format)
 
                 // Add only necessary data to the table
-                model.addRow(new Object[]{orderId, foodOrdered, quantity, transaction, orderTime});
+                model.addRow(new Object[]{orderId, foodOrdered, quantity, transaction, orderDate, orderTime});
             }
         }
     } catch (IOException e) {
@@ -781,11 +788,11 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 
             },
             new String [] {
-                "Order ID", "Food Ordered", "Quantity", "Total Price", "Order Time", "Status"
+                "Order ID", "Food Ordered", "Quantity", "Total Price", "Order Date", "Order Time", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, true, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -798,8 +805,8 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
             StatusjTable1.getColumnModel().getColumn(1).setResizable(false);
             StatusjTable1.getColumnModel().getColumn(2).setResizable(false);
             StatusjTable1.getColumnModel().getColumn(3).setResizable(false);
-            StatusjTable1.getColumnModel().getColumn(4).setResizable(false);
             StatusjTable1.getColumnModel().getColumn(5).setResizable(false);
+            StatusjTable1.getColumnModel().getColumn(6).setResizable(false);
         }
 
         CancelOrder.setBackground(new java.awt.Color(153, 89, 16));
@@ -849,11 +856,11 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 
             },
             new String [] {
-                "Order ID", "Food Ordered", "Quantity", "Transaction", "Order Time"
+                "Order ID", "Food Ordered", "Quantity", "Transaction", "Order Date", "Order Time"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -866,6 +873,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
             HistoryjTable1.getColumnModel().getColumn(1).setResizable(false);
             HistoryjTable1.getColumnModel().getColumn(2).setResizable(false);
             HistoryjTable1.getColumnModel().getColumn(3).setResizable(false);
+            HistoryjTable1.getColumnModel().getColumn(5).setResizable(false);
         }
 
         Reorder.setBackground(new java.awt.Color(153, 89, 16));
@@ -951,7 +959,6 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     }//GEN-LAST:event_logoutActionPerformed
 
     private void MenuTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MenuTabMousePressed
-        // TODO add your handling code here:
         NotificationPanel.setVisible(false);
         MenuPanel.setVisible(true);
         OrderStatusPanel.setVisible(false);
@@ -965,7 +972,6 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     }//GEN-LAST:event_MenuTabMousePressed
 
     private void OrderStatusTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderStatusTabMousePressed
-        // TODO add your handling code here:
         NotificationPanel.setVisible(false);
         MenuPanel.setVisible(false);
         OrderStatusPanel.setVisible(true);
@@ -979,7 +985,6 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     }//GEN-LAST:event_OrderStatusTabMousePressed
 
     private void OrderHistoryTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderHistoryTabMousePressed
-        // TODO add your handling code here:
         NotificationPanel.setVisible(false);
         MenuPanel.setVisible(false);
         OrderStatusPanel.setVisible(false);
@@ -993,7 +998,6 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     }//GEN-LAST:event_OrderHistoryTabMousePressed
 
     private void ComplaintTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ComplaintTabMousePressed
-        // TODO add your handling code here:
         NotificationPanel.setVisible(false);
         MenuPanel.setVisible(false);
         OrderStatusPanel.setVisible(false);
@@ -1007,7 +1011,6 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     }//GEN-LAST:event_ComplaintTabMousePressed
 
     private void NotificationTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_NotificationTabMousePressed
-
         NotificationPanel.setVisible(true);
         MenuPanel.setVisible(false);
         OrderStatusPanel.setVisible(false);
@@ -1085,16 +1088,19 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         String orderId = generateOrderId();
         String customerEmail = "customer@test"; // Replace with actual user data
 
-        // Get current date/time
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        String orderTime = dateFormat.format(new Date());
+        // Get current date & time (now separate)
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        String orderDate = dateFormat.format(new Date()); // Date only
+        String orderTime = timeFormat.format(new Date()); // Time only
         String status = "Pending";
 
         // Debugging output
-        System.out.println("Attempting to save order: " + orderId + ", " + customerEmail + ", " + foodName + ", " + quantityValue + ", " + finalPrice + ", " + orderTime + ", " + status);
+        System.out.println("Attempting to save order: " + orderId + ", " + customerEmail + ", " + foodName + ", " 
+            + quantityValue + ", " + finalPrice + ", " + orderDate + ", " + orderTime + ", " + status);
 
-        // Save order (quantity moved before price)
-        saveOrder(orderId, customerEmail, foodName, quantityValue, finalPrice, orderTime, status);
+        // Save order with new format (separated date & time)
+        saveOrder(orderId, customerEmail, foodName, quantityValue, finalPrice, orderDate, orderTime, status);
 
         // **Refresh both order status and order history tables**
         populateOrderStatusTable(); // 🔹 Updates Order Status Table
@@ -1138,12 +1144,12 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         while ((line = reader.readLine()) != null) {
             String[] data = line.split(",");
 
-            // Ensure valid row
-            if (data.length == 7) {
+            // Ensure valid row (8 columns instead of 7)
+            if (data.length == 8) {
                 String orderId = data[0]; // Order ID
 
                 if (orderId.equals(orderIdToCancel)) {
-                    data[6] = "Cancelled"; // Change status to "Cancelled"
+                    data[7] = "Cancelled"; // Change status to "Cancelled" (8th column)
                 }
 
                 updatedOrders.add(String.join(",", data));
@@ -1185,13 +1191,19 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     String quantity = HistoryjTable1.getValueAt(selectedRow, 2).toString();
     String price = HistoryjTable1.getValueAt(selectedRow, 3).toString();
 
-    // Open the OrderPanel with the extracted data
-    openOrderPanel(null, foodName, price, quantity);
+    // Open the OrderPanel with extracted data
+    openOrderPanel(null, foodName, price, quantity); // Pass `null` for foodId
     }//GEN-LAST:event_ReorderMousePressed
 
     private void LeaveReviewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaveReviewBtnActionPerformed
-        // TODO add your handling code here:
+        String deliveryID = getLatestDeliveryID(); // Fetch delivery ID (you need to implement this method)
 
+        if (deliveryID != null) {
+            ReviewForm reviewForm = new ReviewForm(deliveryID); // Pass the correct deliveryID
+            reviewForm.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Delivery ID not found.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_LeaveReviewBtnActionPerformed
 
         private void updateNotificationPanel(String userID) {

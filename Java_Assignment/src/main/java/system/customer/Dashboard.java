@@ -52,6 +52,7 @@ public class Dashboard extends javax.swing.JFrame {
         panel.loadUserTransaction(Login.getLoggedInUserId());
         populateOrderStatusTable();
         populateOrderHistoryTable();
+        loadFoodIDs();
     }
     
     // Overloaded method for normal clicks
@@ -273,6 +274,82 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         JOptionPane.showMessageDialog(null, "Error reading customerOrder.txt!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
+   
+   private String generateNewComplaintID() {
+    int lastID = 0;
+
+    // Read the last complaint ID from complaint.txt
+    try (BufferedReader reader = new BufferedReader(new FileReader("complaint.txt"))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] data = line.split(",");
+            if (data.length > 0 && data[0].startsWith("CMP")) {
+                int currentID = Integer.parseInt(data[0].substring(3)); // Extract numeric part of ID
+                if (currentID > lastID) {
+                    lastID = currentID;
+                }
+            }
+        }
+    } catch (IOException | NumberFormatException e) {
+        e.printStackTrace();
+    }
+
+    // Generate new ID (e.g., CMP001, CMP002)
+    return String.format("CMP%03d", lastID + 1);
+}
+
+   private void loadFoodIDs() {
+    try (BufferedReader reader = new BufferedReader(new FileReader("vendorFood.txt"))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] foodDetails = line.split(",");
+            if (foodDetails.length > 0) {
+                String foodID = foodDetails[0]; // Extract FoodID (e.g., V001-F001)
+                FoodIDComboBox.addItem(foodID); // Add FoodID to ComboBox
+            }
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error loading food IDs!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+   private void openAddReviewPanel() {
+    // Show AddReviewPanel inside a dialog
+    JOptionPane optionPane = new JOptionPane(
+        AddReviewPanel, 
+        JOptionPane.PLAIN_MESSAGE, 
+        JOptionPane.DEFAULT_OPTION, 
+        null, 
+        new Object[]{} // No buttons
+    );
+
+    JDialog dialog = optionPane.createDialog(this, "Add Food Review");
+    dialog.pack(); // Adjust size
+    dialog.setVisible(true);
+}
+   
+   private String generateNewReviewID() {
+    int lastID = 0;
+    
+    // Read last review ID from foodReview.txt
+    try (BufferedReader reader = new BufferedReader(new FileReader("foodReview.txt"))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length > 0 && parts[0].startsWith("REV")) {
+                int currentID = Integer.parseInt(parts[0].substring(3)); // Extract number from "REVxxx"
+                if (currentID > lastID) {
+                    lastID = currentID;
+                }
+            }
+        }
+    } catch (IOException e) {
+        System.out.println("No previous reviews found.");
+    }
+
+    // Generate new Review ID
+    return "REV" + String.format("%03d", lastID + 1);
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -295,7 +372,18 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         jLabel6 = new javax.swing.JLabel();
         descriptionFoodId = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        ReviewjTable = new javax.swing.JTable();
+        AddReviewPanel = new javax.swing.JPanel();
+        FoodIDComboBox = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        AddReviewTextArea = new javax.swing.JTextArea();
+        RateComboBox = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        SubmitBtn = new javax.swing.JButton();
+        SkipBtn = new javax.swing.JButton();
         title = new javax.swing.JPanel();
         title_lbl1 = new javax.swing.JLabel();
         title_lbl2 = new javax.swing.JLabel();
@@ -330,11 +418,17 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         jScrollPane1 = new javax.swing.JScrollPane();
         StatusjTable1 = new javax.swing.JTable();
         CancelOrder = new javax.swing.JLabel();
+        FoodReview = new javax.swing.JLabel();
         OrderHistoryPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         HistoryjTable1 = new javax.swing.JTable();
         Reorder = new javax.swing.JLabel();
         ComplaintPanel = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        ComplaintTextArea = new javax.swing.JTextArea();
+        jLabel7 = new javax.swing.JLabel();
+        Submit = new javax.swing.JLabel();
+        ComplaintTypeComboBox = new javax.swing.JComboBox<>();
 
         quantity.setText("0");
         quantity.addActionListener(new java.awt.event.ActionListener() {
@@ -376,18 +470,26 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         descriptionFoodId.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         descriptionFoodId.setText("foodID");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        ReviewjTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null},
-                {null},
-                {null},
-                {null}
+
             },
             new String [] {
                 "Review"
             }
-        ));
-        jScrollPane3.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(ReviewjTable);
+        if (ReviewjTable.getColumnModel().getColumnCount() > 0) {
+            ReviewjTable.getColumnModel().getColumn(0).setResizable(false);
+        }
 
         javax.swing.GroupLayout OrderPanelLayout = new javax.swing.GroupLayout(OrderPanel);
         OrderPanel.setLayout(OrderPanelLayout);
@@ -441,6 +543,92 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
                         .addGap(18, 18, 18)
                         .addComponent(OrderBtn)
                         .addGap(0, 7, Short.MAX_VALUE))))
+        );
+
+        jLabel8.setText("Enter Your Review:");
+
+        AddReviewTextArea.setColumns(20);
+        AddReviewTextArea.setRows(5);
+        jScrollPane5.setViewportView(AddReviewTextArea);
+
+        RateComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5", "4", "3", "2", "1" }));
+        RateComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RateComboBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("Select Food ID: ");
+
+        jLabel10.setText("Rate:");
+
+        jLabel11.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel11.setText("ADD REVIEW");
+
+        SubmitBtn.setText("Submit");
+        SubmitBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SubmitBtnActionPerformed(evt);
+            }
+        });
+
+        SkipBtn.setText("Skip");
+        SkipBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SkipBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout AddReviewPanelLayout = new javax.swing.GroupLayout(AddReviewPanel);
+        AddReviewPanel.setLayout(AddReviewPanelLayout);
+        AddReviewPanelLayout.setHorizontalGroup(
+            AddReviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(AddReviewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(AddReviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(AddReviewPanelLayout.createSequentialGroup()
+                        .addComponent(SkipBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SubmitBtn))
+                    .addGroup(AddReviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel8)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel11)
+                        .addGroup(AddReviewPanelLayout.createSequentialGroup()
+                            .addGap(93, 93, 93)
+                            .addComponent(FoodIDComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AddReviewPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(AddReviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(RateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(143, 143, 143))
+        );
+        AddReviewPanelLayout.setVerticalGroup(
+            AddReviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AddReviewPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(AddReviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(FoodIDComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addGap(18, 18, 18)
+                .addGroup(AddReviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(RateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(AddReviewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(SubmitBtn)
+                    .addComponent(SkipBtn))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -772,14 +960,14 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
                             .addComponent(foodIcon5, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(foodLabel5)))
-                    .addContainerGap(123, Short.MAX_VALUE)))
+                    .addContainerGap(141, Short.MAX_VALUE)))
         );
 
         jPanel1.add(MenuPanel);
 
         OrderStatusPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        LeaveReviewBtn.setText("LEAVE REVIEW");
+        LeaveReviewBtn.setText("DELIVERY REVIEW");
         LeaveReviewBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 LeaveReviewBtnActionPerformed(evt);
@@ -824,6 +1012,18 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
             }
         });
 
+        FoodReview.setBackground(new java.awt.Color(153, 89, 16));
+        FoodReview.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        FoodReview.setForeground(new java.awt.Color(255, 255, 255));
+        FoodReview.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        FoodReview.setText("Food Review");
+        FoodReview.setOpaque(true);
+        FoodReview.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                FoodReviewMousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout OrderStatusPanelLayout = new javax.swing.GroupLayout(OrderStatusPanel);
         OrderStatusPanel.setLayout(OrderStatusPanelLayout);
         OrderStatusPanelLayout.setHorizontalGroup(
@@ -832,9 +1032,11 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
                 .addGap(15, 15, 15)
                 .addGroup(OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(OrderStatusPanelLayout.createSequentialGroup()
-                        .addComponent(LeaveReviewBtn)
+                        .addComponent(FoodReview, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(CancelOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(LeaveReviewBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(78, 78, 78)
+                        .addComponent(CancelOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 746, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(151, Short.MAX_VALUE))
         );
@@ -843,11 +1045,12 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OrderStatusPanelLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(LeaveReviewBtn)
-                    .addComponent(CancelOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(OrderStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CancelOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(FoodReview, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(LeaveReviewBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
 
         jPanel1.add(OrderStatusPanel);
@@ -914,17 +1117,57 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 
         jPanel1.add(OrderHistoryPanel);
 
-        ComplaintPanel.setBackground(new java.awt.Color(255, 0, 255));
+        ComplaintPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        ComplaintTextArea.setColumns(20);
+        ComplaintTextArea.setRows(5);
+        jScrollPane4.setViewportView(ComplaintTextArea);
+
+        jLabel7.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
+        jLabel7.setText("Describe your complaint below:Describe your complaint below:");
+
+        Submit.setBackground(new java.awt.Color(153, 89, 16));
+        Submit.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        Submit.setForeground(new java.awt.Color(255, 255, 255));
+        Submit.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Submit.setText("Submit");
+        Submit.setOpaque(true);
+        Submit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                SubmitMousePressed(evt);
+            }
+        });
+
+        ComplaintTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "General", "Food" }));
 
         javax.swing.GroupLayout ComplaintPanelLayout = new javax.swing.GroupLayout(ComplaintPanel);
         ComplaintPanel.setLayout(ComplaintPanelLayout);
         ComplaintPanelLayout.setHorizontalGroup(
             ComplaintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 912, Short.MAX_VALUE)
+            .addGroup(ComplaintPanelLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(ComplaintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(ComplaintPanelLayout.createSequentialGroup()
+                        .addComponent(ComplaintTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Submit, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(ComplaintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane4)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(358, Short.MAX_VALUE))
         );
         ComplaintPanelLayout.setVerticalGroup(
             ComplaintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 621, Short.MAX_VALUE)
+            .addGroup(ComplaintPanelLayout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(ComplaintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Submit, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ComplaintTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(211, Short.MAX_VALUE))
         );
 
         jPanel1.add(ComplaintPanel);
@@ -1209,6 +1452,109 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         }
     }//GEN-LAST:event_LeaveReviewBtnActionPerformed
 
+    private void SubmitMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SubmitMousePressed
+        String customerEmail = "customer@test"; // Replace with actual user data
+    String complaintText = ComplaintTextArea.getText().trim();
+    String complaintType = ComplaintTypeComboBox.getSelectedItem().toString();
+
+    // Validate that complaint is not empty
+    if (complaintText.isEmpty()) {
+        JOptionPane.showMessageDialog(ComplaintPanel, "Please enter your complaint!", "Empty Complaint", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Generate a new Complaint ID
+    String complaintID = generateNewComplaintID();
+
+    // Get current date & time
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+    String complaintDate = dateFormat.format(new Date());
+    String complaintTime = timeFormat.format(new Date());
+
+    String complaintEntry;
+
+    if (complaintType.equals("General Complaint")) {
+        // Save as General Complaint
+        complaintEntry = complaintID + ",General," + customerEmail + "," + complaintText + "," + complaintDate + "," + complaintTime;
+    } else {
+        // Save as Food Complaint (user must enter Order ID manually in text area)
+        complaintEntry = complaintID + ",Food," + customerEmail + "," + complaintText + "," + complaintDate + "," + complaintTime;
+    }
+
+    // Save complaint to complaint.txt
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter("complaint.txt", true))) {
+        writer.write(complaintEntry);
+        writer.newLine();
+        writer.flush();
+        JOptionPane.showMessageDialog(ComplaintPanel, "Complaint submitted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+        // Reset fields after submission
+        ComplaintTextArea.setText("");
+        ComplaintTypeComboBox.setSelectedIndex(0); // Reset combo box
+
+    } catch (IOException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(ComplaintPanel, "Error saving complaint!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_SubmitMousePressed
+
+    private void FoodReviewMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FoodReviewMousePressed
+        openAddReviewPanel(); // Opens the review panel
+    }//GEN-LAST:event_FoodReviewMousePressed
+
+    private void SubmitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubmitBtnActionPerformed
+        String reviewText = AddReviewTextArea.getText().trim();
+    String foodID = FoodIDComboBox.getSelectedItem().toString(); 
+    String rate = RateComboBox.getSelectedItem().toString(); 
+
+    // Check if review is empty
+    if (reviewText.isEmpty()) {
+        JOptionPane.showMessageDialog(AddReviewPanel, "Review cannot be empty!", "Warning", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Generate a new Review ID
+    String reviewID = generateNewReviewID();
+
+    // Prepare review entry
+    String reviewEntry = reviewID + "," + foodID + "," + rate + "," + reviewText;
+
+    // Save to foodReview.txt
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter("foodReview.txt", true))) {
+        writer.write(reviewEntry);
+        writer.newLine();
+        writer.flush();
+        JOptionPane.showMessageDialog(AddReviewPanel, "Review submitted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+        // Reset fields after submission
+        AddReviewTextArea.setText("");
+        FoodIDComboBox.setSelectedIndex(0);
+        RateComboBox.setSelectedIndex(0);
+
+        // Close the AddReviewPanel window
+        Window window = SwingUtilities.getWindowAncestor(AddReviewPanel);
+        if (window != null) {
+            window.dispose();
+        }
+
+    } catch (IOException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(AddReviewPanel, "Error saving review!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_SubmitBtnActionPerformed
+
+    private void SkipBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SkipBtnActionPerformed
+        Window parentWindow = SwingUtilities.getWindowAncestor(AddReviewPanel);
+    if (parentWindow != null) {
+        parentWindow.dispose(); // Close the panel
+    }
+    }//GEN-LAST:event_SkipBtnActionPerformed
+
+    private void RateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RateComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_RateComboBoxActionPerformed
+
         private void updateNotificationPanel(String userID) {
         System.out.println("Updating Notification Panel for: " + userID);
 
@@ -1355,9 +1701,15 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel AddReviewPanel;
+    private javax.swing.JTextArea AddReviewTextArea;
     private javax.swing.JLabel CancelOrder;
     private javax.swing.JPanel ComplaintPanel;
     private javax.swing.JLabel ComplaintTab;
+    private javax.swing.JTextArea ComplaintTextArea;
+    private javax.swing.JComboBox<String> ComplaintTypeComboBox;
+    private javax.swing.JComboBox<String> FoodIDComboBox;
+    private javax.swing.JLabel FoodReview;
     private javax.swing.JTable HistoryjTable1;
     private javax.swing.JButton LeaveReviewBtn;
     private javax.swing.JPanel MenuPanel;
@@ -1370,8 +1722,13 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     private javax.swing.JPanel OrderPanel;
     private javax.swing.JPanel OrderStatusPanel;
     private javax.swing.JLabel OrderStatusTab;
+    private javax.swing.JComboBox<String> RateComboBox;
     private javax.swing.JLabel Reorder;
+    private javax.swing.JTable ReviewjTable;
+    private javax.swing.JButton SkipBtn;
     private javax.swing.JTable StatusjTable1;
+    private javax.swing.JLabel Submit;
+    private javax.swing.JButton SubmitBtn;
     private javax.swing.JLabel descriptionFoodId;
     private javax.swing.JLabel descriptionFoodName;
     private javax.swing.JLabel descriptionFoodPrice;
@@ -1388,16 +1745,22 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     private javax.swing.JLabel foodLabel5;
     private javax.swing.JLabel foodLabel6;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JPanel line;
     private javax.swing.JButton logout;
     private javax.swing.JPanel menubar;

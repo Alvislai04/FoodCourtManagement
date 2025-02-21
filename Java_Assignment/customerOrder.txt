@@ -13,3 +13,5 @@ ORD012,customer@test,Grilled Salmon,2,42.00,21/02/2025, 15:55,Pending
 ORD013,customer@test,Burger,6,66.00,21/02/2025, 16:03,Accepted
 ORD014,customer@test,Grilled Salmon,2,84.00,21/02/2025, 16:03,Pending
 ORD015,customer@test,Burger,6,66.00,21/02/2025,17:22,Pending
+ORD016,customer@test,Grilled Salmon,1,21.00,21/02/2025,21:05,Pending
+ORD017,customer@test,Lemonade,10,40.00,21/02/2025,21:44,Pending

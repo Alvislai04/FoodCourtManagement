@@ -17,7 +17,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -30,6 +32,8 @@ import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import org.jfree.chart.ChartPanel;
+import org.jfree.data.category.DefaultCategoryDataset;
 import system.Vendor.vendorChart;
 import system.Vendor.customListRender.MultilineListCellRenderer;
 
@@ -80,18 +84,68 @@ public class VDashboard extends javax.swing.JFrame {
     }
     
     private void initializeRevenueChart() {
-    vendorChart chart = new vendorChart(); // Instantiate the vendorChart class
-    chartPanel.removeAll(); // Clear any previous content
-    chartPanel.setLayout(new BorderLayout()); // Ensure it has a layout
-    chartPanel.add(chart.createChartPanel(), BorderLayout.CENTER); // Add the chart
-    chartPanel.revalidate(); // Refresh the panel
-    chartPanel.repaint(); // Redraw the panel
+ DefaultCategoryDataset barDataset = new DefaultCategoryDataset(); // Order counts
+    DefaultCategoryDataset lineDataset = new DefaultCategoryDataset(); // Revenue
+
+    try (BufferedReader reader = new BufferedReader(new FileReader("customerOrder.txt"))) {
+        String line;
+        Map<String, Double> revenueMap = new HashMap<>();
+        Map<String, Integer> orderCountMap = new HashMap<>();
+
+        // Read each order and accumulate data
+        while ((line = reader.readLine()) != null) {
+            String[] data = line.split(",");
+            if (data.length < 9) continue;
+
+            String status = data[8].trim();
+            if ("Completed".equalsIgnoreCase(status)) {
+                String date = data[6].trim();
+                double totalPrice = Double.parseDouble(data[4].trim());
+
+                // Update revenue and order count for the date
+                revenueMap.put(date, revenueMap.getOrDefault(date, 0.0) + totalPrice);
+                orderCountMap.put(date, orderCountMap.getOrDefault(date, 0) + 1);
+            }
+        }
+
+        // Sort dates chronologically (dd/MM/yyyy format)
+        List<String> sortedDates = new ArrayList<>(revenueMap.keySet());
+        sortedDates.sort((d1, d2) -> {
+            String[] parts1 = d1.split("/");
+            String[] parts2 = d2.split("/");
+            int yearCompare = parts1[2].compareTo(parts2[2]);
+            if (yearCompare != 0) return yearCompare;
+            int monthCompare = parts1[1].compareTo(parts2[1]);
+            if (monthCompare != 0) return monthCompare;
+            return parts1[0].compareTo(parts2[0]);
+        });
+
+        // Populate datasets with sorted dates
+        for (String date : sortedDates) {
+            barDataset.addValue(orderCountMap.get(date), "Order Count", date);
+            lineDataset.addValue(revenueMap.get(date), "Revenue", date);
+        }
+
+    } catch (IOException | NumberFormatException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error loading order data.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    // Generate the chart
+    vendorChart chart = new vendorChart();
+    ChartPanel chartPanel = chart.createChartPanel(barDataset, lineDataset);
+
+    // Update the GUI
+    this.chartPanel.removeAll();
+    this.chartPanel.add(chartPanel, BorderLayout.CENTER);
+    this.chartPanel.revalidate();
+    this.chartPanel.repaint();
 
 }
     
     private void populateOrderTable() {
         // Define column names
-        String[] columnNames = {"Order ID", "Cust. Name", "Food Ordered","Quantity", "Total Price", "Order Date/Time", "Order Status"};
+        String[] columnNames = {"Order ID", "Cust. Name", "Food Ordered","Quantity", "Total Price", "Order Date", "Order Time", "Order Status"};
 
         // Use the correct DefaultTableModel
         DefaultTableModel model = new DefaultTableModel(columnNames, 0); 
@@ -102,7 +156,7 @@ public class VDashboard extends javax.swing.JFrame {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length == 7) { 
+                if (data.length == 8) { 
                     model.addRow(data); // Add row to the correct model
                 }
             }
@@ -867,7 +921,7 @@ public class VDashboard extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(80, 80, 80)
                 .addComponent(jLabel11)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(80, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -889,7 +943,7 @@ public class VDashboard extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(95, 95, 95)
                 .addComponent(orderNumbers)
-                .addContainerGap(96, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -926,16 +980,16 @@ public class VDashboard extends javax.swing.JFrame {
                 .addComponent(jLabel10)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpRevenueLayout.createSequentialGroup()
-                .addContainerGap(48, Short.MAX_VALUE)
+                .addContainerGap(57, Short.MAX_VALUE)
                 .addGroup(jpRevenueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(chartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 719, Short.MAX_VALUE)
+                    .addComponent(chartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 728, Short.MAX_VALUE)
                     .addGroup(jpRevenueLayout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                         .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
         jpRevenueLayout.setVerticalGroup(
             jpRevenueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1308,7 +1362,7 @@ public class VDashboard extends javax.swing.JFrame {
                     .addComponent(jpReviews, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 330, Short.MAX_VALUE)
+                    .addGap(0, 303, Short.MAX_VALUE)
                     .addComponent(jpRevenue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -1594,6 +1648,9 @@ public class VDashboard extends javax.swing.JFrame {
         if (orderStatus.equals("Accepted") || orderStatus.equals("Completed")) {
             JOptionPane.showMessageDialog(null, "Order is already accepted or completed!");
             return;
+        } else if (orderStatus.equals("Cancelled")) {
+            JOptionPane.showMessageDialog(null, "Order is already cancelled!");
+            return;
         }
 
         int result = JOptionPane.showConfirmDialog(null, "Accept this order?", "Accepting order...", JOptionPane.YES_NO_OPTION);
@@ -1653,6 +1710,9 @@ public class VDashboard extends javax.swing.JFrame {
 
         if (orderStatus.equals("Accepted") || orderStatus.equals("Completed")) {
             JOptionPane.showMessageDialog(null, "Completed or Accepted orders can't be cancelled!");
+            return;
+        } else if (orderStatus.equals("Cancelled")) {
+            JOptionPane.showMessageDialog(null, "Order is already cancelled!");
             return;
         }
         

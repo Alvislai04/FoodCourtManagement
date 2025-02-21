@@ -341,29 +341,29 @@
           <Component id="jpTitle" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
               <Component id="jpTab" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="834" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="857" max="32767" attributes="0"/>
           </Group>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace min="0" pref="304" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="327" max="32767" attributes="0"/>
                   <Component id="jpReviews" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
           <Group type="103" rootIndex="2" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace min="0" pref="307" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="330" max="32767" attributes="0"/>
                   <Component id="jpRevenue" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
           <Group type="103" rootIndex="3" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace min="0" pref="310" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="305" max="32767" attributes="0"/>
                   <Component id="jpOrders" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
           <Group type="103" rootIndex="4" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace min="0" pref="305" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="331" max="32767" attributes="0"/>
                   <Component id="jScrollMenu" min="-2" pref="814" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -371,7 +371,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="287" max="-2" attributes="0"/>
                   <Component id="jpDivider" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="806" max="32767" attributes="0"/>
+                  <EmptySpace pref="833" max="32767" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -431,17 +431,17 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jScrollPane1" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jLabel1" min="-2" pref="198" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
-                                  <Component id="jLabel8" min="-2" pref="198" max="-2" attributes="0"/>
-                                  <EmptySpace pref="119" max="32767" attributes="0"/>
-                                  <Component id="jLabel2" min="-2" pref="198" max="-2" attributes="0"/>
+                                  <Component id="orderAcceptBtn" min="-2" pref="198" max="-2" attributes="0"/>
+                                  <EmptySpace pref="117" max="32767" attributes="0"/>
+                                  <Component id="orderCompleteBtn" min="-2" pref="198" max="-2" attributes="0"/>
+                                  <EmptySpace pref="117" max="32767" attributes="0"/>
+                                  <Component id="orderCancelBtn" min="-2" pref="198" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Component id="jComboBox1" min="-2" max="-2" attributes="0"/>
+                          <Component id="filterCombobox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -452,14 +452,14 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jComboBox1" min="-2" max="-2" attributes="0"/>
+                  <Component id="filterCombobox" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel1" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
-                      <Component id="jLabel2" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
-                      <Component id="jLabel8" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
+                      <Component id="orderAcceptBtn" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
+                      <Component id="orderCancelBtn" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
+                      <Component id="orderCompleteBtn" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="55" max="32767" attributes="0"/>
               </Group>
@@ -530,10 +530,13 @@
                   <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="orderTableMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JLabel" name="jLabel1">
+        <Component class="javax.swing.JLabel" name="orderAcceptBtn">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="10" green="59" red="99" type="rgb"/>
@@ -548,8 +551,11 @@
             <Property name="text" type="java.lang.String" value="Accept"/>
             <Property name="opaque" type="boolean" value="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="orderAcceptBtnMouseClicked"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel2">
+        <Component class="javax.swing.JLabel" name="orderCancelBtn">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="10" green="59" red="99" type="rgb"/>
@@ -564,22 +570,30 @@
             <Property name="text" type="java.lang.String" value="Cancel"/>
             <Property name="opaque" type="boolean" value="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="orderCancelBtnMouseClicked"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="jComboBox1">
+        <Component class="javax.swing.JComboBox" name="filterCombobox">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="3">
-                <StringItem index="0" value="Daily"/>
-                <StringItem index="1" value="Monthly"/>
-                <StringItem index="2" value="Quaterly"/>
+              <StringArray count="5">
+                <StringItem index="0" value="Pending"/>
+                <StringItem index="1" value="Accepted"/>
+                <StringItem index="2" value="Completed"/>
+                <StringItem index="3" value="Cancelled"/>
+                <StringItem index="4" value="All"/>
               </StringArray>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="filterComboboxActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel8">
+        <Component class="javax.swing.JLabel" name="orderCompleteBtn">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="10" green="59" red="99" type="rgb"/>
@@ -594,6 +608,9 @@
             <Property name="text" type="java.lang.String" value="Complete"/>
             <Property name="opaque" type="boolean" value="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="orderCompleteBtnMouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -750,9 +767,9 @@
                       <Component id="chartPanel" pref="719" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="59" max="32767" attributes="0"/>
+                          <EmptySpace pref="58" max="32767" attributes="0"/>
                           <Component id="jComboBox2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="59" max="32767" attributes="0"/>
+                          <EmptySpace pref="58" max="32767" attributes="0"/>
                           <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -828,7 +845,7 @@
                       <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
                       <Component id="revenueNumbers" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="65" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="63" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -847,7 +864,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                           <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="26" max="32767" attributes="0"/>
+                          <EmptySpace pref="28" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -913,7 +930,7 @@
                       <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
                       <Component id="orderNumbers" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="66" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="64" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -932,7 +949,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
                           <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="79" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1537,7 +1554,7 @@
                   <Component id="title_lbl1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                   <Component id="title_lbl2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="1013" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="1040" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

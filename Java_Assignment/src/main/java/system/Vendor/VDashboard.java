@@ -9,8 +9,10 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,7 +27,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import system.Vendor.vendorChart;
 import system.Vendor.customListRender.MultilineListCellRenderer;
 
@@ -286,6 +290,55 @@ public class VDashboard extends javax.swing.JFrame {
         menuPanel.revalidate();
         menuPanel.repaint();
     }
+    
+    private void updateOrderStatusInFile(String orderId, String newStatus) {
+    String inputFile = "customerOrder.txt";
+    String tempFile = "customerOrder_temp.txt";
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] data = line.split(","); // Assuming the file is CSV
+            if (data.length == 7 && data[0].equals(orderId)) {
+                // Update the "Order Status" field (index 6)
+                data[6] = newStatus;
+                line = String.join(",", data);
+            }
+            writer.write(line);
+            writer.newLine();
+        }
+    } catch (IOException ex) {
+        ex.printStackTrace();
+    }
+
+    // Replace the old file with the updated file
+    File oldFile = new File(inputFile);
+    File newFile = new File(tempFile);
+
+    if (oldFile.delete()) {
+        newFile.renameTo(oldFile);
+    }
+}
+    
+    private void filterOrderTable(String statusFilter) {
+        DefaultTableModel model = (DefaultTableModel) orderTable.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        orderTable.setRowSorter(sorter);
+
+        // Apply the filter
+        if (statusFilter.equals("All")) {
+            sorter.setRowFilter(null); // Show all rows
+        } else {
+            sorter.setRowFilter(RowFilter.regexFilter("^" + statusFilter + "$", 6)); // Filter by "Order Status" column (index 6)
+        }
+    }
+    
+    
+    
+    
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -313,10 +366,10 @@ public class VDashboard extends javax.swing.JFrame {
         jpOrders = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         orderTable = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel8 = new javax.swing.JLabel();
+        orderAcceptBtn = new javax.swing.JLabel();
+        orderCancelBtn = new javax.swing.JLabel();
+        filterCombobox = new javax.swing.JComboBox<>();
+        orderCompleteBtn = new javax.swing.JLabel();
         jpReviews = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
@@ -580,6 +633,11 @@ public class VDashboard extends javax.swing.JFrame {
             }
         });
         orderTable.getTableHeader().setReorderingAllowed(false);
+        orderTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                orderTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(orderTable);
         if (orderTable.getColumnModel().getColumnCount() > 0) {
             orderTable.getColumnModel().getColumn(0).setResizable(false);
@@ -591,28 +649,48 @@ public class VDashboard extends javax.swing.JFrame {
             orderTable.getColumnModel().getColumn(6).setResizable(false);
         }
 
-        jLabel1.setBackground(new java.awt.Color(153, 89, 16));
-        jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Accept");
-        jLabel1.setOpaque(true);
+        orderAcceptBtn.setBackground(new java.awt.Color(153, 89, 16));
+        orderAcceptBtn.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        orderAcceptBtn.setForeground(new java.awt.Color(255, 255, 255));
+        orderAcceptBtn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        orderAcceptBtn.setText("Accept");
+        orderAcceptBtn.setOpaque(true);
+        orderAcceptBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                orderAcceptBtnMouseClicked(evt);
+            }
+        });
 
-        jLabel2.setBackground(new java.awt.Color(153, 89, 16));
-        jLabel2.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Cancel");
-        jLabel2.setOpaque(true);
+        orderCancelBtn.setBackground(new java.awt.Color(153, 89, 16));
+        orderCancelBtn.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        orderCancelBtn.setForeground(new java.awt.Color(255, 255, 255));
+        orderCancelBtn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        orderCancelBtn.setText("Cancel");
+        orderCancelBtn.setOpaque(true);
+        orderCancelBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                orderCancelBtnMouseClicked(evt);
+            }
+        });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Daily", "Monthly", "Quaterly" }));
+        filterCombobox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pending", "Accepted", "Completed", "Cancelled", "All" }));
+        filterCombobox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterComboboxActionPerformed(evt);
+            }
+        });
 
-        jLabel8.setBackground(new java.awt.Color(153, 89, 16));
-        jLabel8.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("Complete");
-        jLabel8.setOpaque(true);
+        orderCompleteBtn.setBackground(new java.awt.Color(153, 89, 16));
+        orderCompleteBtn.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        orderCompleteBtn.setForeground(new java.awt.Color(255, 255, 255));
+        orderCompleteBtn.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        orderCompleteBtn.setText("Complete");
+        orderCompleteBtn.setOpaque(true);
+        orderCompleteBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                orderCompleteBtnMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpOrdersLayout = new javax.swing.GroupLayout(jpOrders);
         jpOrders.setLayout(jpOrdersLayout);
@@ -625,28 +703,28 @@ public class VDashboard extends javax.swing.JFrame {
                         .addGroup(jpOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpOrdersLayout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(87, 87, 87)
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(orderAcceptBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
+                                .addComponent(orderCompleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
+                                .addComponent(orderCancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())
                     .addGroup(jpOrdersLayout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(filterCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         jpOrdersLayout.setVerticalGroup(
             jpOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpOrdersLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(filterCombobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
                 .addGroup(jpOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(orderAcceptBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(orderCancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(orderCompleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(55, Short.MAX_VALUE))
         );
 
@@ -740,7 +818,7 @@ public class VDashboard extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(jLabel12)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -770,7 +848,7 @@ public class VDashboard extends javax.swing.JFrame {
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(63, 63, 63)
                 .addComponent(revenueNumbers)
-                .addGap(0, 65, Short.MAX_VALUE))
+                .addGap(0, 63, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(153, 89, 16));
@@ -789,7 +867,7 @@ public class VDashboard extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(80, 80, 80)
                 .addComponent(jLabel11)
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -819,7 +897,7 @@ public class VDashboard extends javax.swing.JFrame {
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(63, 63, 63)
                 .addComponent(orderNumbers)
-                .addGap(0, 66, Short.MAX_VALUE))
+                .addGap(0, 64, Short.MAX_VALUE))
         );
 
         chartPanel.setBackground(new java.awt.Color(221, 221, 221));
@@ -853,9 +931,9 @@ public class VDashboard extends javax.swing.JFrame {
                     .addComponent(chartPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 719, Short.MAX_VALUE)
                     .addGroup(jpRevenueLayout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                         .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(48, Short.MAX_VALUE))
         );
@@ -1205,7 +1283,7 @@ public class VDashboard extends javax.swing.JFrame {
                 .addComponent(title_lbl1)
                 .addGap(2, 2, 2)
                 .addComponent(title_lbl2)
-                .addGap(0, 1013, Short.MAX_VALUE))
+                .addGap(0, 1040, Short.MAX_VALUE))
         );
         jpTitleLayout.setVerticalGroup(
             jpTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1223,28 +1301,28 @@ public class VDashboard extends javax.swing.JFrame {
             .addComponent(jpTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jpTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 834, Short.MAX_VALUE))
+                .addGap(0, 857, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 304, Short.MAX_VALUE)
+                    .addGap(0, 327, Short.MAX_VALUE)
                     .addComponent(jpReviews, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 307, Short.MAX_VALUE)
+                    .addGap(0, 330, Short.MAX_VALUE)
                     .addComponent(jpRevenue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 310, Short.MAX_VALUE)
+                    .addGap(0, 305, Short.MAX_VALUE)
                     .addComponent(jpOrders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 305, Short.MAX_VALUE)
+                    .addGap(0, 331, Short.MAX_VALUE)
                     .addComponent(jScrollMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 814, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(287, 287, 287)
                     .addComponent(jpDivider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(806, Short.MAX_VALUE)))
+                    .addContainerGap(833, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1491,6 +1569,117 @@ public class VDashboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_removeBtnActionPerformed
 
+    private void filterComboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterComboboxActionPerformed
+        // TODO add your handling code here:
+        String selectedFilter = filterCombobox.getSelectedItem().toString();
+        filterOrderTable(selectedFilter);
+        
+        
+        
+    }//GEN-LAST:event_filterComboboxActionPerformed
+
+    private void orderAcceptBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orderAcceptBtnMouseClicked
+            // TODO add your handling code here:
+        int selectedRow = orderTable.getSelectedRow(); // Get the selected row
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Please select an order to accept!");
+            return;
+        }
+
+        // Get Order ID and current Order Status
+        String orderId = orderTable.getValueAt(selectedRow, 0).toString();
+        String orderStatus = orderTable.getValueAt(selectedRow, 6).toString();
+
+        // Check if the order is already accepted or completed
+        if (orderStatus.equals("Accepted") || orderStatus.equals("Completed")) {
+            JOptionPane.showMessageDialog(null, "Order is already accepted or completed!");
+            return;
+        }
+
+        int result = JOptionPane.showConfirmDialog(null, "Accept this order?", "Accepting order...", JOptionPane.YES_NO_OPTION);
+        
+        if (result == JOptionPane.YES_OPTION) {
+            // Update the order status in the table
+            orderTable.setValueAt("Accepted", selectedRow, 6); // Update the "Order Status" column
+
+            // Update the order status in the text file
+            updateOrderStatusInFile(orderId, "Accepted");
+
+            JOptionPane.showMessageDialog(null, "Order " + orderId + " has been accepted!");
+        }
+    }//GEN-LAST:event_orderAcceptBtnMouseClicked
+
+    private void orderCompleteBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orderCompleteBtnMouseClicked
+        int selectedRow = orderTable.getSelectedRow(); // Get the selected row
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Please select an order to complete!");
+            return;
+        }
+
+        // Get Order ID and current Order Status
+        String orderId = orderTable.getValueAt(selectedRow, 0).toString();
+        String orderStatus = orderTable.getValueAt(selectedRow, 6).toString();
+
+        // Check if the order is "Accepted"
+        if (!orderStatus.equals("Accepted")) {
+            JOptionPane.showMessageDialog(null, "Only orders with 'Accepted' status can be completed!");
+            return;
+        }
+        
+        int result = JOptionPane.showConfirmDialog(null, "Complete this order?", "Completing order...", JOptionPane.YES_NO_OPTION);
+        
+        if (result == JOptionPane.YES_OPTION) {
+            // Update the order status in the table
+            orderTable.setValueAt("Completed", selectedRow, 6); // Update the "Order Status" column
+
+            // Update the order status in the text file
+            updateOrderStatusInFile(orderId, "Completed");
+
+            JOptionPane.showMessageDialog(null, "Order " + orderId + " has been completed!");
+        }
+    }//GEN-LAST:event_orderCompleteBtnMouseClicked
+
+    private void orderCancelBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orderCancelBtnMouseClicked
+        // TODO add your handling code here:
+        int selectedRow = orderTable.getSelectedRow(); // Get the selected row
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Please select an order to complete!");
+            return;
+        }
+
+        // Get Order ID and current Order Status
+        String orderId = orderTable.getValueAt(selectedRow, 0).toString();
+        String orderStatus = orderTable.getValueAt(selectedRow, 6).toString();
+
+        if (orderStatus.equals("Accepted") || orderStatus.equals("Completed")) {
+            JOptionPane.showMessageDialog(null, "Completed or Accepted orders can't be cancelled!");
+            return;
+        }
+        
+        int result = JOptionPane.showConfirmDialog(null, "Cancel this order?", "Cancelling order...", JOptionPane.YES_NO_OPTION);
+        
+        if (result == JOptionPane.YES_OPTION) {
+            // Update the order status in the table
+            orderTable.setValueAt("Cancelled", selectedRow, 6); // Update the "Order Status" column
+
+            // Update the order status in the text file
+            updateOrderStatusInFile(orderId, "Cancelled");
+
+            JOptionPane.showMessageDialog(null, "Order " + orderId + " has been cancelled!");
+        }
+
+
+    }//GEN-LAST:event_orderCancelBtnMouseClicked
+
+    private void orderTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orderTableMouseClicked
+        // TODO add your handling code here:
+        int selectedRow = orderTable.getSelectedRow();
+        if (selectedRow != -1) {
+            String orderId = orderTable.getValueAt(selectedRow, 0).toString();
+            System.out.println("Selected Order ID:" + orderId);
+        }
+    }//GEN-LAST:event_orderTableMouseClicked
+
     private void goToLogout(){
         Login loginframe = new Login();
         loginframe.setVisible(true);
@@ -1542,6 +1731,7 @@ public class VDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel descriptionFoodName;
     private javax.swing.JLabel descriptionFoodPrice;
     private javax.swing.JPanel descriptionPanel;
+    private javax.swing.JComboBox<String> filterCombobox;
     private javax.swing.JLabel foodIDLabel;
     private javax.swing.JLabel foodIcon1;
     private javax.swing.JLabel foodIcon2;
@@ -1559,19 +1749,15 @@ public class VDashboard extends javax.swing.JFrame {
     private javax.swing.JTextField foodNameField;
     private javax.swing.JLabel foodNameLabel;
     private javax.swing.JLabel imageLabel;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -1595,6 +1781,9 @@ public class VDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel menuTab;
     private javax.swing.JLabel menuTitle;
     private javax.swing.JLabel nameLabel1;
+    private javax.swing.JLabel orderAcceptBtn;
+    private javax.swing.JLabel orderCancelBtn;
+    private javax.swing.JLabel orderCompleteBtn;
     private javax.swing.JLabel orderNumbers;
     private javax.swing.JTable orderTable;
     private javax.swing.JLabel ordersTab;

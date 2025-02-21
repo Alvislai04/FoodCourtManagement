@@ -711,7 +711,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Dashboard");
+        jLabel1.setText("Welcome");
 
         MenuTab.setBackground(new java.awt.Color(153, 89, 16));
         MenuTab.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N

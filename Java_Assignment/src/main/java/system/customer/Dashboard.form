@@ -513,7 +513,7 @@
               <Font name="Helvetica Neue" size="36" style="1"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Dashboard"/>
+            <Property name="text" type="java.lang.String" value="Welcome"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="MenuTab">

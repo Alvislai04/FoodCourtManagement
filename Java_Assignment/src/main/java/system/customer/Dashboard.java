@@ -258,11 +258,14 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
                 String foodOrdered = data[2]; // Food Name
                 String quantity = data[3];    // Quantity
                 String transaction = data[4]; // Transaction (Total Price)
-                String orderDate = data[5];   // Order Date (New Format)
-                String orderTime = data[6];   // Order Time (New Format)
+                String orderDate = data[5];   // Order Date
+                String orderTime = data[6];   // Order Time
+                String status = data[7].trim(); // Status (Remove any extra spaces)
 
-                // Add only necessary data to the table
-                model.addRow(new Object[]{orderId, foodOrdered, quantity, transaction, orderDate, orderTime});
+                // **Only add orders where the status is "Completed"**
+                if (status.equalsIgnoreCase("Completed")) {
+                    model.addRow(new Object[]{orderId, foodOrdered, quantity, transaction, orderDate, orderTime});
+                }
             }
         }
     } catch (IOException e) {

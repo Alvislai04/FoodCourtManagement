@@ -1506,6 +1506,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     List<String> updatedOrders = new ArrayList<>();
     boolean alreadyCancelled = false;
     boolean alreadyCompleted = false;
+    boolean alreadyAccepted = false; // ✅ Added check for "Accepted"
 
     try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
         String line;
@@ -1515,15 +1516,18 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 
             // Ensure valid row (should have 9 columns)
             if (data.length == 9) {  
-                String orderId = data[0]; // Order ID
+                String orderId = data[0]; 
+                String status = data[7]; // Order status column
 
                 if (orderId.equals(orderIdToCancel)) {
-                    if (data[7].equalsIgnoreCase("Cancelled")) {  
-                        alreadyCancelled = true; // Mark as already cancelled
-                    } else if (data[7].equalsIgnoreCase("Completed")) {
-                        alreadyCompleted = true; // Mark as completed
+                    if (status.equalsIgnoreCase("Cancelled")) {  
+                        alreadyCancelled = true; 
+                    } else if (status.equalsIgnoreCase("Completed")) {
+                        alreadyCompleted = true;
+                    } else if (status.equalsIgnoreCase("Accepted")) { // ✅ Prevent cancelling accepted orders
+                        alreadyAccepted = true;
                     } else {
-                        data[7] = "Cancelled"; // Change status to "Cancelled"
+                        data[7] = "Cancelled"; 
                     }
                 }
 
@@ -1536,9 +1540,15 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         return;
     }
 
-    // **Prevent cancelling already completed orders**
+    // **Prevent cancelling completed orders**
     if (alreadyCompleted) {
         JOptionPane.showMessageDialog(this, "This order is already completed and cannot be cancelled!", "Cannot Cancel", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // **Prevent cancelling accepted orders**
+    if (alreadyAccepted) {
+        JOptionPane.showMessageDialog(this, "This order has already been accepted and cannot be cancelled!", "Cannot Cancel", JOptionPane.WARNING_MESSAGE);
         return;
     }
 

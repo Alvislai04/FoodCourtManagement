@@ -221,7 +221,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 }
    
    private void populateOrderStatusTable() {
-    // Define column names (excluding customer email)
+    // Define column names (excluding customer email and payment status)
     String[] columnNames = {"Order ID", "Food Ordered", "Quantity", "Total Price", "Order Date", "Order Time", "Status"};
 
     // Use the correct DefaultTableModel
@@ -229,7 +229,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     StatusjTable1.setModel(model); // Set model to the table
     StatusjTable1.setRowHeight(50);
 
-    // **Clear table before loading new data**
+    // Clear table before loading new data
     model.setRowCount(0);
 
     try (BufferedReader reader = new BufferedReader(new FileReader("customerOrder.txt"))) {
@@ -237,17 +237,17 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         while ((line = reader.readLine()) != null) {
             String[] data = line.split(",");
 
-            // Ensure the row has exactly 8 columns (due to new date/time format)
-            if (data.length == 8) {
+            // Ensure there are exactly 9 columns but ignore the last (payment) column
+            if (data.length == 9) {
                 String orderId = data[0];     // Order ID
                 String foodOrdered = data[2]; // Food Name
                 String quantity = data[3];    // Quantity
                 String totalPrice = data[4];  // Total Price
-                String orderDate = data[5];   // Order Date (New Format)
-                String orderTime = data[6];   // Order Time (New Format)
+                String orderDate = data[5];   // Order Date
+                String orderTime = data[6];   // Order Time
                 String status = data[7];      // Status
 
-                // Add only necessary data to the table
+                // Add only necessary data to the table (excluding payment status)
                 model.addRow(new Object[]{orderId, foodOrdered, quantity, totalPrice, orderDate, orderTime, status});
             }
         }
@@ -256,7 +256,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         JOptionPane.showMessageDialog(null, "Error reading customerOrder.txt!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
-   
+
    private void populateOrderHistoryTable() {
     // Define column names including the new "Payment" column
     String[] columnNames = {"Order ID", "Food Ordered", "Quantity", "Transaction", "Order Date", "Order Time", "Payment"};
@@ -274,8 +274,8 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         while ((line = reader.readLine()) != null) {
             String[] data = line.split(",");
 
-            // Ensure there are at least 8 columns
-            if (data.length == 8) {
+            // Ensure there are 9 columns (including payment status)
+            if (data.length == 9) {
                 String orderId = data[0];     
                 String foodOrdered = data[2]; 
                 String quantity = data[3];    
@@ -283,10 +283,11 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
                 String orderDate = data[5];   
                 String orderTime = data[6];   
                 String status = data[7].trim();
+                String payment = data[8].trim(); // Read the payment status
 
-                // Only add unpaid completed orders
+                // Show only completed orders (regardless of payment status)
                 if (status.equalsIgnoreCase("Completed")) {
-                    model.addRow(new Object[]{orderId, foodOrdered, quantity, transaction, orderDate, orderTime, "Unpaid"});
+                    model.addRow(new Object[]{orderId, foodOrdered, quantity, transaction, orderDate, orderTime, payment});
                 }
             }
         }
@@ -395,6 +396,47 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         JOptionPane.showMessageDialog(this, "Error loading reviews!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
+   private void updatePaymentStatus(String selectedOrderID) {
+    File file = new File("customerOrder.txt");
+    List<String> updatedLines = new ArrayList<>();
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] data = line.split(",");
+
+            if (data.length == 9) { // Ensure correct format
+                String orderId = data[0].trim();
+                
+                // Check if this is the selected order
+                if (orderId.equals(selectedOrderID) && data[7].trim().equalsIgnoreCase("Completed")) {
+                    data[8] = "paid"; // Change "unpaid" to "paid"
+                }
+
+                // Reconstruct the line and add it to the list
+                updatedLines.add(String.join(",", data));
+            }
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error reading customerOrder.txt!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Write the updated content back to customerOrder.txt
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        for (String updatedLine : updatedLines) {
+            writer.write(updatedLine);
+            writer.newLine();
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error updating payment status!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    JOptionPane.showMessageDialog(null, "Payment updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+}
+
    
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1693,37 +1735,27 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     private void PaymentMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PaymentMousePressed
             int selectedRow = HistoryjTable1.getSelectedRow(); // Get selected row
 
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select an order to make payment!", "Warning", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-
-    // Retrieve order details
-    String orderId = HistoryjTable1.getValueAt(selectedRow, 0).toString();
-    String foodOrdered = HistoryjTable1.getValueAt(selectedRow, 1).toString();
-    String quantity = HistoryjTable1.getValueAt(selectedRow, 2).toString();
-    String transaction = HistoryjTable1.getValueAt(selectedRow, 3).toString();
-    String orderDate = HistoryjTable1.getValueAt(selectedRow, 4).toString();
-    String orderTime = HistoryjTable1.getValueAt(selectedRow, 5).toString();
-
-    // Confirm payment
-    int confirm = JOptionPane.showConfirmDialog(this, "Confirm payment for Order ID: " + orderId + "?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
-    if (confirm == JOptionPane.YES_OPTION) {
-        // Update table status to "Paid"
-        DefaultTableModel model = (DefaultTableModel) HistoryjTable1.getModel();
-        model.setValueAt("Paid", selectedRow, 6);
-
-        // Append to temp_customerOrder.txt
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("temp_customerOrder.txt", true))) {
-            writer.write(orderId + "," + foodOrdered + "," + quantity + "," + transaction + "," + orderDate + "," + orderTime + ",Paid");
-            writer.newLine();
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Error updating payment record!", "Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Please select an order to pay!", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
         }
 
-        JOptionPane.showMessageDialog(this, "Payment successful for Order ID: " + orderId, "Payment Completed", JOptionPane.INFORMATION_MESSAGE);
-    }
+        String orderId = HistoryjTable1.getValueAt(selectedRow, 0).toString(); // Get Order ID
+        String paymentStatus = HistoryjTable1.getValueAt(selectedRow, 6).toString().trim(); // Get Payment Status
+
+        if (!paymentStatus.equalsIgnoreCase("Unpaid")) {
+            JOptionPane.showMessageDialog(null, "This order is already paid!", "Info", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // Confirm payment
+        int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to pay for this order?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            updatePaymentStatus(orderId); // Call function to update file
+
+            // Update table UI
+            HistoryjTable1.setValueAt("Paid", selectedRow, 6); // Change status in table
+        }
     }//GEN-LAST:event_PaymentMousePressed
 
         private void updateNotificationPanel(String userID) {

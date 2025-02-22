@@ -258,15 +258,14 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 }
    
    private void populateOrderHistoryTable() {
-    // Define column names (excluding customer email and status)
-    String[] columnNames = {"Order ID", "Food Ordered", "Quantity", "Transaction", "Order Date", "Order Time"};
-
-    // Use the correct DefaultTableModel
+    // Define column names (including Payment Status)
+    String[] columnNames = {"Order ID", "Food Ordered", "Quantity", "Transaction", "Order Date", "Order Time", "Payment"};
+    
     DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-    HistoryjTable1.setModel(model); // Set model to the table
+    HistoryjTable1.setModel(model); 
     HistoryjTable1.setRowHeight(50);
 
-    // **Clear table before loading new data**
+    // Clear table before loading new data
     model.setRowCount(0);
 
     try (BufferedReader reader = new BufferedReader(new FileReader("customerOrder.txt"))) {
@@ -274,7 +273,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         while ((line = reader.readLine()) != null) {
             String[] data = line.split(",");
 
-            // Ensure the row has exactly 8 columns (due to new date/time format)
+            // Ensure the row has exactly 8 columns (including status)
             if (data.length == 8) {
                 String orderId = data[0];     // Order ID
                 String foodOrdered = data[2]; // Food Name
@@ -282,11 +281,11 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
                 String transaction = data[4]; // Transaction (Total Price)
                 String orderDate = data[5];   // Order Date
                 String orderTime = data[6];   // Order Time
-                String status = data[7].trim(); // Status (Remove any extra spaces)
+                String status = data[7].trim(); // Status (Completed or Pending)
 
-                // **Only add orders where the status is "Completed"**
+                // **Only show completed orders**
                 if (status.equalsIgnoreCase("Completed")) {
-                    model.addRow(new Object[]{orderId, foodOrdered, quantity, transaction, orderDate, orderTime});
+                    model.addRow(new Object[]{orderId, foodOrdered, quantity, transaction, orderDate, orderTime, "Unpaid"});
                 }
             }
         }
@@ -295,7 +294,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         JOptionPane.showMessageDialog(null, "Error reading customerOrder.txt!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
-   
+
    private String generateNewComplaintID() {
     int lastID = 0;
 
@@ -395,6 +394,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         JOptionPane.showMessageDialog(this, "Error loading reviews!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -468,6 +468,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         HistoryjTable1 = new javax.swing.JTable();
         Reorder = new javax.swing.JLabel();
         Receipt = new javax.swing.JLabel();
+        Payment = new javax.swing.JLabel();
         ComplaintPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         ComplaintTextArea = new javax.swing.JTextArea();
@@ -1107,11 +1108,11 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 
             },
             new String [] {
-                "Order ID", "Food Ordered", "Quantity", "Transaction", "Order Date", "Order Time"
+                "Order ID", "Food Ordered", "Quantity", "Transaction", "Order Date", "Order Time", "Payment"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1151,6 +1152,18 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
             }
         });
 
+        Payment.setBackground(new java.awt.Color(153, 89, 16));
+        Payment.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        Payment.setForeground(new java.awt.Color(255, 255, 255));
+        Payment.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Payment.setText("Payment");
+        Payment.setOpaque(true);
+        Payment.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                PaymentMousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout OrderHistoryPanelLayout = new javax.swing.GroupLayout(OrderHistoryPanel);
         OrderHistoryPanel.setLayout(OrderHistoryPanelLayout);
         OrderHistoryPanelLayout.setHorizontalGroup(
@@ -1161,6 +1174,8 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
                     .addGroup(OrderHistoryPanelLayout.createSequentialGroup()
                         .addComponent(Receipt, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Payment, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45)
                         .addComponent(Reorder, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 698, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(175, Short.MAX_VALUE))
@@ -1171,9 +1186,11 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
                 .addGap(16, 16, 16)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Reorder, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Receipt, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(Reorder, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Receipt, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(Payment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(68, Short.MAX_VALUE))
         );
 
@@ -1640,13 +1657,19 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 
     private void ReceiptMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ReceiptMousePressed
         int selectedRow = HistoryjTable1.getSelectedRow();
-
     if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select an order to view the receipt!", "No Order Selected", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Please select an order to view the receipt.", "No Order Selected", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
-    // Get order details from the selected row
+    String paymentStatus = HistoryjTable1.getValueAt(selectedRow, 6).toString(); // Payment Status Column
+
+    if (!paymentStatus.equalsIgnoreCase("Paid")) {
+        JOptionPane.showMessageDialog(this, "You cannot view the receipt until payment is completed.", "Payment Required", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Retrieve order details
     String orderId = HistoryjTable1.getValueAt(selectedRow, 0).toString();
     String foodOrdered = HistoryjTable1.getValueAt(selectedRow, 1).toString();
     String quantity = HistoryjTable1.getValueAt(selectedRow, 2).toString();
@@ -1654,19 +1677,42 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     String orderDate = HistoryjTable1.getValueAt(selectedRow, 4).toString();
     String orderTime = HistoryjTable1.getValueAt(selectedRow, 5).toString();
 
-    // Format the receipt
-    String receipt = "===== Order Receipt =====\n"
-                   + "Order ID: " + orderId + "\n"
-                   + "Food Ordered: " + foodOrdered + "\n"
-                   + "Quantity: " + quantity + "\n"
-                   + "Transaction: " + transaction + "\n"
-                   + "Order Date: " + orderDate + "\n"
-                   + "Order Time: " + orderTime + "\n"
-                   + "=========================";
-
-    // Display receipt in a dialog
-    JOptionPane.showMessageDialog(this, receipt, "Order Receipt", JOptionPane.INFORMATION_MESSAGE);
+    // Display Receipt
+    String receipt = "====== RECEIPT ======\n"
+                    + "Order ID: " + orderId + "\n"
+                    + "Food Ordered: " + foodOrdered + "\n"
+                    + "Quantity: " + quantity + "\n"
+                    + "Transaction: " + transaction + "\n"
+                    + "Order Date: " + orderDate + "\n"
+                    + "Order Time: " + orderTime + "\n"
+                    + "Payment Status: " + paymentStatus + "\n"
+                    + "=====================";
+    
+    JOptionPane.showMessageDialog(this, receipt, "Receipt", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_ReceiptMousePressed
+
+    private void PaymentMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PaymentMousePressed
+        int selectedRow = HistoryjTable1.getSelectedRow();
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select an order to make payment.", "No Order Selected", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    String paymentStatus = HistoryjTable1.getValueAt(selectedRow, 6).toString(); // Payment Status Column
+
+    if (paymentStatus.equalsIgnoreCase("Paid")) {
+        JOptionPane.showMessageDialog(this, "This order has already been paid.", "Payment Completed", JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
+
+    // Confirm payment
+    int confirm = JOptionPane.showConfirmDialog(this, "Confirm payment for this order?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
+    if (confirm == JOptionPane.YES_OPTION) {
+        // **Change payment status to "Paid" in the table**
+        HistoryjTable1.setValueAt("Paid", selectedRow, 6);
+        JOptionPane.showMessageDialog(this, "Payment successful!", "Payment Done", JOptionPane.INFORMATION_MESSAGE);
+    }
+    }//GEN-LAST:event_PaymentMousePressed
 
         private void updateNotificationPanel(String userID) {
         System.out.println("Updating Notification Panel for: " + userID);
@@ -1835,6 +1881,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     private javax.swing.JPanel OrderPanel;
     private javax.swing.JPanel OrderStatusPanel;
     private javax.swing.JLabel OrderStatusTab;
+    private javax.swing.JLabel Payment;
     private javax.swing.JComboBox<String> RateComboBox;
     private javax.swing.JLabel Receipt;
     private javax.swing.JLabel Reorder;

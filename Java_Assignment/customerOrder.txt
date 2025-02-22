@@ -23,4 +23,8 @@ ORD022,customer@test,Spaghetti,1,15.00,22/02/2025,01:39,Pending
 ORD023,customer@test,Grilled Salmon,1,21.00,22/02/2025,01:39,Pending
 ORD024,customer@test,Grilled Salmon,2,42.00,22/02/2025,01:39,Pending
 ORD025,customer@test,Burger,3,33.00,22/02/2025,14:14,Cancelled
-ORD026,customer@test,Grilled Salmon,6,126.00,22/02/2025,14:31,Pending
+ORD026,customer@test,Grilled Salmon,6,126.00,22/02/2025,14:31,Cancelled
+ORD027,customer@test,Grilled Salmon,2,42.00,22/02/2025,16:52,Pending
+ORD028,customer@test,Grilled Salmon,1,21.00,22/02/2025,16:54,Cancelled
+ORD029,customer@test,Burger,6,396.00,22/02/2025,16:54,Pending
+ORD030,customer@test,Grilled Salmon,2,42.00,22/02/2025,17:00,Pending

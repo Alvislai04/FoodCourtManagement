@@ -307,7 +307,7 @@ public class Login extends javax.swing.JFrame {
                     this.dispose();
                     new AdDashboard().setVisible(true);
                 } else if (isCustomer) { // Customer
-                    JOptionPane.showMessageDialog(null, "Successfully logged in");
+                    JOptionPane.showMessageDialog(null, "Successfully logged in as Customer");
                     this.dispose();
                     goToDashboard();
                 } else if (isVendor) { // Vendor

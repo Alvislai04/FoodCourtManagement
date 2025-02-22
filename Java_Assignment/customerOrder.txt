@@ -18,3 +18,7 @@ ORD017,customer@test,Lemonade,10,40.00,21/02/2025,21:44,Pending
 ORD018,customer@test,Grilled Salmon,3,189.00,21/02/2025,23:24,Pending
 ORD019,customer@test,Lemonade,5,20.00,21/02/2025,23:25,Pending
 ORD020,customer@test,Grilled Salmon,2,42.00,22/02/2025,00:58,Cancelled
+ORD021,customer@test,Grilled Salmon,2,42.00,22/02/2025,01:38,Pending
+ORD022,customer@test,Spaghetti,1,15.00,22/02/2025,01:39,Pending
+ORD023,customer@test,Grilled Salmon,1,21.00,22/02/2025,01:39,Pending
+ORD024,customer@test,Grilled Salmon,2,42.00,22/02/2025,01:39,Pending

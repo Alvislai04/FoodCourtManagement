@@ -53,7 +53,10 @@ public class Dashboard extends javax.swing.JFrame {
         populateOrderStatusTable();
         populateOrderHistoryTable();
         loadFoodIDs();
+        loadFoodImages();
     }
+    
+    String vendorFoodFilePath = "vendorFood.txt";
     
     // Overloaded method for normal clicks
 private void openOrderPanel(int index) {
@@ -114,9 +117,14 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 
 
     private void loadFoodImages () {
-        String vendorFoodFilePath = "vendorFood.txt";
+
         JLabel[] foodIcon = {foodIcon1, foodIcon2, foodIcon3, foodIcon4, foodIcon5, foodIcon6};
         JLabel[] foodLabels = {foodLabel1, foodLabel2, foodLabel3, foodLabel4, foodLabel5, foodLabel6};
+        
+         for (int i = 0; i < foodIcon.length; i++) {
+        foodIcon[i].setIcon(null); // Clear the icon
+        foodLabels[i].setText(""); // Clear the text
+        }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {
             String line;
@@ -133,13 +141,13 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
                 File imageFile = new File(imagePath);
                 if (imageFile.exists()) {
                     BufferedImage image = ImageIO.read(imageFile);
-                    ImageIcon icon = new ImageIcon(image);
+
 
                     // Resize the image (optional)
                     Image scaledImage = image.getScaledInstance(
                         187, 179, Image.SCALE_SMOOTH
                     );
-                    icon = new ImageIcon(scaledImage);
+                    ImageIcon icon = new ImageIcon(scaledImage);
 
                     // Set the icon and text for the current label
                     foodIcon[index].setIcon(icon);
@@ -154,7 +162,12 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        
+        // Force the GUI to refresh
+        MenuPanel.revalidate();
+        MenuPanel.repaint();
     }
+    
    private void saveOrder(String orderId, String customerEmail, String foodName, int quantity, String price, String orderDate, String orderTime, String status) {
     String orderFilePath = "customerOrder.txt"; // Ensure the correct filename
 
@@ -1245,7 +1258,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         OrderStatusTab.setBackground(new Color(153, 89, 16));
         OrderHistoryTab.setBackground(new Color(153, 89, 16));
         ComplaintTab.setBackground(new Color(153, 89, 16));
-        NotificationPanel.setBackground(new Color(153, 89, 16));
+        NotificationTab.setBackground(new Color(153, 89, 16));
     }//GEN-LAST:event_MenuTabMousePressed
 
     private void OrderStatusTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderStatusTabMousePressed
@@ -1258,7 +1271,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         MenuTab.setBackground(new Color(153, 89, 16));
         OrderHistoryTab.setBackground(new Color(153, 89, 16));
         ComplaintTab.setBackground(new Color(153, 89, 16));
-        NotificationPanel.setBackground(new Color(153, 89, 16));
+        NotificationTab.setBackground(new Color(153, 89, 16));
     }//GEN-LAST:event_OrderStatusTabMousePressed
 
     private void OrderHistoryTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderHistoryTabMousePressed
@@ -1271,7 +1284,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         OrderStatusTab.setBackground(new Color(153, 89, 16));
         MenuTab.setBackground(new Color(153, 89, 16));
         ComplaintTab.setBackground(new Color(153, 89, 16));
-        NotificationPanel.setBackground(new Color(153, 89, 16));
+        NotificationTab.setBackground(new Color(153, 89, 16));
     }//GEN-LAST:event_OrderHistoryTabMousePressed
 
     private void ComplaintTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ComplaintTabMousePressed
@@ -1284,7 +1297,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         OrderStatusTab.setBackground(new Color(153, 89, 16));
         OrderHistoryTab.setBackground(new Color(153, 89, 16));
         MenuTab.setBackground(new Color(153, 89, 16));
-        NotificationPanel.setBackground(new Color(153, 89, 16));
+        NotificationTab.setBackground(new Color(153, 89, 16));
     }//GEN-LAST:event_ComplaintTabMousePressed
 
     private void NotificationTabMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_NotificationTabMousePressed

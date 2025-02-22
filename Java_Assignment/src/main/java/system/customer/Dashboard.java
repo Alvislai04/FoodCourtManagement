@@ -168,16 +168,17 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         MenuPanel.repaint();
     }
     
-   private void saveOrder(String orderId, String customerEmail, String foodName, int quantity, String price, String orderDate, String orderTime, String status) {
+   private void saveOrder(String orderId, String customerEmail, String foodName, int quantity, 
+                       String price, String orderDate, String orderTime, String status) {
     String orderFilePath = "customerOrder.txt"; // Ensure the correct filename
 
     System.out.println("Inside saveOrder method...");
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(orderFilePath, true))) {
-        // New order format: Separate Date and Time
+        // Include "Unpaid" as the default payment status
         String orderData = orderId + "," + customerEmail + "," + foodName + "," + quantity + "," 
-                         + price + "," + orderDate + "," + orderTime + "," + status;
-        
+                         + price + "," + orderDate + "," + orderTime + "," + status + ",Unpaid"; // 🔹 Fixed here
+
         System.out.println("Writing to file: " + orderData);
         writer.write(orderData);
         writer.newLine();
@@ -192,8 +193,6 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     }
 }
 
-
-   
    private String generateOrderId() {
     String orderFilePath = "customerOrder.txt";
     int lastOrderNumber = 0;
@@ -1493,8 +1492,8 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     }//GEN-LAST:event_OrderBtnActionPerformed
 
     private void CancelOrderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CancelOrderMousePressed
-        int selectedRow = StatusjTable1.getSelectedRow();
-    
+       int selectedRow = StatusjTable1.getSelectedRow();
+
     if (selectedRow == -1) {
         JOptionPane.showMessageDialog(this, "Please select an order to cancel!", "No Selection", JOptionPane.WARNING_MESSAGE);
         return;
@@ -1512,15 +1511,15 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         while ((line = reader.readLine()) != null) {
             String[] data = line.split(",");
 
-            // Ensure valid row (8 columns instead of 7)
-            if (data.length == 8) {
+            // Ensure valid row (should have 9 columns)
+            if (data.length == 9) {  // ✅ Fix: Ensure correct column count
                 String orderId = data[0]; // Order ID
 
                 if (orderId.equals(orderIdToCancel)) {
                     data[7] = "Cancelled"; // Change status to "Cancelled" (8th column)
                 }
 
-                updatedOrders.add(String.join(",", data));
+                updatedOrders.add(String.join(",", data)); // ✅ Keep all columns (including payment)
             }
         }
     } catch (IOException e) {

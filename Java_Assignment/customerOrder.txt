@@ -4,7 +4,7 @@ ORD003,customer@test,Grilled Salmon,1,21.00,21/02/2025, 14:13,Pending,unpaid
 ORD004,customer@test,Grilled Salmon,6,126.00,21/02/2025, 14:22,Pending,unpaid
 ORD005,customer@test,Grilled Salmon,6,126.00,21/02/2025, 14:28,Pending,unpaid
 ORD006,customer@test,Grilled Salmon,9,189.00,21/02/2025, 14:29,Cancelled,unpaid
-ORD007,customer@test,Burger,6,66.00,21/02/2025, 15:35,Completed,paid
+ORD007,customer@test,Burger,6,66.00,21/02/2025, 15:35,Completed,unpaid
 ORD008,customer@test,Spaghetti,1,15.00,21/02/2025, 15:35,Pending,unpaid
 ORD009,customer@test,Grilled Salmon,2,42.00,21/02/2025, 15:39,Cancelled,unpaid
 ORD010,customer@test,Grilled Salmon,3,63.00,21/02/2025, 15:43,Completed,unpaid
@@ -20,11 +20,14 @@ ORD019,customer@test,Lemonade,5,20.00,21/02/2025,23:25,Pending,unpaid
 ORD020,customer@test,Grilled Salmon,2,42.00,22/02/2025,00:58,Cancelled,unpaid
 ORD021,customer@test,Grilled Salmon,2,42.00,22/02/2025,01:38,Pending,unpaid
 ORD022,customer@test,Spaghetti,1,15.00,22/02/2025,01:39,Pending,unpaid
-ORD023,customer@test,Grilled Salmon,1,21.00,22/02/2025,01:39,Pending,unpaid
+ORD023,customer@test,Grilled Salmon,1,21.00,22/02/2025,01:39,Cancelled,unpaid
 ORD024,customer@test,Grilled Salmon,2,42.00,22/02/2025,01:39,Pending,unpaid
 ORD025,customer@test,Burger,3,33.00,22/02/2025,14:14,Cancelled,unpaid
 ORD026,customer@test,Grilled Salmon,6,126.00,22/02/2025,14:31,Cancelled,unpaid
-ORD027,customer@test,Grilled Salmon,2,42.00,22/02/2025,16:52,Pending,unpaid
+ORD027,customer@test,Grilled Salmon,2,42.00,22/02/2025,16:52,Cancelled,unpaid
 ORD028,customer@test,Grilled Salmon,1,21.00,22/02/2025,16:54,Cancelled,unpaid
 ORD029,customer@test,Burger,6,396.00,22/02/2025,16:54,Pending,unpaid
 ORD030,customer@test,Grilled Salmon,2,42.00,22/02/2025,17:00,Pending,unpaid
+ORD031,customer@test,Grilled Salmon,5,525.00,22/02/2025,21:01,Pending,Unpaid
+ORD032,customer@test,Burger,6,396.00,22/02/2025,21:02,Pending,Unpaid
+ORD033,customer@test,Ice Cream,2,12.00,22/02/2025,21:02,Pending,Unpaid

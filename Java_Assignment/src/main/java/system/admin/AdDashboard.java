@@ -517,8 +517,6 @@ public class AdDashboard extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.gray);
         setMinimumSize(new java.awt.Dimension(1300, 586));
-        setPreferredSize(new java.awt.Dimension(1300, 600));
-        setResizable(false);
         setSize(new java.awt.Dimension(1300, 586));
 
         Navigation.setBackground(java.awt.Color.gray);

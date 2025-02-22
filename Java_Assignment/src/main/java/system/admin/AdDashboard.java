@@ -88,7 +88,7 @@ public class AdDashboard extends javax.swing.JFrame {
                     try {
                         // Get selected row of data
                         int selectedRow = userDetailTable.getSelectedRow();
-                        String employeeId = (String) userDetailTable.getValueAt(selectedRow, 0); 
+                        String employeeId = (String) userDetailTable.getValueAt(selectedRow, 0);
 
                         // Remove from users.txt
                         removeIdFromFile("users.txt", employeeId);
@@ -512,11 +512,14 @@ public class AdDashboard extends javax.swing.JFrame {
         title_label5 = new javax.swing.JLabel();
         cbxSelectId = new java.awt.Choice();
         jLabel14 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        sortCus = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.gray);
+        setMaximumSize(new java.awt.Dimension(1500, 600));
         setMinimumSize(new java.awt.Dimension(1300, 586));
+        setPreferredSize(new java.awt.Dimension(1300, 600));
+        setResizable(false);
         setSize(new java.awt.Dimension(1300, 586));
 
         Navigation.setBackground(java.awt.Color.gray);
@@ -1096,12 +1099,6 @@ public class AdDashboard extends javax.swing.JFrame {
         topupTable.setRowHeight(40);
         topupTable.setSelectionBackground(new java.awt.Color(135, 98, 89));
         jScrollPane3.setViewportView(topupTable);
-        if (topupTable.getColumnModel().getColumnCount() > 0) {
-            topupTable.getColumnModel().getColumn(0).setPreferredWidth(1);
-            topupTable.getColumnModel().getColumn(1).setPreferredWidth(1);
-            topupTable.getColumnModel().getColumn(2).setPreferredWidth(1);
-            topupTable.getColumnModel().getColumn(3).setPreferredWidth(1);
-        }
 
         jLabel1.setText("Sort by customer id: ");
 
@@ -1130,9 +1127,14 @@ public class AdDashboard extends javax.swing.JFrame {
 
         jLabel14.setText("Select a customer id: ");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        sortCus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                sortCusActionPerformed(evt);
+            }
+        });
+        sortCus.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                sortCusKeyReleased(evt);
             }
         });
 
@@ -1150,7 +1152,7 @@ public class AdDashboard extends javax.swing.JFrame {
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(title_label5)))
-                        .addGap(85, 85, 85)
+                        .addGap(18, 18, Short.MAX_VALUE)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel11)
                             .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1165,7 +1167,7 @@ public class AdDashboard extends javax.swing.JFrame {
                     .addGroup(jp3Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(sortCus, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jp3Layout.setVerticalGroup(
@@ -1196,7 +1198,7 @@ public class AdDashboard extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jp3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(sortCus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -1655,9 +1657,15 @@ public class AdDashboard extends javax.swing.JFrame {
                         userFound = true;
                         customerName = parts[1];
                         // Update balance
-                        double currentBalance = Double.parseDouble(parts[7]);
+                        double currentBalance;
+                        try {
+                            currentBalance = Double.parseDouble(parts[7].trim());
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Invalid balance format in users.txt for user " + id);
+                            return;
+                        }
                         newBalance = currentBalance + topupAmount;
-                        parts[7] = String.format("%.2f", newBalance);
+                        parts[7] = String.valueOf(newBalance);
                         line = String.join(";", parts);
                     }
                     userLines.add(line);
@@ -1720,35 +1728,44 @@ public class AdDashboard extends javax.swing.JFrame {
                 return;
             }
 
-            FileReader fr = new FileReader("users.txt");
-            BufferedReader br = new BufferedReader(fr);
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(";");
-                String id = data[0].trim();
-                String name = data[1].trim();
-                String address = data[2].trim();
-                String phoneno = data[3].trim();
-                String username = data[4].trim();
-                String role = data[6].trim();
-                String balance = data[7].trim();
-
-                if (!role.equalsIgnoreCase("Customer")) {
-                    balance = "-";
-                }
-
-                String searchableText = id + " " + name + " " + address + " " + phoneno + " " + username;
-
-                // Check if the search text matches the order in the searchable text
-                if (isOrderedMatch(search.toLowerCase(), searchableText.toLowerCase())) {
-                    // Add the matching record to the table
-                    model.addRow(new Object[]{id, name, address, phoneno, username, role, balance});
+            Map<String, String> userMap = new HashMap<>();
+            try (BufferedReader userReader = new BufferedReader(new FileReader("users.txt"))) {
+                String userLine;
+                while ((userLine = userReader.readLine()) != null) {
+                    String[] userDetails = userLine.split(";");
+                    if (userDetails.length > 1) {
+                        userMap.put(userDetails[0], userDetails[1]); // ID -> Name
+                    }
                 }
             }
-            br.close();
+
+            // Read userTopup.txt and store rows in a list
+            List<Object[]> topupData = new ArrayList<>();
+            try (BufferedReader topupReader = new BufferedReader(new FileReader("userTopup.txt"))) {
+                String read;
+                while ((read = topupReader.readLine()) != null) {
+                    String[] topupDetails = read.split(";");
+                    if (topupDetails.length == 4) {
+                        String id = topupDetails[0];
+                        String paymentMethod = topupDetails[1];
+                        String amount = topupDetails[2];
+                        String totalBalance = topupDetails[3];
+
+                        // Retrieve name from users.txt based on id
+                        String name = userMap.getOrDefault(id, "Unknown");
+
+                        // Store the row data
+                        topupData.add(new Object[]{id, name, paymentMethod, amount, totalBalance});
+                    }
+                }
+            }
+
+            // Add rows to the table in reverse order
+            for (int i = topupData.size() - 1; i >= 0; i--) {
+                model.addRow(topupData.get(i));
+            }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error reading file: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }//GEN-LAST:event_searchFieldKeyReleased
 
@@ -1769,9 +1786,63 @@ public class AdDashboard extends javax.swing.JFrame {
         sortRoleCbx.setSelectedIndex(0);
     }//GEN-LAST:event_clearSearchBtnMouseReleased
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void sortCusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortCusActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_sortCusActionPerformed
+
+    private void sortCusKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sortCusKeyReleased
+        try {
+            String search = sortCus.getText().trim();
+            DefaultTableModel model = (DefaultTableModel) topupTable.getModel();
+            model.setRowCount(0);
+
+            if (search.isEmpty()) {
+                refreshTopupData();
+                return;
+            }
+
+            String customerName = null;
+            FileReader frUsers = new FileReader("users.txt");
+            BufferedReader brUsers = new BufferedReader(frUsers);
+            String line;
+
+            while ((line = brUsers.readLine()) != null) {
+                String[] data = line.split(";");
+                if (data.length >= 8) {
+                    String id = data[0].trim();
+                    String name = data[1].trim();
+                    String role = data[6].trim();
+
+                    if (role.equalsIgnoreCase("Customer") && id.equalsIgnoreCase(search)) {
+                        customerName = name;
+                        break;
+                    }
+                }
+            }
+            brUsers.close();
+
+            FileReader frTopup = new FileReader("userTopup.txt");
+            BufferedReader brTopup = new BufferedReader(frTopup);
+
+            while ((line = brTopup.readLine()) != null) {
+                String[] data = line.split(";");
+                if (data.length >= 4) {
+                    String id = data[0].trim();
+                    String paymentMethod = data[1].trim();
+                    String amount = data[2].trim();
+                    String totalBalance = data[3].trim();
+
+                    if (id.equalsIgnoreCase(search)) {
+                        model.addRow(new Object[]{id, customerName, paymentMethod, amount, totalBalance});
+                    }
+                }
+            }
+            brTopup.close();
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error reading file: " + e.getMessage());
+        }
+    }//GEN-LAST:event_sortCusKeyReleased
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -1837,7 +1908,6 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel jp1;
     private javax.swing.JPanel jp2;
     private javax.swing.JPanel jp3;
@@ -1850,6 +1920,7 @@ public class AdDashboard extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> rolecbx;
     private javax.swing.JTextField searchField;
     private javax.swing.JTextField searchtxt;
+    private javax.swing.JTextField sortCus;
     private javax.swing.JComboBox<String> sortRoleCbx;
     private javax.swing.JLabel tab1;
     private javax.swing.JLabel tab2;

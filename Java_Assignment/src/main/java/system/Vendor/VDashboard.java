@@ -360,7 +360,7 @@ public class VDashboard extends javax.swing.JFrame {
         if (statusFilter.equals("All")) {
             sorter.setRowFilter(null); // Show all rows
         } else {
-            sorter.setRowFilter(RowFilter.regexFilter("^" + statusFilter + "$", 6)); // Filter by "Order Status" column (index 6)
+            sorter.setRowFilter(RowFilter.regexFilter("^" + statusFilter + "$", 7)); // Filter by "Order Status" column (index 6)
         }
     }
     

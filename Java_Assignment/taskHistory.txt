@@ -9,3 +9,31 @@ Teh Ais
 123 Street A;456 Street B;012-3456789;Paid;25.50;C:\Users\Jenna\Pictures\20_9_2022 1_01_03 PM.png
 ------------------------------------------------------
 
+DR001
+Food Items: Nasi Lemak
+Nasi Goreng
+Teh Ais
+123 Street A;456 Street B;012-3456789;Paid;25.50;C:\Users\Louis\Downloads\Arrow (1).png
+------------------------------------------------------
+
+DR002
+Food Items: Nasi Kerabu
+Mee Goreng
+Kopi Ais
+789 Street C;101 Street D;011-9876543;Unpaid;15.00;C:\Users\Louis\Downloads\fried rice.png
+------------------------------------------------------
+
+DR001
+Food Items: Nasi Lemak
+Nasi Goreng
+Teh Ais
+123 Street A;456 Street B;012-3456789;Paid;25.50;C:\Users\Louis\Downloads\fried rice.png
+------------------------------------------------------
+
+DR001
+Food Items: Nasi Lemak
+Nasi Goreng
+Teh Ais
+123 Street A;456 Street B;012-3456789;Paid;25.50;C:\Users\Louis\Downloads\fried rice.png
+------------------------------------------------------
+

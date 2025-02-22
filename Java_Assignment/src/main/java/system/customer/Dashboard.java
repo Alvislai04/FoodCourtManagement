@@ -258,11 +258,12 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 }
    
    private void populateOrderHistoryTable() {
-    // Define column names (including Payment Status)
+    // Define column names including the new "Payment" column
     String[] columnNames = {"Order ID", "Food Ordered", "Quantity", "Transaction", "Order Date", "Order Time", "Payment"};
     
+    // Create table model
     DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-    HistoryjTable1.setModel(model); 
+    HistoryjTable1.setModel(model); // Set model to the table
     HistoryjTable1.setRowHeight(50);
 
     // Clear table before loading new data
@@ -273,17 +274,17 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         while ((line = reader.readLine()) != null) {
             String[] data = line.split(",");
 
-            // Ensure the row has exactly 8 columns (including status)
+            // Ensure there are at least 8 columns
             if (data.length == 8) {
-                String orderId = data[0];     // Order ID
-                String foodOrdered = data[2]; // Food Name
-                String quantity = data[3];    // Quantity
-                String transaction = data[4]; // Transaction (Total Price)
-                String orderDate = data[5];   // Order Date
-                String orderTime = data[6];   // Order Time
-                String status = data[7].trim(); // Status (Completed or Pending)
+                String orderId = data[0];     
+                String foodOrdered = data[2]; 
+                String quantity = data[3];    
+                String transaction = data[4]; 
+                String orderDate = data[5];   
+                String orderTime = data[6];   
+                String status = data[7].trim();
 
-                // **Only show completed orders**
+                // Only add unpaid completed orders
                 if (status.equalsIgnoreCase("Completed")) {
                     model.addRow(new Object[]{orderId, foodOrdered, quantity, transaction, orderDate, orderTime, "Unpaid"});
                 }
@@ -1658,14 +1659,42 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     private void ReceiptMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ReceiptMousePressed
         int selectedRow = HistoryjTable1.getSelectedRow();
     if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select an order to view the receipt.", "No Order Selected", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Please select an order to view receipt!", "Warning", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
-    String paymentStatus = HistoryjTable1.getValueAt(selectedRow, 6).toString(); // Payment Status Column
+    String orderId = HistoryjTable1.getValueAt(selectedRow, 0).toString();
+    String paymentStatus = HistoryjTable1.getValueAt(selectedRow, 6).toString(); // Payment Column
 
     if (!paymentStatus.equalsIgnoreCase("Paid")) {
-        JOptionPane.showMessageDialog(this, "You cannot view the receipt until payment is completed.", "Payment Required", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Receipt is only available for paid orders!", "Warning", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Show receipt details
+    String foodOrdered = HistoryjTable1.getValueAt(selectedRow, 1).toString();
+    String quantity = HistoryjTable1.getValueAt(selectedRow, 2).toString();
+    String transaction = HistoryjTable1.getValueAt(selectedRow, 3).toString();
+    String orderDate = HistoryjTable1.getValueAt(selectedRow, 4).toString();
+    String orderTime = HistoryjTable1.getValueAt(selectedRow, 5).toString();
+
+    String receiptMessage = "Receipt\n\n" +
+                            "Order ID: " + orderId + "\n" +
+                            "Food Ordered: " + foodOrdered + "\n" +
+                            "Quantity: " + quantity + "\n" +
+                            "Transaction: RM" + transaction + "\n" +
+                            "Order Date: " + orderDate + "\n" +
+                            "Order Time: " + orderTime + "\n" +
+                            "Payment Status: Paid";
+
+    JOptionPane.showMessageDialog(null, receiptMessage, "Receipt", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_ReceiptMousePressed
+
+    private void PaymentMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PaymentMousePressed
+            int selectedRow = HistoryjTable1.getSelectedRow(); // Get selected row
+
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select an order to make payment!", "Warning", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
@@ -1677,40 +1706,23 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     String orderDate = HistoryjTable1.getValueAt(selectedRow, 4).toString();
     String orderTime = HistoryjTable1.getValueAt(selectedRow, 5).toString();
 
-    // Display Receipt
-    String receipt = "====== RECEIPT ======\n"
-                    + "Order ID: " + orderId + "\n"
-                    + "Food Ordered: " + foodOrdered + "\n"
-                    + "Quantity: " + quantity + "\n"
-                    + "Transaction: " + transaction + "\n"
-                    + "Order Date: " + orderDate + "\n"
-                    + "Order Time: " + orderTime + "\n"
-                    + "Payment Status: " + paymentStatus + "\n"
-                    + "=====================";
-    
-    JOptionPane.showMessageDialog(this, receipt, "Receipt", JOptionPane.INFORMATION_MESSAGE);
-    }//GEN-LAST:event_ReceiptMousePressed
-
-    private void PaymentMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PaymentMousePressed
-        int selectedRow = HistoryjTable1.getSelectedRow();
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select an order to make payment.", "No Order Selected", JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-
-    String paymentStatus = HistoryjTable1.getValueAt(selectedRow, 6).toString(); // Payment Status Column
-
-    if (paymentStatus.equalsIgnoreCase("Paid")) {
-        JOptionPane.showMessageDialog(this, "This order has already been paid.", "Payment Completed", JOptionPane.INFORMATION_MESSAGE);
-        return;
-    }
-
     // Confirm payment
-    int confirm = JOptionPane.showConfirmDialog(this, "Confirm payment for this order?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
+    int confirm = JOptionPane.showConfirmDialog(this, "Confirm payment for Order ID: " + orderId + "?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
     if (confirm == JOptionPane.YES_OPTION) {
-        // **Change payment status to "Paid" in the table**
-        HistoryjTable1.setValueAt("Paid", selectedRow, 6);
-        JOptionPane.showMessageDialog(this, "Payment successful!", "Payment Done", JOptionPane.INFORMATION_MESSAGE);
+        // Update table status to "Paid"
+        DefaultTableModel model = (DefaultTableModel) HistoryjTable1.getModel();
+        model.setValueAt("Paid", selectedRow, 6);
+
+        // Append to temp_customerOrder.txt
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("temp_customerOrder.txt", true))) {
+            writer.write(orderId + "," + foodOrdered + "," + quantity + "," + transaction + "," + orderDate + "," + orderTime + ",Paid");
+            writer.newLine();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Error updating payment record!", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+
+        JOptionPane.showMessageDialog(this, "Payment successful for Order ID: " + orderId, "Payment Completed", JOptionPane.INFORMATION_MESSAGE);
     }
     }//GEN-LAST:event_PaymentMousePressed
 

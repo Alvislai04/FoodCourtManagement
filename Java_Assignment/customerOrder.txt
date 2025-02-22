@@ -1,4 +1,5 @@
-ORD001,customer@test,Grilled Salmon,5,105.00,21/02/2025, 04:49,Completed
+
+ORD001,customer@test,Grilled Salmon,5,105.00,21/02/2025, 04:49,Paid
 ORD002,customer@test,Grilled Salmon,10,210.00,21/02/2025, 14:04,Cancelled
 ORD003,customer@test,Grilled Salmon,1,21.00,21/02/2025, 14:13,Pending
 ORD004,customer@test,Grilled Salmon,6,126.00,21/02/2025, 14:22,Pending

@@ -216,8 +216,9 @@ public class MDashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logoutBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtn1ActionPerformed
-        goToLogout();
-        // TODO add your handling code here:
+    Login login = new Login();
+    login.setVisible(true);
+    this.dispose(); // Close the current dashboard window
     }//GEN-LAST:event_logoutBtn1ActionPerformed
 
     private void reviewTab4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reviewTab4MousePressed

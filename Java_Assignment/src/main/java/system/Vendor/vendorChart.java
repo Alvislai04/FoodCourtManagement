@@ -48,7 +48,7 @@ public JPanel createChart() {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length < 8) continue; // Ensure correct format
+                if (data.length < 9) continue; // Ensure correct format
 
                 String status = data[7].trim(); // Order status
                 if ("Completed".equalsIgnoreCase(status)) {

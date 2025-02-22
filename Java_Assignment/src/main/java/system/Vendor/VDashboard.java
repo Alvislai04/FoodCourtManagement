@@ -131,7 +131,7 @@ public class VDashboard extends javax.swing.JFrame {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length == 8) { 
+                if (data.length == 9) { 
                     model.addRow(data); // Add row to the correct model
                 }
             }
@@ -330,7 +330,7 @@ public class VDashboard extends javax.swing.JFrame {
         String line;
         while ((line = reader.readLine()) != null) {
             String[] data = line.split(","); // Assuming the file is CSV
-            if (data.length == 7 && data[0].equals(orderId)) {
+            if (data.length == 9 && data[0].equals(orderId)) {
                 // Update the "Order Status" field (index 6)
                 data[6] = newStatus;
                 line = String.join(",", data);

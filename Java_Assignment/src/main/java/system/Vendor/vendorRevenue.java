@@ -19,7 +19,7 @@ public class vendorRevenue {
                 // Read each order and accumulate data for today
                 while ((line = reader.readLine()) != null) {
                     String[] data = line.split(",");
-                    if (data.length < 8) continue; // Ensure there are 8 fields
+                    if (data.length < 9) continue; // Ensure there are 8 fields
 
                     String status = data[7].trim();
                     if ("Completed".equalsIgnoreCase(status)) {

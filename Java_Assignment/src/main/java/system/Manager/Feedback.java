@@ -186,7 +186,7 @@ public class Feedback extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        int selectedRow = 0;
+        int selectedRow = jTable1.getSelectedRow();
         // TODO add your handling code here:int selectedRow = jTable1.getSelectedRow();
 
         if (selectedRow == -1) {
@@ -199,11 +199,13 @@ public class Feedback extends javax.swing.JFrame {
 
         // Update the status of the selected complaint to "Resolved"
         jTable1.setValueAt("Resolved", selectedRow, 3);
-      
-
+    
+    // Clear the response box after resolving
+    jTextArea1.setText("");  // Clear the text in the response box
+     
         // Save the updated data back to the file
         saveUpdatedData();
-
+        populateTable();
         JOptionPane.showMessageDialog(this, "Complaint " + complainID + " has been resolved.", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 

@@ -467,6 +467,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         jScrollPane2 = new javax.swing.JScrollPane();
         HistoryjTable1 = new javax.swing.JTable();
         Reorder = new javax.swing.JLabel();
+        Receipt = new javax.swing.JLabel();
         ComplaintPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         ComplaintTextArea = new javax.swing.JTextArea();
@@ -1138,16 +1139,31 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
             }
         });
 
+        Receipt.setBackground(new java.awt.Color(153, 89, 16));
+        Receipt.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        Receipt.setForeground(new java.awt.Color(255, 255, 255));
+        Receipt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Receipt.setText("Receipt");
+        Receipt.setOpaque(true);
+        Receipt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                ReceiptMousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout OrderHistoryPanelLayout = new javax.swing.GroupLayout(OrderHistoryPanel);
         OrderHistoryPanel.setLayout(OrderHistoryPanelLayout);
         OrderHistoryPanelLayout.setHorizontalGroup(
             OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(OrderHistoryPanelLayout.createSequentialGroup()
                 .addGap(51, 51, 51)
-                .addGroup(OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(Reorder, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(OrderHistoryPanelLayout.createSequentialGroup()
+                        .addComponent(Receipt, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Reorder, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 698, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(163, Short.MAX_VALUE))
+                .addContainerGap(175, Short.MAX_VALUE))
         );
         OrderHistoryPanelLayout.setVerticalGroup(
             OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1155,8 +1171,10 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
                 .addGap(16, 16, 16)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(Reorder, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addGroup(OrderHistoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Reorder, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Receipt, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
         jPanel1.add(OrderHistoryPanel);
@@ -1620,6 +1638,36 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
         // TODO add your handling code here:
     }//GEN-LAST:event_RateComboBoxActionPerformed
 
+    private void ReceiptMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ReceiptMousePressed
+        int selectedRow = HistoryjTable1.getSelectedRow();
+
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select an order to view the receipt!", "No Order Selected", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Get order details from the selected row
+    String orderId = HistoryjTable1.getValueAt(selectedRow, 0).toString();
+    String foodOrdered = HistoryjTable1.getValueAt(selectedRow, 1).toString();
+    String quantity = HistoryjTable1.getValueAt(selectedRow, 2).toString();
+    String transaction = HistoryjTable1.getValueAt(selectedRow, 3).toString();
+    String orderDate = HistoryjTable1.getValueAt(selectedRow, 4).toString();
+    String orderTime = HistoryjTable1.getValueAt(selectedRow, 5).toString();
+
+    // Format the receipt
+    String receipt = "===== Order Receipt =====\n"
+                   + "Order ID: " + orderId + "\n"
+                   + "Food Ordered: " + foodOrdered + "\n"
+                   + "Quantity: " + quantity + "\n"
+                   + "Transaction: " + transaction + "\n"
+                   + "Order Date: " + orderDate + "\n"
+                   + "Order Time: " + orderTime + "\n"
+                   + "=========================";
+
+    // Display receipt in a dialog
+    JOptionPane.showMessageDialog(this, receipt, "Order Receipt", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_ReceiptMousePressed
+
         private void updateNotificationPanel(String userID) {
         System.out.println("Updating Notification Panel for: " + userID);
 
@@ -1788,6 +1836,7 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
     private javax.swing.JPanel OrderStatusPanel;
     private javax.swing.JLabel OrderStatusTab;
     private javax.swing.JComboBox<String> RateComboBox;
+    private javax.swing.JLabel Receipt;
     private javax.swing.JLabel Reorder;
     private javax.swing.JTable ReviewjTable;
     private javax.swing.JButton SkipBtn;

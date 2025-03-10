@@ -116,57 +116,47 @@ private void openOrderPanel(Integer index, String reorderFoodName, String reorde
 }
 
 
-    private void loadFoodImages () {
+    private void loadFoodImages() {
+    JLabel[] foodIcon = {foodIcon1, foodIcon2, foodIcon3, foodIcon4, foodIcon5, foodIcon6};
+    JLabel[] foodLabels = {foodLabel1, foodLabel2, foodLabel3, foodLabel4, foodLabel5, foodLabel6};
 
-        JLabel[] foodIcon = {foodIcon1, foodIcon2, foodIcon3, foodIcon4, foodIcon5, foodIcon6};
-        JLabel[] foodLabels = {foodLabel1, foodLabel2, foodLabel3, foodLabel4, foodLabel5, foodLabel6};
-        
-         for (int i = 0; i < foodIcon.length; i++) {
-        foodIcon[i].setIcon(null); // Clear the icon
-        foodLabels[i].setText(""); // Clear the text
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {
-            String line;
-            int index = 0; // Track the current label index
-
-            while ((line = reader.readLine()) != null && index < foodIcon.length) {
-                String[] data = line.split(",");
-                String foodId = data[0];
-                String foodName = data[1];
-                String price = data[2];
-                String imagePath = data[3]; // Relative path to the image
-
-                // Load the image
-                File imageFile = new File(imagePath);
-                if (imageFile.exists()) {
-                    BufferedImage image = ImageIO.read(imageFile);
-
-
-                    // Resize the image (optional)
-                    Image scaledImage = image.getScaledInstance(
-                        187, 179, Image.SCALE_SMOOTH
-                    );
-                    ImageIcon icon = new ImageIcon(scaledImage);
-
-                    // Set the icon and text for the current label
-                    foodIcon[index].setIcon(icon);
-                    foodLabels[index].setText(foodName + " - " + price);
-                } else {
-                    System.out.println("Image not found: " + imagePath);
-                }
-
-                index++; // Move to the next label
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        
-        // Force the GUI to refresh
-        MenuPanel.revalidate();
-        MenuPanel.repaint();
+    for (int i = 0; i < foodIcon.length; i++) {
+        foodIcon[i].setIcon(null);
+        foodLabels[i].setText("");
     }
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(vendorFoodFilePath))) {
+        String line;
+        int index = 0;
+
+        while ((line = reader.readLine()) != null && index < foodIcon.length) {
+            String[] data = line.split(",");
+            String foodId = data[0];
+            String foodName = data[1];
+            String price = data[2];
+            String imagePath = data[3].replace("\\", "/"); // Fix Windows paths
+
+            File imageFile = new File(imagePath);
+            System.out.println("Checking file: " + imageFile.getAbsolutePath()); // Debugging
+
+            if (imageFile.exists()) {
+                BufferedImage image = ImageIO.read(imageFile);
+                Image scaledImage = image.getScaledInstance(187, 179, Image.SCALE_SMOOTH);
+                foodIcon[index].setIcon(new ImageIcon(scaledImage));
+                foodLabels[index].setText(foodName + " - " + price);
+            } else {
+                System.out.println("Image not found: " + imagePath);
+            }
+            index++;
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error reading vendorFood.txt!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    MenuPanel.revalidate();
+    MenuPanel.repaint();
+}
     
    private void saveOrder(String orderId, String customerEmail, String foodName, int quantity, 
                        String price, String orderDate, String orderTime, String status) {

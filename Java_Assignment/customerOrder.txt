@@ -33,3 +33,5 @@ ORD032,customer@test,Burger,6,396.00,22/02/2025,21:02,Pending,Unpaid
 ORD033,customer@test,Ice Cream,2,12.00,22/02/2025,21:02,Pending,Unpaid
 ORD034,customer@test,Grilled Salmon,5,525.00,22/02/2025,21:12,Pending,Unpaid
 ORD035,customer@test,Grilled Salmon,5,525.00,22/02/2025,21:13,Pending,Unpaid
+ORD036,customer@test,Grilled Salmon,1,21.00,06/03/2025,15:41,Cancelled,Unpaid
+ORD037,customer@test,Grilled Salmon,1,21.00,08/04/2025,23:02,Pending,Unpaid
